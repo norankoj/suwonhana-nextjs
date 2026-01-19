@@ -1,0 +1,110 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+@layer base {
+  html {
+    /* 폰트 적용 */
+    font-family: "Pretendard", sans-serif;
+  }
+
+  body {
+    /* 기본 글자색 지정 (위에서 만든 변수 사용) */
+    @apply text-dark-medium bg-white;
+  }
+
+  /* --- 폰트 사이즈 통합 관리 --- */
+
+  /* H1: 메인 타이틀 (예: 하나님을 즐거워하고...) */
+  h1 {
+    @apply text-4xl md:text-6xl font-bold text-dark tracking-tight leading-tight;
+  }
+
+  /* H2: 섹션 제목 (예: 환영합니다, 예배안내) */
+  h2 {
+    @apply text-3xl md:text-4xl font-bold text-dark mb-4;
+  }
+
+  /* H3: 카드 제목 (예: 주일 1부 예배, 공지사항 제목) */
+  h3 {
+    @apply text-xl md:text-2xl font-bold text-dark mb-2;
+  }
+
+  /* P: 본문 내용 */
+  p {
+    @apply text-base md:text-lg text-dark-medium leading-relaxed;
+  }
+
+  /* 작은 설명 글씨 */
+  small {
+    @apply text-sm text-dark-light;
+  }
+}
+
+/* 유틸리티 클래스 (자주 쓰는 버튼 모양 등) */
+@layer components {
+  .btn-primary {
+    @apply bg-brand text-white px-6 py-3 rounded-full font-bold hover:bg-brand-dark transition-all shadow-md hover:shadow-lg;
+  }
+
+  .btn-outline {
+    @apply border border-brand text-brand px-6 py-3 rounded-full font-bold hover:bg-brand hover:text-white transition-all;
+  }
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
