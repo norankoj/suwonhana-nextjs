@@ -89,7 +89,7 @@ export default function RecentSermons() {
         </Link>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 border-b border-slate-100 pb-8">
         {/* [왼쪽] 메인 플레이어 */}
         <div className="w-full lg:w-2/3">
           <div className="aspect-video w-full bg-black rounded-xl overflow-hidden shadow-xl">
