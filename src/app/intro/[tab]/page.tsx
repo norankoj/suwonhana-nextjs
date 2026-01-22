@@ -415,10 +415,11 @@ export default function IntroContentPage() {
               History
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              수원하나교회 발자취
+              하나님이 인도하신 길
             </h2>
             <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
-              1992년부터 지금까지, 하나님의 은혜로 걸어온 시간들입니다.
+              성령 안에서 하나님이 거하실 처소가 되기 위하여 <br />
+              그리스도 예수 안에서 함께 지어져 가느니라 (에베소서 2:22)
             </p>
           </div>
 
