@@ -10,19 +10,14 @@ import {
   Loader2,
   Play,
   X,
-  Book,
   BookOpen,
-  Plus,
   ChevronDown,
   ChevronUp,
   RotateCcw,
-  Hash,
   Filter as FilterIcon,
   List,
-  Home,
   Tag,
 } from "lucide-react";
-import Link from "next/link";
 import { HeroSub } from "@/components/Common";
 
 const WP_API_DOMAIN = "http://suwonhana.local";
@@ -129,7 +124,8 @@ function Accordion({
     <div className="border-b border-slate-100 last:border-0 py-5">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full text-slate-900 font-extrabold text-[15px] hover:text-blue-600 transition-colors mb-3"
+        type="button"
+        className="flex items-center justify-between w-full text-slate-900 font-extrabold text-[15px] hover:text-blue-600 transition-colors"
       >
         <span>{title}</span>
         {isOpen ? (
@@ -138,7 +134,7 @@ function Accordion({
           <ChevronDown size={18} className="text-slate-400" />
         )}
       </button>
-      {isOpen && <div className="mt-1 animate-fade-in">{children}</div>}
+      {isOpen && <div className="animate-fade-in mt-3">{children}</div>}
     </div>
   );
 }
@@ -154,11 +150,8 @@ export default function SermonPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [searchTrigger, setSearchTrigger] = useState(0);
-
-  // [NEW] 페이지 이동 시 자동 선택을 위한 상태 ('first' = 첫번째 선택, 'last' = 마지막 선택)
-  const [autoSelect, setAutoSelect] = useState<"first" | "last" | null>(null);
-
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
   const [categoryMap, setCategoryMap] = useState<Record<string, number[]>>({});
   const [tagMap, setTagMap] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -220,19 +213,10 @@ export default function SermonPage() {
 
   useEffect(() => {
     fetchSermons(currentPage);
-  }, [currentPage]);
-
-  // [NEW] 설교 목록이 로드된 후, 페이지 이동에 따른 자동 선택 로직 실행
-  useEffect(() => {
-    if (sermons.length > 0 && autoSelect) {
-      if (autoSelect === "last") {
-        setSelectedSermon(sermons[sermons.length - 1]); // 이전 페이지의 마지막 영상
-      } else if (autoSelect === "first") {
-        setSelectedSermon(sermons[0]); // 다음 페이지의 첫 번째 영상
-      }
-      setAutoSelect(null); // 초기화
+    if (window.innerWidth < 1024) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [sermons, autoSelect]);
+  }, [currentPage]);
 
   const fetchSermons = async (page = 1) => {
     setIsLoading(true);
@@ -267,7 +251,6 @@ export default function SermonPage() {
       if (!res.ok) {
         setSermons([]);
         setTotalPages(0);
-        setIsLoading(false);
         return;
       }
       const totalPagesHeader = res.headers.get("X-WP-TotalPages");
@@ -286,7 +269,9 @@ export default function SermonPage() {
     e.preventDefault();
     setCurrentPage(1);
     fetchSermons(1);
+    setIsMobileFilterOpen(false);
   };
+
   const resetFilters = () => {
     setActiveTab("전체");
     setSelectedBooks([]);
@@ -301,6 +286,7 @@ export default function SermonPage() {
       : selectedBooks.length < 5
         ? setSelectedBooks([...selectedBooks, book])
         : alert("최대 5개까지 선택 가능합니다.");
+
   const toggleTopic = (topic: string) =>
     selectedTopics.includes(topic)
       ? setSelectedTopics(selectedTopics.filter((t) => t !== topic))
@@ -337,39 +323,46 @@ export default function SermonPage() {
   };
 
   const getPageNumbers = () => {
-    const pageNumbers = [];
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-    if (endPage - startPage + 1 < maxPagesToShow) {
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    const pages = [];
+    const maxVisiblePages = 5;
+
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 4) {
+        for (let i = 1; i <= 5; i++) pages.push(i);
+        pages.push("...");
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
+        pages.push("...");
+        pages.push(totalPages);
+      }
     }
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-    return pageNumbers;
+    return pages;
   };
 
-  // [NEW] 페이지 이동 핸들러
-  const handlePrevSermon = (currentIndex: number) => {
-    if (currentIndex > 0) {
-      // 현재 페이지 내에서 이동
-      setSelectedSermon(sermons[currentIndex - 1]);
-    } else if (currentPage > 1) {
-      // 이전 페이지로 이동
-      setAutoSelect("last");
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  const getAsideClassName = () => {
+    const desktopClasses =
+      "lg:w-[280px] lg:shrink-0 lg:bg-transparent lg:p-0 lg:rounded-none lg:shadow-none lg:border-none lg:sticky lg:top-24 lg:block lg:z-auto";
 
-  const handleNextSermon = (currentIndex: number) => {
-    if (currentIndex < sermons.length - 1) {
-      // 현재 페이지 내에서 이동
-      setSelectedSermon(sermons[currentIndex + 1]);
-    } else if (currentPage < totalPages) {
-      // 다음 페이지로 이동
-      setAutoSelect("first");
-      setCurrentPage(currentPage + 1);
+    if (selectedSermon) {
+      return `hidden lg:block ${desktopClasses}`;
+    }
+
+    if (isMobileFilterOpen) {
+      // 모바일 필터 열림: 배경색(bg-white) 추가 및 z-index 상향
+      return `fixed inset-0 z-[100] overflow-y-auto bg-white p-5 ${desktopClasses}`;
+    } else {
+      return `hidden ${desktopClasses}`;
     }
   };
 
@@ -382,9 +375,7 @@ export default function SermonPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          <aside
-            className={`lg:w-[280px] lg:shrink-0 w-full bg-white lg:bg-transparent p-5 lg:p-0 rounded-xl lg:rounded-none shadow-xl lg:shadow-none border border-slate-100 lg:border-none sticky top-24 transition-all duration-300 ${selectedSermon ? "hidden lg:block" : ""}`}
-          >
+          <aside className={getAsideClassName()}>
             {selectedSermon ? (
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col gap-4 animate-fade-in">
                 <button
@@ -394,74 +385,7 @@ export default function SermonPage() {
                   <List size={18} /> 목록으로 돌아가기
                 </button>
                 <div className="w-full h-px bg-slate-100 my-2"></div>
-
-                {/* [수정] 페이지 넘김 로직 적용 */}
-                {(() => {
-                  const idx = sermons.findIndex(
-                    (s) => s.id === selectedSermon.id,
-                  );
-                  const hasPrev = idx > 0 || currentPage > 1;
-                  const hasNext =
-                    idx < sermons.length - 1 || currentPage < totalPages;
-                  const prevSermon = idx > 0 ? sermons[idx - 1] : null; // 현재 페이지 내 이전 설교
-                  const nextSermon =
-                    idx < sermons.length - 1 ? sermons[idx + 1] : null; // 현재 페이지 내 다음 설교
-
-                  return (
-                    <>
-                      {hasPrev ? (
-                        <button
-                          onClick={() => handlePrevSermon(idx)}
-                          className="text-left group"
-                        >
-                          <span className="text-xs text-slate-400 font-bold mb-1 flex items-center">
-                            <ChevronLeft size={12} className="mr-1" /> 이전 설교
-                          </span>
-                          <h5
-                            className="text-sm font-bold text-slate-700 group-hover:text-blue-600 line-clamp-2 leading-snug transition-colors"
-                            dangerouslySetInnerHTML={{
-                              __html: prevSermon
-                                ? prevSermon.title.rendered
-                                : "이전 페이지의 설교입니다.",
-                            }}
-                          ></h5>
-                        </button>
-                      ) : (
-                        <div className="text-xs text-slate-300 py-2">
-                          이전 설교 없음
-                        </div>
-                      )}
-
-                      <div className="w-full h-px bg-slate-100 my-1"></div>
-
-                      {hasNext ? (
-                        <button
-                          onClick={() => handleNextSermon(idx)}
-                          className="text-right group"
-                        >
-                          <span className="text-xs text-slate-400 font-bold mb-1 flex items-center justify-end">
-                            다음 설교{" "}
-                            <ChevronRight size={12} className="ml-1" />
-                          </span>
-                          <h5
-                            className="text-sm font-bold text-slate-700 group-hover:text-blue-600 line-clamp-2 leading-snug transition-colors"
-                            dangerouslySetInnerHTML={{
-                              __html: nextSermon
-                                ? nextSermon.title.rendered
-                                : "다음 페이지의 설교입니다.",
-                            }}
-                          ></h5>
-                        </button>
-                      ) : (
-                        <div className="text-xs text-right text-slate-300 py-2">
-                          다음 설교 없음
-                        </div>
-                      )}
-                    </>
-                  );
-                })()}
-
-                <div className="mt-4 pt-6 border-t border-slate-100">
+                <div className="mt-2">
                   <p className="text-xs font-bold text-slate-400 mb-3 flex items-center gap-1">
                     <Tag size={12} /> 관련 키워드
                   </p>
@@ -488,17 +412,16 @@ export default function SermonPage() {
                     <FilterIcon size={20} /> 필터
                   </h3>
                   <button
-                    onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
-                    className="text-sm font-bold text-slate-500"
+                    onClick={() => setIsMobileFilterOpen(false)}
+                    className="text-sm font-bold text-slate-500 p-2"
                   >
                     닫기
                   </button>
                 </div>
-                <div
-                  className={`${isMobileFilterOpen ? "block" : "hidden lg:block"}`}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-extrabold text-lg text-slate-900 hidden lg:block">
+
+                <div className="block">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-extrabold text-lg text-slate-900 hidden lg:block mb-0">
                       검색 필터
                     </h3>
                     <button
@@ -510,7 +433,7 @@ export default function SermonPage() {
                   </div>
                   <form
                     onSubmit={handleSearchSubmit}
-                    className="relative group mb-6"
+                    className="relative group mb-3"
                   >
                     <input
                       type="text"
@@ -524,7 +447,7 @@ export default function SermonPage() {
                       size={16}
                     />
                   </form>
-                  <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <div className="bg-white rounded-2xl border border-slate-200 px-5 py-1 shadow-sm">
                     <Accordion title="예배" defaultOpen={true}>
                       <div className="flex flex-col gap-2">
                         {SERVICE_TAGS.map((tag) => (
@@ -637,19 +560,19 @@ export default function SermonPage() {
                         {selectedSermon.sermon_meta?.speaker || "담임목사"}
                       </span>
                     </div>
+
+                    {selectedSermon.sermon_meta?.scripture && (
+                      <div className="flex items-center gap-2">
+                        <BookOpen size={18} className="text-slate-400" />
+                        <span>{selectedSermon.sermon_meta?.scripture}</span>
+                      </div>
+                    )}
                     <div className="flex items-center gap-2">
                       <Calendar size={18} className="text-slate-400" />
                       <span>{formatDate(selectedSermon.date)}</span>
                     </div>
-                    {selectedSermon.sermon_meta?.scripture && (
-                      <div className="flex items-center gap-2">
-                        <BookOpen size={18} className="text-slate-400" />
-                        <span className="text-blue-600 font-bold">
-                          {selectedSermon.sermon_meta?.scripture}
-                        </span>
-                      </div>
-                    )}
                   </div>
+
                   <div className="mt-8 prose prose-lg max-w-none text-slate-700 leading-loose">
                     <div
                       dangerouslySetInnerHTML={{
@@ -665,11 +588,10 @@ export default function SermonPage() {
               <>
                 <div className="lg:hidden mb-6">
                   <button
-                    onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+                    onClick={() => setIsMobileFilterOpen(true)}
                     className="w-full py-3.5 bg-slate-900 text-white rounded-lg font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform"
                   >
-                    <FilterIcon size={18} />{" "}
-                    {isMobileFilterOpen ? "검색 필터 닫기" : "검색 필터 열기"}
+                    <FilterIcon size={18} /> 검색 필터 열기
                   </button>
                 </div>
                 {(selectedBooks.length > 0 ||
@@ -717,13 +639,14 @@ export default function SermonPage() {
                     )}
                   </div>
                 )}
+
                 {isLoading ? (
-                  <div className="flex flex-col items-center justify-center py-32 opacity-50">
+                  <div className="flex flex-col items-center justify-center py-32 opacity-80 min-h-[400px]">
                     <Loader2
-                      className="animate-spin text-slate-400 mb-4"
-                      size={40}
+                      className="animate-spin text-blue-600 mb-4"
+                      size={48}
                     />
-                    <p className="text-slate-400 text-sm">
+                    <p className="text-slate-500 font-bold text-base animate-pulse">
                       말씀을 불러오고 있습니다...
                     </p>
                   </div>
@@ -784,7 +707,7 @@ export default function SermonPage() {
                                   __html: item.title.rendered,
                                 }}
                               />
-                              <div className="flex items-center justify-between text-xs text-slate-400 mt-3 border-t border-slate-50 pt-2">
+                              <div className="flex items-center justify-between text-xs text-slate-400 mt-3">
                                 <span className="text-slate-600 font-medium">
                                   {item.sermon_meta?.speaker || "담임목사"}
                                 </span>
@@ -795,28 +718,42 @@ export default function SermonPage() {
                         );
                       })}
                     </div>
+
                     {!isLoading && totalPages > 1 && (
-                      <div className="flex justify-center mt-12 gap-2">
+                      <div className="flex justify-center mt-12 gap-2 flex-wrap">
                         <button
                           onClick={() => setCurrentPage(currentPage - 1)}
                           disabled={currentPage === 1}
-                          className="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-30 transition-colors"
+                          className="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                         >
                           <ChevronLeft size={20} />
                         </button>
-                        {getPageNumbers().map((pageNum) => (
-                          <button
-                            key={pageNum}
-                            onClick={() => setCurrentPage(pageNum)}
-                            className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-sm transition-all ${currentPage === pageNum ? "bg-slate-900 text-white shadow-md" : "bg-white border border-slate-200 text-slate-500 hover:bg-slate-50"}`}
-                          >
-                            {pageNum}
-                          </button>
+
+                        {getPageNumbers().map((pageNum, index) => (
+                          <React.Fragment key={index}>
+                            {pageNum === "..." ? (
+                              <span className="w-10 h-10 flex items-center justify-center text-slate-400 font-bold tracking-widest">
+                                ...
+                              </span>
+                            ) : (
+                              <button
+                                onClick={() => setCurrentPage(Number(pageNum))}
+                                className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-sm transition-all ${
+                                  currentPage === pageNum
+                                    ? "bg-slate-900 text-white shadow-md transform scale-105"
+                                    : "bg-white border border-slate-200 text-slate-500 hover:bg-slate-50"
+                                }`}
+                              >
+                                {pageNum}
+                              </button>
+                            )}
+                          </React.Fragment>
                         ))}
+
                         <button
                           onClick={() => setCurrentPage(currentPage + 1)}
                           disabled={currentPage === totalPages}
-                          className="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-30 transition-colors"
+                          className="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                         >
                           <ChevronRight size={20} />
                         </button>
