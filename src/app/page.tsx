@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
@@ -12,11 +12,25 @@ import {
   Copy,
   X,
   ChevronDown,
+  Loader2,
+  Sprout,
+  MapPin,
+  Clock, // 로딩 아이콘 추가
 } from "lucide-react";
-import { HeroCarousel, CustomPlayButton } from "@/components/Common";
-import { MainHero } from "@/components/MainHero";
+import { CustomPlayButton } from "@/components/Common";
+import { MainHero, MainHeroData } from "@/components/MainHero";
+import { EventBanner } from "@/components/EventBanner";
+import RecentSermons from "@/components/RecentSermons";
+import WelcomeSection from "@/components/WelcomeSection";
 
-// 구글폼 주소
+// =================================================================
+// [설정 영역] 워드프레스 연결 정보
+// =================================================================
+
+// [상태 관리] 슬라이드 데이터 & 로딩
+const WP_API_DOMAIN = "http://suwonhana.local";
+const SLIDE_POST_TYPE = "risen_slide";
+
 const RECEIPT_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSfD5f0YpO6Y1b9Z6U6Yz4k3n8FQ1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1ZQ/viewform";
 
@@ -24,247 +38,137 @@ export default function MainPage() {
   const router = useRouter();
   const [showAccountInfo, setShowAccountInfo] = useState(false);
 
-  // 슬라이드 이미지 (public/images 폴더에 해당 파일들이 있어야 함)
-  const slides = ["/images/background02.jpg", "/images/background03.jpg"];
+  // [상태 관리] 초기값을 빈 배열로 둠
+  const [heroSlides, setHeroSlides] = useState<MainHeroData[]>([]);
+  // =================================================================
+  // [API 연동] 워드프레스에서 슬라이드 이미지 가져오기
+  // =================================================================
+  // API 데이터 가져오기
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const endpoint = `${WP_API_DOMAIN}/wp-json/wp/v2/${SLIDE_POST_TYPE}?per_page=10&_embed`;
+        const res = await fetch(endpoint);
+
+        if (!res.ok) throw new Error("API Network Error");
+        const data = await res.json();
+
+        console.log("🔥 워드프레스 데이터:", data);
+
+        const slideData = data
+          .map((item: any) => {
+            // 특성 이미지 추출
+            if (
+              item._embedded &&
+              item._embedded["wp:featuredmedia"] &&
+              item._embedded["wp:featuredmedia"][0]
+            ) {
+              const media = item._embedded["wp:featuredmedia"][0];
+
+              // [수정] 캡션 가져오기 로직 (Code Snippets에서 만든 custom_meta 사용)
+              // 1순위: Slide Options에 적은 캡션 (custom_meta)
+              let caption = item.custom_meta?.caption;
+
+              // 2순위: 그게 없으면 글 제목 사용
+              if (!caption) {
+                caption = item.title?.rendered;
+              }
+
+              // 링크 가져오기 (Slide Options에 적은 URL)
+              const link = item.custom_meta?.link || "#";
+
+              // 버튼 가져오기
+              const buttonText = item.custom_meta?.button_text || "";
+
+              return {
+                imageUrl: media.source_url,
+                caption: caption || "",
+                // MainHero로 넘겨줄 데이터에 추가
+                buttonText: buttonText,
+                link: link,
+              };
+            }
+            return null;
+          })
+          .filter((item): item is MainHeroData => item !== null);
+
+        if (slideData.length > 0) {
+          setHeroSlides(slideData);
+        }
+      } catch (error) {
+        console.error("슬라이드 로딩 실패:", error);
+      } finally {
+        //
+      }
+    };
+
+    fetchSlides();
+  }, []);
 
   const handleNavClick = (path: string) => {
     router.push(path);
   };
-
   return (
     <>
       <div className="animate-fade-in">
-        {/* 1. Hero Section (메인 배너) */}
-        <MainHero />
+        {/* 1. 메인 슬라이드 */}
+        <MainHero slidesData={heroSlides} key={heroSlides.length} />
 
-        {/* 2. Welcome Message Section (환영 메시지) */}
-        <section className="py-24 bg-white text-center">
-          <div className="max-w-4xl mx-auto px-6">
-            <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8 leading-snug">
-              수원하나교회에 오신 것을 환영합니다!
-            </h3>
-            <div className="space-y-4 text-slate-600 text-lg leading-relaxed font-light mb-12">
-              <p>
-                수원하나교회는 하나님을 즐거워하고 그 분의 목적에 헌신하는
-                공동체입니다.
+        {/* 2. Welcome Message Section (Button Moved to Left) */}
+        <section className="py-24 bg-white relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+            {/* [왼쪽] 텍스트 콘텐츠 */}
+            <div className="w-full md:w-1/2 z-10 mb-12 md:mb-0">
+              <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-6">
+                수원하나교회에
+                <br />
+                오신 것을
+                <br />
+                환영합니다.
+              </h2>
+              <div className="w-24 h-2 bg-slate-900 mb-8"></div>
+              <p className="text-lg md:text-xl text-slate-700 leading-relaxed mb-6">
+                수원하나교회는 하나님을 즐거워하고
+                <br />그 분의 목적에 헌신하는 공동체입니다.
               </p>
-              <p className="text-base md:text-lg">
-                <strong className="text-slate-900">하나</strong>의 의미는{" "}
-                <span className="font-semibold text-slate-800">
-                  하나님의 나라(Kingdom of God)
-                </span>
-                를 건설하고
-                <br className="hidden md:block" />
-                형제 자매가{" "}
-                <span className="font-semibold text-slate-800">
-                  연합(Unity)
-                </span>
-                하여 하나가 되어간다는 의미입니다.
+              <p className="text-lg md:text-xl text-slate-700 leading-relaxed mb-8">
+                <span className="font-bold">하나</span>의 의미는{" "}
+                <span className="font-bold">하나님의 나라(Kingdom)</span>를
+                건설하고,
+                <br />
+                형제 자매가 <span className="font-bold">연합(Unity)</span>하여
+                하나가 되어간다는 뜻입니다.
               </p>
-              <p className="text-sm text-slate-400 pt-4">
-                수원하나교회는 기독교 한국 침례회 교단 소속 입니다.
+              <p className="text-sm text-slate-500 mb-10">
+                * 수원하나교회는 기독교 한국 침례회 교단 소속입니다.
               </p>
-            </div>
-
-            <button
-              onClick={() => handleNavClick("/intro/pastor")}
-              className="bg-slate-900 text-white px-10 py-4 rounded-full font-bold text-sm hover:bg-sky-700 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-300"
-            >
-              더 알아보기
-            </button>
-          </div>
-        </section>
-
-        {/* 3. Newcomer Guide Section (새가족 안내) */}
-        <section className="py-24" style={{ backgroundColor: "#f8f8f8" }}>
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="text-left mb-16">
-              <h3 className="text-4xl font-bold text-slate-900 mb-6">
-                처음이신가요?
-              </h3>
-              <p className="text-slate-500 text-lg mb-8">
-                수원하나교회에 오신 것을 환영합니다. 새가족 절차를 안내해
-                드립니다. 새가족 담당자 (신상철 목사 :010-2484-0776)
-              </p>
-            </div>
-
-            <div className="relative pl-4 md:pl-0">
-              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-sky-100 md:hidden"></div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
-                {/* Step 1 */}
-                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start h-full">
-                  <div className="flex items-center justify-between w-full mb-6">
-                    <div className="w-12 h-12 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-sky-600 group-hover:text-white transition-colors duration-300">
-                      <UserPlus size={24} />
-                    </div>
-                    <span className="text-4xl font-bold text-slate-100 group-hover:text-sky-50 transition-colors">
-                      01
-                    </span>
-                  </div>
-                  <div>
-                    <span className="inline-block text-sky-600 font-bold text-xs mb-2 tracking-wider">
-                      STEP 01
-                    </span>
-                    <h4 className="font-bold text-xl text-slate-900">
-                      새가족 담당 문의
-                    </h4>
-                  </div>
-                </div>
-
-                {/* Step 2 */}
-                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start h-full">
-                  <div className="flex items-center justify-between w-full mb-6">
-                    <div className="w-12 h-12 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors duration-300">
-                      <FileText size={24} />
-                    </div>
-                    <span className="text-4xl font-bold text-slate-100 group-hover:text-slate-100 transition-colors">
-                      02
-                    </span>
-                  </div>
-                  <div>
-                    <span className="inline-block text-slate-400 font-bold text-xs mb-2 tracking-wider">
-                      STEP 02
-                    </span>
-                    <h4 className="font-bold text-xl text-slate-900">
-                      새가족 프로그램 신청
-                    </h4>
-                  </div>
-                </div>
-
-                {/* Step 3 */}
-                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start h-full">
-                  <div className="flex items-center justify-between w-full mb-6">
-                    <div className="w-12 h-12 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors duration-300">
-                      <BookOpen size={24} />
-                    </div>
-                    <span className="text-4xl font-bold text-slate-100 group-hover:text-slate-100 transition-colors">
-                      03
-                    </span>
-                  </div>
-                  <div>
-                    <span className="inline-block text-slate-400 font-bold text-xs mb-2 tracking-wider">
-                      STEP 03
-                    </span>
-                    <h4 className="font-bold text-xl text-slate-900">
-                      새가족 교육 (6주)
-                    </h4>
-                  </div>
-                </div>
-
-                {/* Step 4 */}
-                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col items-start h-full">
-                  <div className="flex items-center justify-between w-full mb-6">
-                    <div className="w-12 h-12 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors duration-300">
-                      <Users size={24} />
-                    </div>
-                    <span className="text-4xl font-bold text-slate-100 group-hover:text-slate-100 transition-colors">
-                      04
-                    </span>
-                  </div>
-                  <div>
-                    <span className="inline-block text-slate-400 font-bold text-xs mb-2 tracking-wider">
-                      STEP 04
-                    </span>
-                    <h4 className="font-bold text-xl text-slate-900">
-                      셀 배정
-                    </h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 4. Featured Sermon Preview (설교 미리보기) */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex justify-between items-end mb-8">
-              <div>
-                <span className="text-sky-600 font-bold uppercase tracking-wide text-sm">
-                  Sermon Bank
-                </span>
-                <h2 className="text-3xl font-bold text-slate-900 mt-2">
-                  주일 강단 메세지
-                </h2>
-              </div>
-              <button
-                className="hidden md:flex items-center text-slate-500 hover:text-sky-600 text-sm font-medium transition-colors"
-                onClick={() => handleNavClick("/sermon")}
+              <a
+                href="/about"
+                className="inline-flex items-center px-6 py-3 border-2 border-slate-900 rounded-full text-lg font-bold text-slate-900 hover:bg-slate-900 hover:text-white transition-colors"
               >
-                메세지 더보기 <ArrowRight size={16} className="ml-1" />
-              </button>
+                교회 소개 더보기 <ChevronRight size={20} className="ml-2" />
+              </a>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* 메인 설교 카드 */}
-              <div
-                className="lg:col-span-2 relative group cursor-pointer rounded-2xl overflow-hidden shadow-xl aspect-video"
-                onClick={() => handleNavClick("/sermon")}
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1510936111840-65e151ad71bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  alt="sermon"
-                />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-colors">
-                  <CustomPlayButton />
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 to-transparent text-white">
-                  <div className="inline-block px-3 py-1 bg-red-600 rounded text-xs font-bold mb-3">
-                    LIVE REPLAY
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">
-                    2025.12.07 주일 2부 예배
-                  </h3>
-                  <p className="text-slate-300">
-                    본문: 요한복음 3장 16절 | 설교: 담임목사
-                  </p>
-                </div>
-              </div>
-
-              {/* 사이드 리스트 */}
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-4 max-h-[450px] overflow-y-auto pr-2">
-                  {[1, 2, 3, 4, 5].map((item) => (
-                    <div
-                      key={item}
-                      className="flex gap-4 p-3 bg-slate-50 rounded-xl hover:shadow-md transition-shadow cursor-pointer border border-slate-100 group"
-                      onClick={() => handleNavClick("/sermon")}
-                    >
-                      <div className="w-32 aspect-video bg-slate-200 rounded-lg overflow-hidden shrink-0 relative">
-                        <img
-                          src={`https://images.unsplash.com/photo-1515162305285-0293e4767cc2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`}
-                          className="w-full h-full object-cover"
-                          alt="thumb"
-                        />
-                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <CustomPlayButton size={24} />
-                        </div>
-                      </div>
-                      <div className="flex flex-col justify-center">
-                        <span className="text-xs text-slate-400 mb-1">
-                          2025.11.{30 - item}
-                        </span>
-                        <h4 className="font-bold text-slate-800 text-sm leading-tight mb-1 group-hover:text-sky-600 transition-colors line-clamp-2">
-                          믿음으로 승리하는 삶 (Part {item})
-                        </h4>
-                        <span className="text-xs text-slate-500">
-                          로마서 8장 {item}-15절
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  onClick={() => handleNavClick("/sermon")}
-                  className="w-full py-4 mt-auto bg-white border border-slate-200 rounded-xl font-bold text-slate-600 hover:bg-sky-50 hover:text-sky-600 hover:border-sky-200 transition-all flex items-center justify-center"
-                >
-                  설교 더보기 <ChevronRight size={18} className="ml-1" />
-                </button>
-              </div>
+            {/* [오른쪽] 목사님 이미지 (누끼) */}
+            <div className="w-full md:w-1/2 h-full absolute md:relative bottom-0 right-0 md:right-auto pointer-events-none md:pointer-events-auto flex justify-end items-end z-0">
+              {/* [중요] 아래 src에 실제 목사님 누끼 이미지 경로를 입력해주세요.
+            예: "/images/pastor_removed_bg.png" 
+        */}
+              <img
+                src="/images/pastor_ko.png" // <-- 여기를 수정하세요!
+                alt="고목사님"
+                className="w-auto h-[80%] md:h-auto max-h-[600px] object-contain object-bottom opacity-20 md:opacity-100"
+              />
             </div>
           </div>
         </section>
+
+        {/* 3. Newcomer Guide (새가족 안내) */}
+        <WelcomeSection />
+
+        {/* 4. 최근 설교 */}
+        <RecentSermons />
 
         {/* 5. 기부금 영수증 */}
         <section className="py-24" style={{ backgroundColor: "#f8f8f8" }}>
@@ -345,10 +249,10 @@ export default function MainPage() {
                       navigator.clipboard.writeText(`국민 ${item.num}`);
                       alert(`${item.label} 계좌가 복사되었습니다.`);
                     }}
-                    className="group flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:bg-sky-50 hover:border-sky-200 transition-all cursor-pointer"
+                    className="group flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-sky-600 transition-colors">
+                      <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-blue-600 transition-colors">
                         <span className="text-[10px] font-bold text-slate-500">
                           국민
                         </span>
@@ -358,12 +262,12 @@ export default function MainPage() {
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-slate-600 group-hover:text-sky-600">
+                      <span className="font-mono font-bold text-slate-600 group-hover:text-blue-600">
                         {item.num}
                       </span>
                       <Copy
                         size={14}
-                        className="text-slate-300 group-hover:text-sky-500"
+                        className="text-slate-300 group-hover:text-blue-500"
                       />
                     </div>
                   </div>

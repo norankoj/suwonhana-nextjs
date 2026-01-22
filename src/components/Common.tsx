@@ -1,40 +1,81 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, Home } from "lucide-react";
 
 // 커스텀 재생 버튼 컴포넌트
-export const CustomPlayButton = ({ size = 64, className = "" }: { size?: number, className?: string }) => (
+export const CustomPlayButton = ({
+  size = 64,
+  className = "",
+}: {
+  size?: number;
+  className?: string;
+}) => (
   <div
     className={`flex items-center justify-center transition-transform duration-300 hover:scale-110 drop-shadow-lg cursor-pointer ${className}`}
     style={{ width: size, height: size }}
   >
-    <svg width="100%" height="100%" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 24 30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path d="M24 15L0 30V0L24 15Z" fill="white" />
     </svg>
   </div>
 );
 
-// 서브 페이지용 헤더
-export const HeroSub = ({ title, subtitle, image }: { title: string, subtitle: string, image: string }) => (
-  <div className="relative h-[300px] flex items-center justify-center bg-slate-900 overflow-hidden">
-    <img
-      src={image}
-      alt="bg"
-      className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
-    />
-    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
-    <div className="relative z-10 text-center">
-      <h2 className="text-4xl font-bold text-white mb-2">{title}</h2>
-      <p className="text-sky-300 font-medium tracking-wide uppercase">
-        {subtitle}
-      </p>
+interface HeroSubProps {
+  title: string;
+  subtitle?: string;
+  image?: string;
+  desc?: string;
+}
+
+export function HeroSub({ title, subtitle, desc }: HeroSubProps) {
+  return (
+    <div className="bg-white pt-32 pb-8 border-b border-slate-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center text-xs text-slate-400 font-medium mb-8">
+          <Link href="/" className="hover:text-blue-600 flex items-center">
+            <Home size={12} className="mr-1" /> 홈
+          </Link>
+          {subtitle ? (
+            <>
+              <ChevronRight size={12} className="mx-2" />
+              <span>{title}</span>
+              <ChevronRight size={12} className="mx-2" />
+              <span className="text-slate-800 font-bold">{subtitle}</span>
+            </>
+          ) : (
+            <>
+              <ChevronRight size={12} className="mx-2" />
+              <span className="text-slate-800 font-bold">{title}</span>
+            </>
+          )}
+        </div>
+        <div className="pt-4">
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-2">
+            {title}
+          </h1>
+          <p className="text-slate-500">{desc}</p>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+}
 
 // 히어로 캐러셀 (메인 화면 배경 슬라이드)
-export const HeroCarousel = ({ slides, interval = 5000 }: { slides: string[], interval?: number }) => {
+export const HeroCarousel = ({
+  slides,
+  interval = 5000,
+}: {
+  slides: string[];
+  interval?: number;
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {

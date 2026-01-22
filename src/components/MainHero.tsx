@@ -1,91 +1,183 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link"; // 링크 이동을 위해 필수
-import { ArrowRight } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-// 슬라이드 데이터
-const SLIDE_DATA = [
+export interface MainHeroData {
+  imageUrl: string;
+  caption: string;
+  link?: string;
+  buttonText?: string;
+}
+
+const DEFAULT_DATA: MainHeroData[] = [
   {
-    id: 1,
-    image: "/images/background02.jpg",
-    link: "/intro/vision", // 클릭 시 이동할 주소
-    alt: "비전 설명",
+    imageUrl: "/images/background02.jpg",
+    caption: `<h1 class="text-4xl md:text-7xl font-bold mb-4 md:mb-6 text-white drop-shadow-md leading-tight">하나님을 즐거워하는<br/>공동체</h1><p class="text-slate-100 text-lg md:text-xl font-light opacity-90">주님이 주신 기쁨으로 세상을 섬깁니다.</p>`,
+    link: "/intro/vision",
+    buttonText: "자세히 보기",
   },
   {
-    id: 2,
-    image: "/images/background03.jpg",
-    link: "/sermon", // 클릭 시 이동할 주소
-    alt: "설교 바로가기",
+    imageUrl: "/images/background03.jpg",
+    caption: `<h1 class="text-4xl md:text-7xl font-bold mb-4 md:mb-6 text-white drop-shadow-md leading-tight">말씀과 성령으로<br/>새로워지는 교회</h1><p class="text-slate-100 text-lg md:text-xl font-light opacity-90">매일의 삶에서 경험하는 하나님의 은혜</p>`,
+    link: "/sermon",
+    buttonText: "설교 말씀 듣기",
   },
 ];
 
-export const MainHero = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+interface MainHeroProps {
+  slidesData?: MainHeroData[];
+}
 
-  // 자동 슬라이드 기능
+export const MainHero = ({ slidesData }: MainHeroProps) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const displaySlides =
+    slidesData && slidesData.length > 0
+      ? slidesData.map((item, idx) => ({ ...item, id: idx }))
+      : DEFAULT_DATA.map((item, idx) => ({ ...item, id: idx + 100 }));
+
+  const totalSlides = displaySlides.length;
+
+  const goToSlide = (index: number) => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentIndex(index);
+    setTimeout(() => setIsAnimating(false), 700);
+  };
+
+  const nextSlide = () => goToSlide((currentIndex + 1) % totalSlides);
+  const prevSlide = () =>
+    goToSlide((currentIndex - 1 + totalSlides) % totalSlides);
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % SLIDE_DATA.length);
-    }, 5000); // 5초마다 변경
-    return () => clearInterval(timer);
-  }, []);
+    if (totalSlides <= 1) return;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    timeoutRef.current = setTimeout(() => {
+      nextSlide();
+    }, 6000);
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [currentIndex, totalSlides]);
+
+  const currentSlide = displaySlides[currentIndex];
+  if (!currentSlide) return null;
 
   return (
-    <section className="relative h-screen min-h-[600px] flex items-center overflow-hidden">
-      {/* 배경 슬라이드 (클릭 가능하게 변경) */}
-      <div className="absolute inset-0 bg-slate-900">
-        {SLIDE_DATA.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentIndex ? "opacity-60 z-10" : "opacity-0 z-0"
-            }`}
-          >
-            {/* 이미지를 Link로 감싸서 클릭 가능하게 만듦 */}
-            <Link
-              href={slide.link}
-              className="block w-full h-full cursor-pointer"
-            >
+    // [수정 포인트 1] 높이 설정
+    // 모바일: h-[calc(100vh-5rem)] -> 헤더(5rem/80px)를 뺀 나머지 화면을 꽉 채움
+    // PC: h-[85vh] -> 적당한 비율 유지
+    <section className="relative mt-20 md:mt-24 h-[calc(100vh-5rem)] md:h-[85vh] min-h-[500px] overflow-hidden group bg-slate-900">
+      {/* 1. 슬라이드 트랙 */}
+      <div
+        className="flex w-full h-full transition-transform duration-700 ease-in-out will-change-transform"
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+      >
+        {displaySlides.map((slide) => (
+          <div key={slide.id} className="w-full h-full flex-shrink-0 relative">
+            {slide.link && slide.link !== "#" ? (
+              <Link
+                href={slide.link}
+                className="block w-full h-full cursor-pointer"
+              >
+                <img
+                  src={slide.imageUrl}
+                  alt="slide background"
+                  className="w-full h-full object-cover object-center"
+                />
+                <span
+                  className="absolute inset-0 z-10"
+                  aria-hidden="true"
+                ></span>
+              </Link>
+            ) : (
               <img
-                src={slide.image}
-                alt={slide.alt}
-                className="w-full h-full object-cover"
+                src={slide.imageUrl}
+                alt="slide background"
+                className="w-full h-full object-cover object-center"
               />
-            </Link>
+            )}
+            {/* [수정 포인트 2] 모바일 가독성을 위해 하단 그라데이션을 더 진하게 처리 */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none md:bg-gradient-to-r md:from-slate-900/70 md:via-slate-900/30 md:to-transparent"></div>
           </div>
         ))}
-        {/* 어두운 그라데이션 오버레이 (글씨 잘 보이게) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/40 to-transparent z-20 pointer-events-none"></div>
       </div>
 
-      {/* 텍스트 내용 */}
-      <div className="max-w-7xl mx-auto px-6 w-full relative z-30 mt-10">
-        {/* ⭐ h1에 text-white를 직접 지정하여 글로벌 스타일 덮어쓰기 */}
-        <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6 drop-shadow-lg text-white">
-          하나님을 즐거워하고
-          <br />그 분의 목적에 헌신하는 공동체
-        </h1>
+      {/* 2. 텍스트 콘텐츠 */}
+      <div className="absolute inset-0 flex items-end md:items-center pb-20 md:pb-0 z-30 pointer-events-none">
+        <div className="max-w-7xl mx-auto px-6 w-full pointer-events-auto">
+          <div key={currentSlide.id} className="animate-fade-in">
+            {/* 캡션 스타일: 모바일에서는 하단 배치 느낌을 위해 글자 크기와 여백 조정 */}
+            <div
+              className="text-white mb-8 md:mb-10 prose prose-invert max-w-none 
+                [&>h1]:text-4xl [&>h1]:md:text-7xl [&>h1]:font-bold [&>h1]:leading-tight [&>h1]:mb-4 [&>h1]:drop-shadow-lg
+                [&>p]:text-lg [&>p]:md:text-xl [&>p]:text-slate-100 [&>p]:font-light
+                md:[&>br]:block"
+              dangerouslySetInnerHTML={{ __html: currentSlide.caption }}
+            />
 
-        {/* ⭐ p 태그들도 text-white 또는 밝은 색으로 지정 */}
-        <div className="flex flex-col gap-1 mb-10 text-slate-100 font-light text-sm md:text-base">
-          <p className="text-slate-100">
-            주일예배 매주 1부(9:00), 2부(11:00), 3부(14:30)
-          </p>
-          <p className="text-slate-100">금요예배 매주 9:00</p>
+            {/* [수정 포인트 3] 버튼 부활! (hidden 제거) */}
+            {currentSlide.buttonText && (
+              <Link
+                href={currentSlide.link || "#"}
+                target={
+                  currentSlide.link?.startsWith("http") ? "_blank" : "_self"
+                }
+                className="inline-flex items-center gap-2 text-white border border-white/40 bg-white/5 backdrop-blur-sm hover:bg-white hover:text-slate-900 px-6 py-3 md:px-8 md:py-4 rounded-full transition-all duration-300 group/btn"
+              >
+                <span className="text-sm md:text-base font-bold">
+                  {currentSlide.buttonText}
+                </span>
+                <ArrowRight
+                  size={18}
+                  className="group-hover/btn:translate-x-1 transition-transform"
+                />
+              </Link>
+            )}
+          </div>
         </div>
-
-        <Link
-          href="/intro/vision"
-          className="inline-flex items-center gap-2 text-white border border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white hover:text-slate-900 px-8 py-3 rounded-full transition-all duration-300 group"
-        >
-          자세히 보기{" "}
-          <ArrowRight
-            size={18}
-            className="group-hover:translate-x-1 transition-transform"
-          />
-        </Link>
       </div>
+
+      {/* 3. 화살표 (PC에서만 보임) */}
+      {totalSlides > 1 && (
+        <>
+          <button
+            onClick={prevSlide}
+            className="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/30 md:left-8"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/30 md:right-8"
+          >
+            <ChevronRight size={24} />
+          </button>
+        </>
+      )}
+
+      {/* 4. 하단 인디케이터 */}
+      {totalSlides > 1 && (
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex gap-2 md:gap-3">
+          {displaySlides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => goToSlide(idx)}
+              className={`h-1.5 md:h-2 rounded-full transition-all duration-500 ${
+                idx === currentIndex
+                  ? "w-6 md:w-8 bg-white"
+                  : "w-1.5 md:w-2 bg-white/50 hover:bg-white/80"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 };

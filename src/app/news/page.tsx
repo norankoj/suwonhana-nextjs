@@ -58,11 +58,7 @@ export default function NewsPage() {
   if (selectedNews) {
     return (
       <div className="bg-white min-h-screen animate-fade-in">
-        <HeroSub
-          title="교회소식"
-          subtitle="News & Notice"
-          image="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
-        />
+        <HeroSub title="교회소식" />
         <div className="max-w-4xl mx-auto px-6 py-20">
           <div className="mb-8">
             <button
@@ -112,11 +108,7 @@ export default function NewsPage() {
 
   return (
     <div className="bg-white min-h-screen animate-fade-in">
-      <HeroSub
-        title="교회소식"
-        subtitle="News & Notice"
-        image="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
-      />
+      <HeroSub title="교회소식" />
       <div className="max-w-5xl mx-auto px-6 py-20">
         <div className="space-y-4">
           {newsData.map((item) => (

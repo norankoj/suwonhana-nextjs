@@ -368,59 +368,85 @@ export const historyData = [
 export const bookList = [
   {
     id: 1,
-    title: "카이로스",
-    desc: "하나님의 시공간, 그 신비한 타이밍을 포착하라",
-    link: "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=%EA%B3%A0%EC%84%B1%EC%A4%80+%EC%B9%B4%EC%9D%B4%EB%A1%9C%EC%8A%A4",
-    color: "bg-amber-100", // 이미지 없을 시 배경색 (실제 이미지 사용 시 제거 가능)
+    title: "데스티니",
+    desc: "하나님의 계획, 나를 향한 창조주의 위대한 설계도",
+    link: "https://mall.godpeople.com/?G=9788960974739",
+    color: "bg-blue-100",
+    image:
+      "https://image.aladin.co.kr/product/9539/95/cover500/8960974730_1.jpg",
   },
   {
     id: 2,
-    title: "데스티니",
-    desc: "하나님의 계획, 당신의 인생을 향한 부르심",
-    link: "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=%EA%B3%A0%EC%84%B1%EC%A4%80+%EB%8D%B0%EC%8A%A4%ED%8B%B0%EB%8B%88",
-    color: "bg-blue-100",
+    title: "예수 마음 프로젝트",
+    desc: "내 마음이 예수 마음이 되는 변화를 받으라",
+    link: "https://mall.godpeople.com/?G=9788960974982",
+    color: "bg-teal-100",
+    image:
+      "https://image.aladin.co.kr/product/11027/24/cover500/8960974986_1.jpg",
   },
   {
     id: 3,
-    title: "떠내려가지 마라",
-    desc: "세상의 물결 속에서 믿음을 지키는 법",
-    link: "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=%EA%B3%A0%EC%84%B1%EC%A4%80+%EB%96%A0%EB%82%B4%EB%A0%A4%EA%B0%80%EC%A7%80%EB%A7%88%EB%9D%BC",
-    color: "bg-emerald-100",
+    title: "나의 데스티니 찾기",
+    desc: "하나님이 계획하신 내 인생의 진짜 목적",
+    link: "https://mall.godpeople.com/?G=9788960975514",
+    color: "bg-indigo-100",
+    image:
+      "https://image.aladin.co.kr/product/16727/58/cover500/8960975516_1.jpg",
   },
   {
     id: 4,
-    title: "나의 데스티니 찾기",
-    desc: "하나님이 주신 꿈을 발견하는 워크북",
-    link: "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=%EB%82%98%EC%9D%98+%EB%8D%B0%EC%8A%A4%ED%8B%B0%EB%8B%88+%EC%B0%BE%EA%B8%B0",
-    color: "bg-indigo-100",
+    title: "카이로스1",
+    desc: "하나님의 시공간, 보이지 않는 영적 세계의 원리",
+    link: "https://mall.godpeople.com/?G=9791165041335",
+    color: "bg-amber-100", // 이미지 없을 시 배경색 (실제 이미지 사용 시 제거 가능)
+    image:
+      "https://image.aladin.co.kr/product/25171/48/cover500/k592633598_2.jpg",
   },
   {
     id: 5,
-    title: "케노시스",
-    desc: "자기 비움, 예수 그리스도의 마음을 품다",
-    link: "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=%EA%B3%A0%EC%84%B1%EC%A4%80+%EC%BC%80%EB%85%B8%EC%8B%9C%EC%8A%A4",
-    color: "bg-rose-100",
+    title: "카이로스2",
+    desc: "하나님의 타이밍, 보이지 않는 영적 세계의 원리",
+    link: "https://mall.godpeople.com/?G=9791165041854",
+    color: "bg-amber-100", // 이미지 없을 시 배경색 (실제 이미지 사용 시 제거 가능)
+    image:
+      "https://image.aladin.co.kr/product/26400/97/cover500/k242738321_1.jpg",
   },
   {
     id: 6,
-    title: "황금시편",
-    desc: "시편을 통해 만나는 하나님의 위로와 지혜",
-    link: "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=%EA%B3%A0%EC%84%B1%EC%A4%80+%ED%99%A9%EA%B8%88%EC%8B%9C%ED%8E%B8",
-    color: "bg-orange-100",
+    title: "빌리브 갓",
+    desc: "하나님을 믿는다는 것은 증명하는 것이 아니라 믿는 것이다",
+    link: "https://mall.godpeople.com/?G=9791165043629",
+    color: "bg-slate-200",
+    image:
+      "https://image.aladin.co.kr/product/30235/94/cover500/k322839403_1.jpg",
   },
   {
     id: 7,
-    title: "빌리브 갓",
-    desc: "믿음, 보이지 않는 것을 보는 힘",
-    link: "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=%EA%B3%A0%EC%84%B1%EC%A4%80+%EB%B9%8C%EB%A6%AC%EB%B8%8C%EA%B0%93",
-    color: "bg-slate-200",
+    title: "케노시스",
+    desc: "자기 비움, 예수님이 누리셨던 기쁨의 비밀",
+    link: "https://mall.godpeople.com/?G=9791165044503",
+    color: "bg-rose-100",
+    image:
+      "https://image.aladin.co.kr/product/32050/69/cover500/k692834986_1.jpg",
   },
+
   {
     id: 8,
-    title: "예수 마음 프로젝트",
-    desc: "제자도를 향한 마음의 여정",
-    link: "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=%EA%B3%A0%EC%84%B1%EC%A4%80+%EC%98%88%EC%88%98%EB%A7%88%EC%9D%8C%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8",
-    color: "bg-teal-100",
+    title: "황금시편",
+    desc: "다윗 영성의 진수, 믹담 시편",
+    link: "https://mall.godpeople.com/?G=9791165044824",
+    color: "bg-orange-100",
+    image:
+      "https://image.aladin.co.kr/product/32936/68/cover500/k382936049_1.jpg",
+  },
+  {
+    id: 9,
+    title: "떠내려가지 마라",
+    desc: "넋 놓고 있으면 미혹의 물결에 떠내려갈 뿐이다!",
+    link: "https://mall.godpeople.com/?G=9791165046040",
+    color: "bg-emerald-100",
+    image:
+      "https://image.aladin.co.kr/product/36116/27/cover500/k442038169_1.jpg",
   },
 ];
 
@@ -430,24 +456,18 @@ export const vision = [
     title: "하나님을 즐거워 함",
     desc: `수원하나교회의 비전은 첫째, 하나님을 즐거워하는 것입니다. 
     참 신앙은 하나님을 즐거워하는 것입니다. 하나님을 즐거워하지 않는 신앙생활은 종교고 행위일 뿐, 진짜 믿음이 아닙니다. 그리스도인의 삶은 하나님의 사랑 안에서 그 분을 즐거워하는 것으로 시작되고, 또한 그것이 최종적인 목표입니다.(시편 9:2, 16:11, 27:4)
-    
-    내가 여호와께 청하였던 한 가지 일 곧 그것을 구하리니 곧 나로 내 생전에 여호와의 집에 거하여 여호와의 아름다움을 앙망하며 그 전에서 사모하게 하실 것이라(시편 27:4)
     `,
   },
   {
     title: "그 분의 목적",
     desc: `둘째, 예수님을 사랑하기 때문에 그 분의 목적이 우리의 목적이 됩니다. 
     그 분의 목적은 열방 가운데 주님의 몸된 교회를 개척하는 것입니다. 주님께서는 모든 민족이 주님의 몸된 교회 안으로 들어오기를 원하시기에 우리는 그 목적(열방 가운데 교회를 개척하는 일)에 우리의 삶을 기쁨으로, 또 열정적으로 드리기 원합니다. 이것이 우리의 비전입니다. (마태복음 24:14, 마태복음28:18~20)
-    
-    그러므로 너희는 가서 모든 족속으로 제자를 삼아 아버지와 아들과 성령의 이름으로 침례를 주고 내가 너희에게 분부한 모든 것을 가르쳐 지키게 하라 볼지어다 내가 세상 끝날까지 너희와 항상 함께 있으리라 하시니라(마태복음 28:19~20) 
     `,
   },
   {
     title: "공동체",
     desc: `셋째, 교회는 공동체입니다. 
-        그리스도인의 삶은 혼자 외롭게 걸어가는 “외로운 나그네 길”이 아닙니다. 그것은 예수 안에서 한가족 된 공동체가 서로 사랑하고 섬기며 함께 걸어가는 길입니다. 수원하나교회는 하나님의 가족입니다.(에베소서 2:19)
-        
-        그러므로 이제부터 너희가 외인도 아니요 손도 아니요 오직 성도들과 동일한 시민이요 하나님의 권속(가족)이라(에베소서 2:19)`,
+        그리스도인의 삶은 혼자 외롭게 걸어가는 “외로운 나그네 길”이 아닙니다. 그것은 예수 안에서 한가족 된 공동체가 서로 사랑하고 섬기며 함께 걸어가는 길입니다. 수원하나교회는 하나님의 가족입니다.(에베소서 2:19)`,
   },
 ];
 
