@@ -81,6 +81,19 @@ export default function WelcomeSection() {
           </div>
         </div>
 
+        {/* 모바일용 연락처 카드 */}
+        <div className="mb-6 p-6 bg-white rounded-2xl border border-slate-200 md:hidden text-center shadow-sm">
+          <p className="text-sm text-slate-400 font-bold mb-1 flex items-center justify-center gap-1">
+            새가족 담당 문의
+          </p>
+          <p className="text-lg font-bold text-slate-800">
+            신상철 목사{" "}
+            <a href="tel:010-2484-0776" className=" ml-1">
+              010-2484-0776
+            </a>
+          </p>
+        </div>
+
         {/* 카드 그리드 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {steps.map((item, idx) => (
@@ -121,22 +134,6 @@ export default function WelcomeSection() {
               ></div>
             </div>
           ))}
-        </div>
-
-        {/* 모바일용 연락처 카드 */}
-        <div className="mt-6 p-6 bg-white rounded-2xl border border-slate-200 md:hidden text-center shadow-sm">
-          <p className="text-sm text-slate-400 font-bold mb-1 flex items-center justify-center gap-1">
-            <Phone size={14} /> 새가족 담당 문의
-          </p>
-          <p className="text-lg font-bold text-slate-800">
-            신상철 목사{" "}
-            <a
-              href="tel:010-2484-0776"
-              className="text-blue-600 underline decoration-2 underline-offset-4 ml-1"
-            >
-              010-2484-0776
-            </a>
-          </p>
         </div>
       </div>
     </section>
