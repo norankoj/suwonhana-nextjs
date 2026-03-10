@@ -17,6 +17,8 @@ import {
   Filter as FilterIcon,
   List,
   Tag,
+  LayoutGrid,
+  AlignJustify,
 } from "lucide-react";
 import { HeroSub } from "@/components/Common";
 
@@ -109,7 +111,192 @@ const getTagColor = (tag: string) => {
   return "bg-slate-50 text-slate-500 border-slate-100";
 };
 
-// 아코디언
+// --- [NEW] 제목 정제 유틸리티 함수 추가됨 ---
+const getCleanTitle = (rawTitle: string) => {
+  if (!rawTitle) return "";
+
+  // 1. 워드프레스 특수문자 엔티티 처리
+  let title = rawTitle
+    .replace(/&#8211;/g, "-") // en-dash
+    .replace(/&#8212;/g, "-") // em-dash
+    .replace(/&nbsp;/g, " ");
+
+  // 2. 대시(-) 기준으로 분리하여 마지막 부분(제목) 추출
+  // 예: "날짜 - 시리즈 - 제목" 형태라면 "제목"만 가져옴
+  const parts = title.split(/[-–—]/);
+  let mainTitle = parts.length > 1 ? parts[parts.length - 1] : title;
+
+  // 3. 뒤에 붙은 성경 구절 괄호 제거 (예: "(갈2:3-5절)")
+  mainTitle = mainTitle.replace(/\s*\([^)]*\)\s*$/, "");
+
+  return mainTitle.trim();
+};
+
+// 유틸리티 함수
+const formatDate = (dateString: string) => {
+  const d = new Date(dateString);
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+};
+
+const getYouTubeId = (url?: string) => {
+  if (!url) return null;
+  let videoId = "";
+  if (url.includes("youtu.be/"))
+    videoId = url.split("youtu.be/")[1]?.split("?")[0];
+  else if (url.includes("v=")) videoId = url.split("v=")[1]?.split("&")[0];
+  else if (url.includes("/embed/"))
+    videoId = url.split("/embed/")[1]?.split("?")[0];
+  return videoId || null;
+};
+
+// --- 개별 설교 카드 컴포넌트 ---
+const SermonCard = ({
+  item,
+  viewMode,
+  onClick,
+}: {
+  item: Sermon;
+  viewMode: "grid" | "list";
+  onClick: (item: Sermon) => void;
+}) => {
+  const tags = item.sermon_meta?.tags || ["주일예배"];
+  const youtubeId = getYouTubeId(item.sermon_meta?.video_url);
+
+  const [imgSrc, setImgSrc] = useState<string>("");
+  const [imgError, setImgError] = useState(false);
+
+  const cleanTitle =
+    item.sermon_meta?.clean_title || getCleanTitle(item.title.rendered);
+
+  useEffect(() => {
+    if (youtubeId) {
+      setImgSrc(`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`);
+      setImgError(false);
+    } else {
+      setImgSrc(item._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "");
+    }
+  }, [youtubeId, item._embedded]);
+
+  const handleImgError = () => {
+    if (!imgError && youtubeId) {
+      setImgError(true);
+      setImgSrc(`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`);
+    }
+  };
+
+  if (viewMode === "list") {
+    return (
+      <div
+        onClick={() => onClick(item)}
+        className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-slate-100 cursor-pointer flex flex-col sm:flex-row gap-0 sm:gap-6 transition-all duration-300 hover:bg-slate-50/50"
+      >
+        <div className="w-full sm:w-64 shrink-0 relative aspect-video bg-slate-200 overflow-hidden">
+          {imgSrc ? (
+            <img
+              src={imgSrc}
+              alt=""
+              onError={handleImgError}
+              className="w-full h-full object-cover transform scale-[1.01] group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-slate-100 text-slate-300">
+              <Play size={32} className="opacity-50" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors" />
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-md backdrop-blur-sm">
+              <Play size={16} className="text-slate-900 fill-slate-900 ml-1" />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-1 py-4 pr-4 pl-4 sm:pl-0 flex flex-col justify-center">
+          <div className="flex flex-wrap gap-1 mb-2">
+            {tags.slice(0, 5).map((tag, i) => (
+              <span
+                key={i}
+                className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md border ${getTagColor(tag)}`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+          {/* [MODIFIED] 정제된 제목 사용 */}
+          <h3
+            className="font-bold text-lg text-slate-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors"
+            // dangerouslySetInnerHTML 대신 일반 문자열로 렌더링해도 됩니다 (HTML 태그가 없다면)
+            // 하지만 WP 특수문자 처리를 위해 dangerouslySetInnerHTML 사용 유지하되 cleanTitle 적용
+            dangerouslySetInnerHTML={{ __html: cleanTitle }}
+          />
+          <div className="flex items-center gap-3 text-xs text-slate-500 mt-auto">
+            <span className="flex items-center gap-1 font-medium text-slate-700">
+              <Users size={14} /> {item.sermon_meta?.speaker || "담임목사"}
+            </span>
+            <span className="w-px h-3 bg-slate-300"></span>
+            <span className="flex items-center gap-1">
+              <Calendar size={14} /> {formatDate(item.date)}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- 그리드형 뷰 ---
+  return (
+    <div
+      onClick={() => onClick(item)}
+      className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer h-full flex flex-col"
+    >
+      <div className="relative aspect-video bg-slate-200 overflow-hidden">
+        {imgSrc ? (
+          <img
+            src={imgSrc}
+            alt=""
+            onError={handleImgError}
+            className="w-full h-full object-cover transform scale-[1.01] group-hover:scale-105 transition-transform duration-700 ease-out"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-300">
+            <Play size={32} className="mb-2 opacity-50" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+            <Play size={20} className="text-slate-900 fill-slate-900 ml-1" />
+          </div>
+        </div>
+      </div>
+      <div className="p-4 flex flex-col flex-1">
+        <div className="flex flex-wrap gap-1 mb-2">
+          {tags.slice(0, 3).map((tag, i) => (
+            <span
+              key={i}
+              className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md border ${getTagColor(tag)}`}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+        {/* [MODIFIED] 정제된 제목 사용 */}
+        <h3
+          className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors"
+          dangerouslySetInnerHTML={{ __html: cleanTitle }}
+        />
+        <div className="flex items-center justify-between text-xs text-slate-400 mt-auto pt-3">
+          <span className="text-slate-600 font-medium">
+            {item.sermon_meta?.speaker || "담임목사"}
+          </span>
+          <span>{formatDate(item.date)}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 아코디언 컴포넌트
 function Accordion({
   title,
   children,
@@ -142,6 +329,8 @@ function Accordion({
 export default function SermonPage() {
   const [selectedSermon, setSelectedSermon] = useState<Sermon | null>(null);
   const [sermons, setSermons] = useState<Sermon[]>([]);
+
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const [activeTab, setActiveTab] = useState("전체");
   const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
@@ -301,11 +490,6 @@ export default function SermonPage() {
     setSearchTrigger((prev) => prev + 1);
   };
 
-  const formatDate = (dateString: string) => {
-    const d = new Date(dateString);
-    return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
-  };
-
   const getYouTubeId = (url?: string) => {
     if (!url) return null;
     let videoId = "";
@@ -324,8 +508,6 @@ export default function SermonPage() {
 
   const getPageNumbers = () => {
     const pages = [];
-    const maxVisiblePages = 5;
-
     if (totalPages <= 7) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -359,7 +541,6 @@ export default function SermonPage() {
     }
 
     if (isMobileFilterOpen) {
-      // 모바일 필터 열림: 배경색(bg-white) 추가 및 z-index 상향
       return `fixed inset-0 z-[100] overflow-y-auto bg-white p-5 ${desktopClasses}`;
     } else {
       return `hidden ${desktopClasses}`;
@@ -550,7 +731,9 @@ export default function SermonPage() {
                   <h2
                     className="text-2xl md:text-4xl font-bold text-slate-900 mb-6 leading-snug break-keep"
                     dangerouslySetInnerHTML={{
-                      __html: selectedSermon.title.rendered,
+                      __html:
+                        selectedSermon.sermon_meta?.clean_title ||
+                        getCleanTitle(selectedSermon.title.rendered),
                     }}
                   />
                   <div className="flex flex-wrap items-center gap-6 py-6 border-t border-b border-slate-100 text-sm md:text-base text-slate-600">
@@ -594,6 +777,26 @@ export default function SermonPage() {
                     <FilterIcon size={18} /> 검색 필터 열기
                   </button>
                 </div>
+
+                <div className="flex items-center justify-end mb-4 gap-2">
+                  <div className="bg-white p-1 rounded-lg border border-slate-200 flex items-center">
+                    <button
+                      onClick={() => setViewMode("grid")}
+                      className={`p-2 rounded-md transition-all ${viewMode === "grid" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                      aria-label="그리드 보기"
+                    >
+                      <LayoutGrid size={18} />
+                    </button>
+                    <button
+                      onClick={() => setViewMode("list")}
+                      className={`p-2 rounded-md transition-all ${viewMode === "list" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                      aria-label="리스트 보기"
+                    >
+                      <AlignJustify size={18} />
+                    </button>
+                  </div>
+                </div>
+
                 {(selectedBooks.length > 0 ||
                   selectedTopics.length > 0 ||
                   selectedYear) && (
@@ -652,71 +855,21 @@ export default function SermonPage() {
                   </div>
                 ) : (
                   <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {sermons.map((item) => {
-                        const tags = item.sermon_meta?.tags || ["주일예배"];
-                        const youtubeId = getYouTubeId(
-                          item.sermon_meta?.video_url,
-                        );
-                        const thumbUrl = youtubeId
-                          ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-                          : item._embedded?.["wp:featuredmedia"]?.[0]
-                              ?.source_url;
-                        return (
-                          <div
-                            key={item.id}
-                            className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer"
-                            onClick={() => setSelectedSermon(item)}
-                          >
-                            <div className="relative aspect-video bg-slate-200 overflow-hidden">
-                              {thumbUrl ? (
-                                <img
-                                  src={thumbUrl}
-                                  alt=""
-                                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-300">
-                                  <Play size={32} className="mb-2 opacity-50" />
-                                </div>
-                              )}
-                              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors"></div>
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                                  <Play
-                                    size={20}
-                                    className="text-slate-900 fill-slate-900 ml-1"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="p-4">
-                              <div className="flex flex-wrap gap-1 mb-2">
-                                {tags.slice(0, 3).map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md border ${getTagColor(tag)}`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                              </div>
-                              <h3
-                                className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors"
-                                dangerouslySetInnerHTML={{
-                                  __html: item.title.rendered,
-                                }}
-                              />
-                              <div className="flex items-center justify-between text-xs text-slate-400 mt-3">
-                                <span className="text-slate-600 font-medium">
-                                  {item.sermon_meta?.speaker || "담임목사"}
-                                </span>
-                                <span>{formatDate(item.date)}</span>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
+                    <div
+                      className={
+                        viewMode === "grid"
+                          ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                          : "flex flex-col gap-4"
+                      }
+                    >
+                      {sermons.map((item) => (
+                        <SermonCard
+                          key={item.id}
+                          item={item}
+                          viewMode={viewMode}
+                          onClick={setSelectedSermon}
+                        />
+                      ))}
                     </div>
 
                     {!isLoading && totalPages > 1 && (
