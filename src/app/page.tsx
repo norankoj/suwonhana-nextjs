@@ -2,24 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ArrowRight,
-  UserPlus,
-  FileText,
-  BookOpen,
-  Users,
-  ChevronRight,
-  Copy,
-  X,
-  ChevronDown,
-  Loader2,
-  Sprout,
-  MapPin,
-  Clock, // 로딩 아이콘 추가
-} from "lucide-react";
-import { CustomPlayButton } from "@/components/Common";
+import { ArrowRight, ChevronRight, Copy, X, ChevronDown } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
-import { EventBanner } from "@/components/EventBanner";
 import RecentSermons from "@/components/RecentSermons";
 import WelcomeSection from "@/components/WelcomeSection";
 
@@ -53,7 +37,7 @@ export default function MainPage() {
         if (!res.ok) throw new Error("API Network Error");
         const data = await res.json();
 
-        console.log("🔥 워드프레스 데이터:", data);
+        console.log("워드프레스 데이터:", data);
 
         const slideData = data
           .map((item: any) => {
@@ -111,91 +95,89 @@ export default function MainPage() {
   return (
     <>
       <div className="animate-fade-in">
-        {/* 1. 메인 슬라이드 */}
+        {/* 1. 메인 히어로 */}
         <MainHero slidesData={heroSlides} key={heroSlides.length} />
 
-        {/* 2. Welcome Message Section (Button Moved to Left) */}
-        <section className="py-24 bg-white relative overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
-            {/* [왼쪽] 텍스트 콘텐츠 */}
-            <div className="w-full md:w-1/2 z-10 mb-12 md:mb-0">
-              <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-6">
-                수원하나교회에
-                <br />
-                오신 것을
-                <br />
-                환영합니다.
-              </h2>
-              <div className="w-24 h-2 bg-slate-900 mb-8"></div>
-              <p className="text-lg md:text-xl text-slate-700 leading-relaxed mb-6">
-                수원하나교회는 하나님을 즐거워하고
-                <br />그 분의 목적에 헌신하는 공동체입니다.
+        {/* 2. 환영 메시지 (Welcome) - 중앙 정렬 타이포그래피 집중형 */}
+        <section className="py-24 md:py-32 bg-white flex items-center justify-center">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            {/* 거대한 메인 타이틀 */}
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.4] mb-10 tracking-tight break-keep">
+              하나님을 즐거워하고
+              <br />그 분의 목적에 헌신하는 공동체
+            </h2>
+
+            {/* 텍스트 그룹 (본문 + 하단 캡션을 하나로 묶음) */}
+            <div className="mb-10">
+              <p className="text-lg md:text-xl text-slate-600 mb-4 leading-relaxed break-keep max-w-2xl mx-auto">
+                <strong className="text-slate-900 font-extrabold">하나</strong>
+                의 의미는{" "}
+                <strong className="text-slate-900 font-extrabold">
+                  하나님의 나라(Kingdom)
+                </strong>
+                를 건설하고,
+                <br className="hidden sm:block" />
+                형제 자매가
+                <strong className="text-slate-900 font-extrabold">
+                  연합(Unity)
+                </strong>
+                하여 하나가 되어간다는 뜻입니다.
               </p>
-              <p className="text-lg md:text-xl text-slate-700 leading-relaxed mb-8">
-                <span className="font-bold">하나</span>의 의미는{" "}
-                <span className="font-bold">하나님의 나라(Kingdom)</span>를
-                건설하고,
-                <br />
-                형제 자매가 <span className="font-bold">연합(Unity)</span>하여
-                하나가 되어간다는 뜻입니다.
-              </p>
-              <p className="text-sm text-slate-500 mb-10">
+              {/* 버튼 아래에 있던 캡션을 본문 바로 밑으로 이동! */}
+              <p className="text-sm text-slate-400">
                 * 수원하나교회는 기독교 한국 침례회 교단 소속입니다.
               </p>
-              <a
-                href="/about"
-                className="inline-flex items-center px-6 py-3 border-2 border-slate-900 rounded-full text-lg font-bold text-slate-900 hover:bg-slate-900 hover:text-white transition-colors"
-              >
-                교회 소개 더보기 <ChevronRight size={20} className="ml-2" />
-              </a>
             </div>
 
-            {/* [오른쪽] 목사님 이미지 (누끼) */}
-            <div className="w-full md:w-1/2 h-full absolute md:relative bottom-0 right-0 md:right-auto pointer-events-none md:pointer-events-auto flex justify-end items-end z-0">
-              {/* [중요] 아래 src에 실제 목사님 누끼 이미지 경로를 입력해주세요.
-            예: "/images/pastor_removed_bg.png" 
-        */}
-              <img
-                src="/images/pastor_ko.png" // <-- 여기를 수정하세요!
-                alt="고목사님"
-                className="w-auto h-[80%] md:h-auto max-h-[600px] object-contain object-bottom opacity-20 md:opacity-100"
-              />
+            {/* 버튼 영역 (가장 마지막에 단독으로 배치하여 시선 집중) */}
+            <div className="flex justify-center">
+              <a
+                href="/intro/vision"
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/20"
+              >
+                교회 소개 더보기
+                <ChevronRight
+                  size={18}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </a>
             </div>
           </div>
         </section>
 
-        {/* 3. Newcomer Guide (새가족 안내) */}
+        {/* 3. 새가족 안내 (bg-slate-50으로 자연스러운 구분) */}
         <WelcomeSection />
 
-        {/* 4. 최근 설교 */}
+        {/* 4. 이벤트 배너 (필요시 활성화, bg-white 영역) */}
+        {/* <EventBanner slidesData={heroSlides} /> */}
+
+        {/* 5. 최근 설교 (bg-white) */}
         <RecentSermons />
 
-        {/* 5. 기부금 영수증 */}
-        <section className="py-24" style={{ backgroundColor: "#f8f8f8" }}>
-          <div className="max-w-4xl mx-auto px-6 text-center">
-            <h3 className="text-3xl font-bold text-slate-900 mb-6">
-              기부금 영수증
-            </h3>
-            <p className="text-slate-600 text-lg mb-10 leading-relaxed">
-              연말정산 및 세액공제를 위한 기부금 영수증을 온라인으로 간편하게
-              신청하고 발급받으실 수 있습니다.
-              <br />
-              <span className="text-sm text-slate-400 mt-2 block">
-                * 신청 후 발급까지 약 일주일정도 소요될 수 있습니다.
-              </span>
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        {/* 6. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
+        <section className="py-16 bg-slate-50 border-t border-slate-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">
+                기부금 영수증 및 헌금 안내
+              </h2>
+              <p className="text-slate-500 text-sm md:text-base">
+                연말정산용 영수증 신청 및 온라인 헌금 계좌를 확인하실 수
+                있습니다.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
               <a
                 href={RECEIPT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-full font-bold text-sm hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors"
               >
                 발급 신청하기 <ArrowRight size={16} />
               </a>
               <button
                 onClick={() => setShowAccountInfo(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-8 py-4 rounded-full font-bold text-sm hover:bg-slate-50 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
               >
                 헌금 계좌 안내 <ChevronDown size={16} />
               </button>
