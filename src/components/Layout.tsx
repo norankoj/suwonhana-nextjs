@@ -16,7 +16,7 @@ const navItems = [
       { name: "비전", path: "/intro/vision" },
       { name: "핵심가치", path: "/intro/core-values" },
       { name: "교회연혁", path: "/intro/history" },
-      { name: "담임목사 소개", path: "/intro/pastor" },
+      // { name: "담임목사 소개", path: "/intro/pastor" },
       { name: "섬기는 이들", path: "/intro/staff" },
       { name: "예배안내", path: "/intro/worship" },
       { name: "오시는 길", path: "/intro/location" },

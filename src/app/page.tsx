@@ -102,7 +102,7 @@ export default function MainPage() {
         <section className="py-24 md:py-32 bg-white flex items-center justify-center">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* 거대한 메인 타이틀 */}
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.4] mb-10 tracking-tight break-keep">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.4] mb-10 tracking-normal break-keep">
               하나님을 즐거워하고
               <br />그 분의 목적에 헌신하는 공동체
             </h2>
