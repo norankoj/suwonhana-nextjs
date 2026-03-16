@@ -1,162 +1,222 @@
-"use client";
+import React from "react";
+import CoreValueAccordion from "./CoreValueAccordion";
 
-import React, { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { coreValuePart1, coreValuePart2 } from "@/data/data";
+async function getCoreValuesData() {
+  const query = `
+    query GetCoreValuesPage {
+      page(id: "핵심가치", idType: URI) {
+        coreValueFields {
+          valueStatement 
+          mainTitle
+          subDesc
+          part1Title
+          part2Title
+          value1Title
+          value1Sub
+          value1Desc
+          value2Title
+          value2Sub
+          value2Desc
+          value3Title
+          value3Sub
+          value3Desc
+          value4Title
+          value4Sub
+          value4Desc
+          value5Title
+          value5Sub
+          value5Desc
+          value6Title
+          value6Sub
+          value6Desc
+          value7Title
+          value7Sub
+          value7Desc
+          value8Title
+          value8Sub
+          value8Desc
+          value9Title
+          value9Sub
+          value9Desc
+          value10Title
+          value10Sub
+          value10Desc
+          value11Title
+          value11Sub
+          value11Desc
+          value12Title
+          value12Sub
+          value12Desc
+        }
+      }
+    }
+  `;
 
-// --- 아코디언 개별 컴포넌트 ---
-const CoreValueAccordion = ({ item, index }: { item: any; index: number }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  try {
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+        next: { revalidate: 60 },
+      },
+    );
 
-  return (
-    <div className="border-b border-slate-200">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between py-8 text-left group transition-colors"
-      >
-        <div className="flex items-center gap-6 md:gap-10">
-          {/* 번호 타이포그래피 */}
-          <span
-            className={`text-3xl md:text-4xl font-light font-serif transition-colors duration-300 ${
-              isOpen
-                ? "text-blue-600"
-                : "text-slate-300 group-hover:text-slate-400"
-            }`}
-          >
-            {index < 10 ? `0${index}` : index}.
-          </span>
+    if (!res.ok) throw new Error("Network response was not ok");
+    const json = await res.json();
+    return json.data?.page;
+  } catch (error) {
+    console.error("WPGraphQL Fetch Error:", error);
+    return null;
+  }
+}
 
-          {/* 타이틀 및 서브타이틀 */}
-          <div>
-            <h3
-              className={`text-xl md:text-2xl font-bold transition-colors duration-300 ${
-                isOpen
-                  ? "text-blue-600"
-                  : "text-slate-900 group-hover:text-blue-600"
-              }`}
-            >
-              {item.title}
-            </h3>
-            <p className="text-sm md:text-base text-slate-500 font-medium mt-1">
-              {item.sub}
-            </p>
-          </div>
-        </div>
+export default async function CoreValuesPage() {
+  const pageData = await getCoreValuesData();
 
-        {/* 열기/닫기 아이콘 */}
-        <div className="shrink-0 ml-4">
-          {isOpen ? (
-            <ChevronUp className="text-blue-600" size={24} />
-          ) : (
-            <ChevronDown
-              className="text-slate-300 group-hover:text-blue-600 transition-colors"
-              size={24}
-            />
-          )}
-        </div>
-      </button>
-
-      {/* 펼쳐지는 본문 영역 */}
-      <div
-        className={`grid transition-all duration-500 ease-in-out ${
-          isOpen
-            ? "grid-rows-[1fr] opacity-100 pb-8"
-            : "grid-rows-[0fr] opacity-0"
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="bg-slate-50 rounded-xl p-6 md:p-10 ml-0 md:ml-[5.5rem]">
-            {/* 🔥 글씨 크기(text-sm md:text-base) 및 문단 간격(space-y-8) 축소 🔥 */}
-            <div className="text-sm md:text-base text-slate-700 leading-loose break-keep space-y-8">
-              {/* 1. 엔터 두 번(\n\n)을 기준으로 큰 문단 블록을 나눕니다 */}
-              {item.desc.split(/\n\s*\n/).map((block: string, bIdx: number) => {
-                if (!block.trim()) return null;
-
-                // 2. 블록 안에서 엔터 한 번(\n)을 기준으로 줄을 나눕니다
-                const lines = block
-                  .split("\n")
-                  .filter((line: string) => line.trim() !== "");
-                if (lines.length === 0) return null;
-
-                const titleLine = lines[0];
-                const descLines = lines.slice(1);
-
-                return (
-                  <div key={bIdx} className="space-y-2">
-                    <strong className="block text-slate-900 font-bold text-base md:text-md leading-snug">
-                      {titleLine.trim()}
-                    </strong>
-
-                    {/* 나머지 부연 설명들 */}
-                    {descLines.map((line: string, lIdx: number) => (
-                      <p key={lIdx} className="text-slate-600 text-base">
-                        {line.trim()}
-                      </p>
-                    ))}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+  if (!pageData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-slate-500">
+        워드프레스 데이터를 불러올 수 없습니다. GraphQL 설정을 확인해 주세요.
       </div>
-    </div>
-  );
-};
+    );
+  }
 
-export default function CoreValuesPage() {
+  const fields = pageData.coreValueFields || {};
+
+  // 타이틀 기본값 세팅
+  const valueStatementText = fields.valueStatement || "Value Statement"; // 워드프레스 데이터 연동
+  const mainTitle = fields.mainTitle || "핵심가치들";
+  const subDesc =
+    fields.subDesc ||
+    "수원하나교회는 다음의 12가지 가치들을 중요하게 여깁니다.";
+  const part1Title = fields.part1Title || "Part 1. 6가지 핵심가치";
+  const part2Title = fields.part2Title || "Part 2. 6가지 핵심가치";
+
+  // 워드프레스에서 받아온 낱개 데이터들을 Part 1(1~6)과 Part 2(7~12) 배열로 재구성
+  const coreValuePart1 = [
+    {
+      title: fields.value1Title,
+      sub: fields.value1Sub,
+      desc: fields.value1Desc,
+    },
+    {
+      title: fields.value2Title,
+      sub: fields.value2Sub,
+      desc: fields.value2Desc,
+    },
+    {
+      title: fields.value3Title,
+      sub: fields.value3Sub,
+      desc: fields.value3Desc,
+    },
+    {
+      title: fields.value4Title,
+      sub: fields.value4Sub,
+      desc: fields.value4Desc,
+    },
+    {
+      title: fields.value5Title,
+      sub: fields.value5Sub,
+      desc: fields.value5Desc,
+    },
+    {
+      title: fields.value6Title,
+      sub: fields.value6Sub,
+      desc: fields.value6Desc,
+    },
+  ].filter((item) => item.title); // 데이터가 있는 것만 남김
+
+  const coreValuePart2 = [
+    {
+      title: fields.value7Title,
+      sub: fields.value7Sub,
+      desc: fields.value7Desc,
+    },
+    {
+      title: fields.value8Title,
+      sub: fields.value8Sub,
+      desc: fields.value8Desc,
+    },
+    {
+      title: fields.value9Title,
+      sub: fields.value9Sub,
+      desc: fields.value9Desc,
+    },
+    {
+      title: fields.value10Title,
+      sub: fields.value10Sub,
+      desc: fields.value10Desc,
+    },
+    {
+      title: fields.value11Title,
+      sub: fields.value11Sub,
+      desc: fields.value11Desc,
+    },
+    {
+      title: fields.value12Title,
+      sub: fields.value12Sub,
+      desc: fields.value12Desc,
+    },
+  ].filter((item) => item.title);
+
   return (
     <div className="bg-white pb-32">
       {/* 1. 페이지 헤더 */}
       <section className="pt-20 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
         <p className="text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-6">
-          Value Statement
+          {valueStatementText}
         </p>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.45] tracking-normal mb-8">
-          핵심가치들
+          {mainTitle}
         </h1>
-        <p className="text-lg md:text-xl text-slate-600 font-medium break-keep">
-          수원하나교회는 다음의 12가지 가치들을 중요하게 여깁니다.
+        <p className="text-lg md:text-xl text-slate-600 font-medium break-keep whitespace-pre-wrap">
+          {subDesc}
         </p>
       </section>
 
       {/* 2. 핵심가치 아코디언 리스트 */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         {/* Part 1 */}
-        <div className="mb-20">
-          <div className="flex items-center gap-4 mb-8">
-            <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase">
-              Part 1. 6가지 핵심가치
-            </h2>
-            <div className="h-px flex-1 bg-slate-200"></div>
-          </div>
+        {coreValuePart1.length > 0 && (
+          <div className="mb-20">
+            <div className="flex items-center gap-4 mb-8">
+              <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase">
+                {part1Title}
+              </h2>
+              <div className="h-px flex-1 bg-slate-200"></div>
+            </div>
 
-          <div className="border-t border-slate-900">
-            {coreValuePart1.map((item: any, idx: number) => (
-              <CoreValueAccordion key={idx} item={item} index={idx + 1} />
-            ))}
+            <div className="border-t border-slate-900">
+              {coreValuePart1.map((item, idx) => (
+                <CoreValueAccordion key={idx} item={item} index={idx + 1} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Part 2 */}
-        <div>
-          <div className="flex items-center gap-4 mb-8">
-            <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase">
-              Part 2. 6가지 핵심가치
-            </h2>
-            <div className="h-px flex-1 bg-slate-200"></div>
-          </div>
+        {coreValuePart2.length > 0 && (
+          <div>
+            <div className="flex items-center gap-4 mb-8">
+              <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase">
+                {part2Title}
+              </h2>
+              <div className="h-px flex-1 bg-slate-200"></div>
+            </div>
 
-          <div className="border-t border-slate-900">
-            {coreValuePart2.map((item: any, idx: number) => (
-              <CoreValueAccordion
-                key={idx}
-                item={item}
-                index={coreValuePart1.length + idx + 1}
-              />
-            ))}
+            <div className="border-t border-slate-900">
+              {coreValuePart2.map((item, idx) => (
+                <CoreValueAccordion
+                  key={idx}
+                  item={item}
+                  index={coreValuePart1.length + idx + 1}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </section>
     </div>
   );
