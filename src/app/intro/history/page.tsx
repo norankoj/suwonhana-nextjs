@@ -1,55 +1,59 @@
-"use client";
-
-import React, { useEffect, useRef, useState } from "react";
-import { historyData } from "@/data/data";
+import React from "react";
 import { ArrowUp } from "lucide-react";
+import ScrollReveal from "./ScrollReveal";
+import BackToTopButton from "./BackToTopButton";
 
-// --- 스크롤 애니메이션 컴포넌트 ---
-const ScrollReveal = ({
-  children,
-  index,
-}: {
-  children: React.ReactNode;
-  index: number;
-}) => {
-  const [isVisible, setIsVisible] = useState(index < 2);
-  const domRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (index < 2) {
-      const timer = setTimeout(() => setIsVisible(true), 100);
-      return () => clearTimeout(timer);
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entries[0].target);
+// 1. WPGraphQL 통신: 연혁 페이지의 JSON 텍스트 가져오기
+async function getHistoryData() {
+  const query = `
+    query GetHistoryPage {
+      page(id: "65", idType: DATABASE_ID) { # 워드프레스 슬러그 맞게 수정 필요
+        historyFields {
+          historyJsonData
         }
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
-    );
-
-    if (domRef.current) {
-      observer.observe(domRef.current);
+      }
     }
-    return () => observer.disconnect();
-  }, [index]);
+  `;
 
-  return (
-    <div
-      ref={domRef}
-      className={`transition-all duration-1000 ease-out ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-      }`}
-    >
-      {children}
-    </div>
-  );
-};
+  try {
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+        next: { revalidate: 60 },
+      },
+    );
+    if (!res.ok) throw new Error("Network response was not ok");
+    const json = await res.json();
+    return json.data?.page;
+  } catch (error) {
+    console.error("WPGraphQL Fetch Error:", error);
+    return null;
+  }
+}
 
-export default function HistoryPage() {
+export default async function HistoryPage() {
+  const pageData = await getHistoryData();
+
+  // 2. 워드프레스에서 받아온 JSON 문자열 파싱 (에러 처리 필수!)
+  let parsedHistoryData = [];
+  const rawJsonString = pageData?.historyFields?.historyJsonData;
+  console.log("==== WP 원본 데이터 ====", rawJsonString);
+  console.log("==== pageData ====", pageData);
+  if (rawJsonString) {
+    try {
+      // 워드프레스에서 큰따옴표, 작은따옴표 등의 오타가 있을 경우를 대비
+      // (만약 파싱 에러가 나면 이 catch 블록에서 잡힙니다)
+      parsedHistoryData = JSON.parse(rawJsonString);
+    } catch (e) {
+      console.error("JSON Parsing Error! 워드프레스 입력값을 확인하세요.", e);
+      parsedHistoryData = []; // 에러 시 빈 배열 반환하여 화면 렌더링 에러 방지
+    }
+  }
+
+  // 날짜 포맷팅 함수
   const formatPosterDate = (dateStr: string) => {
     if (!dateStr) return "";
     if (dateStr.includes(".")) {
@@ -129,64 +133,60 @@ export default function HistoryPage() {
             </div>
           </div>
 
-          {/* 타임라인 리스트 */}
           <div className="flex-1 border-t border-white/20 pt-4">
-            {historyData?.map((item: any, idx: number) => (
-              <ScrollReveal key={item.year} index={idx}>
-                <div className="flex flex-col sm:flex-row py-10 md:py-14 border-b border-white/10 gap-4 sm:gap-10 px-2 md:px-0">
-                  {/* 연도 */}
-                  <div className="text-3xl md:text-4xl font-light font-serif text-white shrink-0 sm:w-24 tracking-wider">
-                    {item.year}
-                  </div>
+            {parsedHistoryData.length > 0 ? (
+              parsedHistoryData.map((item: any, idx: number) => (
+                <ScrollReveal key={item.year} index={idx}>
+                  <div className="flex flex-col sm:flex-row py-10 md:py-14 border-b border-white/10 gap-4 sm:gap-10 px-2 md:px-0">
+                    <div className="text-3xl md:text-4xl font-light font-serif text-white shrink-0 sm:w-24 tracking-wider">
+                      {item.year}
+                    </div>
 
-                  <div className="flex-1 space-y-6 mt-1 sm:mt-1.5">
-                    {item.events.map((event: any, eIdx: number) => {
-                      const formattedDate = formatPosterDate(event.date);
-
-                      return (
-                        <div
-                          key={eIdx}
-                          className="text-white/80 text-sm md:text-base leading-relaxed break-keep"
-                        >
-                          {formattedDate && (
-                            <span className="text-white/60 mr-2 font-medium">
-                              {formattedDate}
+                    <div className="flex-1 space-y-6 mt-1 sm:mt-1.5">
+                      {item.events.map((event: any, eIdx: number) => {
+                        const formattedDate = formatPosterDate(event.date);
+                        return (
+                          <div
+                            key={eIdx}
+                            className="text-white/80 text-sm md:text-base leading-relaxed break-keep"
+                          >
+                            {formattedDate && (
+                              <span className="text-white/60 mr-2 font-medium">
+                                {formattedDate}
+                              </span>
+                            )}
+                            <span>
+                              {event.content
+                                .split("\n")
+                                .map((line: string, lIdx: number) => (
+                                  <React.Fragment key={lIdx}>
+                                    {line}
+                                    {lIdx !==
+                                      event.content.split("\n").length - 1 && (
+                                      <br />
+                                    )}
+                                  </React.Fragment>
+                                ))}
                             </span>
-                          )}
-                          <span>
-                            {event.content
-                              .split("\n")
-                              .map((line: string, lIdx: number) => (
-                                <React.Fragment key={lIdx}>
-                                  {line}
-                                  {lIdx !==
-                                    event.content.split("\n").length - 1 && (
-                                    <br />
-                                  )}
-                                </React.Fragment>
-                              ))}
-                          </span>
-                        </div>
-                      );
-                    })}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              </ScrollReveal>
-            ))}
+                </ScrollReveal>
+              ))
+            ) : (
+              // 데이터가 없거나 JSON 파싱 에러 났을 때 보여줄 화면
+              <div className="py-20 text-white/50 text-center">
+                연혁 데이터가 없거나 텍스트 형식이 잘못되었습니다.
+                <br />
+                워드프레스 관리자 페이지의 JSON 괄호 및 쉼표를 확인해 주세요.
+              </div>
+            )}
 
             {/* 맨 아래 오른쪽 끝 위로 가기 버튼 */}
             <div className="pt-24 pb-10 flex justify-end">
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="group flex flex-col items-center gap-3 text-white/50 hover:text-white transition-all duration-300 mr-2 md:mr-6"
-              >
-                <div className="p-4 rounded-full border border-white/20 group-hover:border-white/60 group-hover:-translate-y-2 transition-all duration-300 bg-white/5 backdrop-blur-sm shadow-sm cursor-pointer">
-                  <ArrowUp size={24} strokeWidth={1.5} />
-                </div>
-                <span className="text-xs font-bold tracking-[0.2em] uppercase">
-                  Back to Top
-                </span>
-              </button>
+              <BackToTopButton />
             </div>
           </div>
         </div>
