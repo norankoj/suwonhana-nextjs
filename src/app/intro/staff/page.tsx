@@ -25,18 +25,18 @@ async function getPastorAndStaffData() {
       }
       
       # 2. Staff 사역자 리스트 데이터 (최대 50명, 메뉴 순서(Menu Order) 오름차순 정렬)
-     staffs(first: 50, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
+      staffs(first: 50, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
         nodes {
-          title # 사역자 이름
-          content # 본문 내용 (여기에 적힌 미디어 기획, 제작 등을 가져옵니다)
+          title
+          content 
           featuredImage { 
             node {
               sourceUrl
             }
           }
           staffFields {
-            teamCategory # ACF에서 만든 팀 분류 (ministry, admin, media)
-            staffRole    # ACF에서 만든 직분/역할
+            teamCategory
+            staffRole
           }
         }
       }
@@ -88,13 +88,13 @@ const StaffCard = ({ staff }: { staff: any }) => (
     </div>
   </div>
 );
+
 // ==========================================
 // 3. 메인 페이지 컴포넌트
 // ==========================================
 export default async function PastorPage() {
   const wpData = await getPastorAndStaffData();
 
-  // --- [데이터 1] 담임목사님 데이터 파싱 ---
   const fields = wpData?.page?.servingFields || {};
   const pastorName = fields.pastorName || "고성준";
   const pastorBio = fields.pastorBio || "";
@@ -116,7 +116,6 @@ export default async function PastorPage() {
     }
   }
 
-  // --- [데이터 2] Staff 사역자 리스트 파싱 및 팀별 분류 ---
   const rawStaffs = wpData?.staffs?.nodes || [];
 
   const staffTeams = {
@@ -128,17 +127,14 @@ export default async function PastorPage() {
   rawStaffs.forEach((staff: any) => {
     const roleFallback = staff.staffFields?.staffRole || "간사";
 
-    // 1. 본문(content)에서 HTML 태그(<p> 등)를 싹 지우고 순수 텍스트만 남깁니다.
     let rawDesc = staff.content
       ? staff.content.replace(/<[^>]+>/g, "").trim()
       : "";
 
-    // 2. 만약 "미디어팀 | 미디어 (기획, 제작)" 처럼 '|' 기호가 있다면 뒤쪽 텍스트만 가져옵니다.
     if (rawDesc.includes("|")) {
       rawDesc = rawDesc.split("|")[1].trim();
     }
 
-    // 3. 워드프레스가 변환한 특수기호(&amp; 등)를 원래 기호(&)로 되돌려줍니다 (디코딩)
     rawDesc = rawDesc
       .replace(/&amp;/g, "&")
       .replace(/&#038;/g, "&")
@@ -170,11 +166,11 @@ export default async function PastorPage() {
   });
 
   return (
-    <div className="bg-white pb-32 font-sans selection:bg-blue-50 selection:text-blue-900">
+    <div className="bg-white pb-20 font-sans selection:bg-blue-50 selection:text-blue-900">
       {/* =========================================
           [섹션 1] 통합 페이지 헤더
           ========================================= */}
-      <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center border-b border-slate-100 mb-20 md:mb-24">
+      <section className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center border-b border-slate-100 mb-16 lg:mb-20">
         <p className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-6">
           Serving People
         </p>
@@ -186,7 +182,7 @@ export default async function PastorPage() {
       {/* =========================================
           [섹션 2] 담임목사 프로필
           ========================================= */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-32">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 lg:mb-24">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
           <div className="w-full lg:w-[45%] shrink-0">
             <div className="aspect-[4/5] lg:aspect-[3.5/4.5] w-full bg-[#EAEBEF] rounded-[2rem] overflow-hidden shadow-sm relative">
@@ -214,7 +210,7 @@ export default async function PastorPage() {
                 <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-8 uppercase tracking-wider">
                   학력 및 약력
                 </h3>
-                <ul className="space-y-4 text-sm md:text-[15px] text-slate-600 leading-relaxed break-keep">
+                <ul className="space-y-4 text-base md:text-[16px] text-slate-600 leading-relaxed break-keep">
                   {pastorHistoryArray.map((history: string, idx: number) => {
                     const isLast = idx === pastorHistoryArray.length - 1;
                     return (
@@ -240,9 +236,9 @@ export default async function PastorPage() {
       {/* =========================================
           [섹션 3] 저서 소개 
           ========================================= */}
-      <section className="bg-[#F8F9FA] py-24 border-t border-b border-slate-100">
+      <section className="bg-[#F8F9FA] py-16 md:py-20 border-t border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-16 px-1">
+          <div className="flex items-center justify-between mb-10 lg:mb-12 px-1">
             <h3 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
               저서
             </h3>
@@ -277,7 +273,7 @@ export default async function PastorPage() {
                   <h4 className="text-[15px] font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1 px-1">
                     {book.title}
                   </h4>
-                  <p className="text-[12px] text-slate-500 leading-snug line-clamp-2 break-keep px-1">
+                  <p className="text-xs md:text-sm text-slate-500 leading-snug line-clamp-2 break-keep px-1">
                     {book.desc}
                   </p>
                 </a>
@@ -291,13 +287,15 @@ export default async function PastorPage() {
         </div>
       </section>
 
-      {/* [섹션 4] 섬기는 이들 (워드프레스 데이터 렌더링) */}
-      <section className="py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* =========================================
+          [섹션 4] 섬기는 이들
+          ========================================= */}
+      <section className="py-16 md:py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* 사역팀 */}
         {staffTeams.ministry.length > 0 && (
-          <div className="mb-24">
-            <div className="mb-12 text-center">
-              <h4 className="text-xl md:text-2xl font-bold text-slate-900 flex items-center justify-center gap-2">
+          <div className="mb-16 md:mb-20">
+            <div className="mb-10 text-center">
+              <h4 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center justify-center gap-2">
                 사역팀{" "}
                 <span className="text-sm font-light text-slate-400 uppercase tracking-widest">
                   Ministry Team
@@ -314,9 +312,9 @@ export default async function PastorPage() {
 
         {/* 행정팀 */}
         {staffTeams.administration.length > 0 && (
-          <div className="mb-24">
-            <div className="mb-12 text-center">
-              <h4 className="text-xl md:text-2xl font-bold text-slate-900 flex items-center justify-center gap-2">
+          <div className="mb-16 md:mb-20">
+            <div className="mb-10 text-center">
+              <h4 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center justify-center gap-2">
                 행정팀{" "}
                 <span className="text-sm font-light text-slate-400 uppercase tracking-widest">
                   Administration Team
@@ -333,9 +331,9 @@ export default async function PastorPage() {
 
         {/* 미디어팀 */}
         {staffTeams.media.length > 0 && (
-          <div className="mb-24">
-            <div className="mb-12 text-center">
-              <h4 className="text-xl md:text-2xl font-bold text-slate-900 flex items-center justify-center gap-2">
+          <div className="mb-16 md:mb-20">
+            <div className="mb-10 text-center">
+              <h4 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center justify-center gap-2">
                 미디어팀{" "}
                 <span className="text-sm font-light text-slate-400 uppercase tracking-widest">
                   Media Team
@@ -350,7 +348,7 @@ export default async function PastorPage() {
           </div>
         )}
 
-        <div className="pt-10 flex justify-end">
+        <div className="pt-8 flex justify-end">
           <BackToTopButton />
         </div>
       </section>
