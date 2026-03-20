@@ -677,6 +677,7 @@ export const groups = [
       {
         id: "joycorner",
         name: "조이코너",
+        age: "5-7세",
         eng: "JOY CORNER",
         sub: `예수님의 기쁨 ♥ Joy Corner
         5-7세(부모와 함께), 주일 오후 1시, 교회 2층 본당`,
