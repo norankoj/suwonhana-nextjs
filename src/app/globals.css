@@ -1,4 +1,4 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
 
 @tailwind base;
 @tailwind components;
@@ -6,63 +6,51 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground: #0f172a;
 }
 
 @layer base {
   html {
-    /* 폰트 적용 */
-    font-family: "Pretendard", sans-serif;
+    font-family: "Pretendard Variable", "Pretendard", sans-serif;
+    scroll-behavior: smooth;
   }
 
   body {
-    /* 기본 글자색 지정 (위에서 만든 변수 사용) */
     @apply text-dark-medium bg-white;
   }
 
-  /* --- 폰트 사이즈 통합 관리 --- */
-
-  /* H1: 메인 타이틀 (예: 하나님을 즐거워하고...) */
+  /* Fluid 타이포그래피 기반 헤딩 */
   h1 {
-    @apply text-4xl md:text-6xl font-bold text-dark tracking-tight leading-tight;
+    @apply text-fluid-2xl font-extrabold text-dark tracking-tight leading-tight;
   }
 
-  /* H2: 섹션 제목 (예: 환영합니다, 예배안내) */
   h2 {
-    @apply text-3xl md:text-4xl font-bold text-dark mb-4;
+    @apply text-fluid-xl font-bold text-dark mb-4;
   }
 
-  /* H3: 카드 제목 (예: 주일 1부 예배, 공지사항 제목) */
   h3 {
-    @apply text-xl md:text-2xl font-bold text-dark mb-2;
+    @apply text-fluid-lg font-bold text-dark mb-2;
   }
 
-  /* P: 본문 내용 */
   p {
-    @apply text-base md:text-lg text-dark-medium leading-relaxed;
+    @apply text-fluid-base text-dark-medium leading-relaxed;
   }
 
-  /* 작은 설명 글씨 */
   small {
-    @apply text-sm text-dark-light;
+    @apply text-fluid-xs text-dark-light;
   }
 }
 
-/* 유틸리티 클래스 (자주 쓰는 버튼 모양 등) */
 @layer components {
   .btn-primary {
-    @apply bg-brand text-white px-6 py-3 rounded-full font-bold hover:bg-brand-dark transition-all shadow-md hover:shadow-lg;
+    @apply bg-slate-900 text-white px-6 py-3 rounded-full font-bold hover:bg-slate-800 transition-all shadow-sm hover:shadow-md;
   }
 
   .btn-outline {
-    @apply border border-brand text-brand px-6 py-3 rounded-full font-bold hover:bg-brand hover:text-white transition-all;
+    @apply border border-slate-900 text-slate-900 px-6 py-3 rounded-full font-bold hover:bg-slate-900 hover:text-white transition-all;
+  }
+
+  .btn-pill {
+    @apply px-6 py-3 rounded-pill font-bold transition-all duration-300;
   }
 }
-

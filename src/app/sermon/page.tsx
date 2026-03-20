@@ -287,6 +287,7 @@ export default function SermonPage() {
   const [selectedYear, setSelectedYear] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [searchTrigger, setSearchTrigger] = useState(0);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
@@ -344,10 +345,18 @@ export default function SermonPage() {
     fetchAllTaxonomies();
   }, []);
 
+  // 검색어 디바운스 (300ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   useEffect(() => {
     setCurrentPage(1);
     fetchSermons(1);
-  }, [activeTab, selectedBooks, selectedTopics, selectedYear, searchTrigger]);
+  }, [activeTab, selectedBooks, selectedTopics, selectedYear, searchTrigger, debouncedSearch]);
 
   useEffect(() => {
     fetchSermons(currentPage);
@@ -379,7 +388,7 @@ export default function SermonPage() {
         if (uniqueIds) url += `&risen_multimedia_category=${uniqueIds}`;
       }
 
-      if (searchTerm) url += `&search=${encodeURIComponent(searchTerm)}`;
+      if (debouncedSearch) url += `&search=${encodeURIComponent(debouncedSearch)}`;
       if (selectedYear) {
         url += `&after=${selectedYear}-01-01T00:00:00`;
         url += `&before=${selectedYear}-12-31T23:59:59`;
@@ -387,6 +396,11 @@ export default function SermonPage() {
 
       const res = await fetch(url);
       if (!res.ok) {
+        if (res.status === 400) {
+          setSermons([]);
+          setTotalPages(0);
+          return;
+        }
         setSermons([]);
         setTotalPages(0);
         return;
@@ -492,7 +506,7 @@ export default function SermonPage() {
         desc="수원하나교회의 주일예배 및 특별 집회 설교를 다시 보실 수 있습니다."
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           <aside className={getAsideClassName()}>
             {selectedSermon ? (
@@ -790,6 +804,20 @@ export default function SermonPage() {
                     <p className="text-slate-500 font-bold text-base animate-pulse">
                       말씀을 불러오고 있습니다...
                     </p>
+                  </div>
+                ) : sermons.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-32 min-h-[400px] text-center">
+                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+                      <BookOpen size={28} className="text-slate-300" />
+                    </div>
+                    <p className="text-slate-900 font-bold text-lg mb-2">검색 결과가 없습니다</p>
+                    <p className="text-slate-400 text-sm mb-6">다른 검색어나 필터를 시도해보세요.</p>
+                    <button
+                      onClick={resetFilters}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-full text-sm font-bold hover:bg-slate-800 transition-colors"
+                    >
+                      <RotateCcw size={14} /> 필터 초기화
+                    </button>
                   </div>
                 ) : (
                   <>

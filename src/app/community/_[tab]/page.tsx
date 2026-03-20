@@ -120,7 +120,6 @@ export default function CommunityContentPage() {
                   {
                     src: selectedGroup.img,
                     altText: selectedGroup.name,
-                    key: 1,
                   },
                 ]}
                 // SimpleCarousel 내부 img에 className="w-full h-full object-cover"가 적용되어야 베스트입니다.

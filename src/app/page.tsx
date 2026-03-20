@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowRight, ChevronRight, Copy, X, ChevronDown } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
 import RecentSermons from "@/components/RecentSermons";
@@ -20,11 +19,10 @@ const RECEIPT_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSfD5f0YpO6Y1b9Z6U6Yz4k3n8FQ1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1ZQ/viewform";
 
 export default function MainPage() {
-  const router = useRouter();
   const [showAccountInfo, setShowAccountInfo] = useState(false);
 
-  // [상태 관리] 초기값을 빈 배열로 둠
-  const [heroSlides, setHeroSlides] = useState<MainHeroData[]>([]);
+  // null = 로딩 중, [] = 데이터 없음, 배열 = 데이터 있음
+  const [heroSlides, setHeroSlides] = useState<MainHeroData[] | null>(null);
   // =================================================================
   // [API 연동] 워드프레스에서 슬라이드 이미지 가져오기
   // =================================================================
@@ -37,8 +35,6 @@ export default function MainPage() {
 
         if (!res.ok) throw new Error("API Network Error");
         const data = await res.json();
-
-        console.log("워드프레스 데이터:", data);
 
         const slideData = data
           .map((item: WPSlide) => {
@@ -77,27 +73,22 @@ export default function MainPage() {
           })
           .filter((item: MainHeroData | null): item is MainHeroData => item !== null);
 
-        if (slideData.length > 0) {
-          setHeroSlides(slideData);
-        }
+        // 데이터가 있으면 설정, 없으면 빈 배열(기본 슬라이드 표시)
+        setHeroSlides(slideData.length > 0 ? slideData : []);
       } catch (error) {
         console.error("슬라이드 로딩 실패:", error);
-      } finally {
-        //
+        setHeroSlides([]); // 에러 시 기본 슬라이드 표시
       }
     };
 
     fetchSlides();
   }, []);
 
-  const handleNavClick = (path: string) => {
-    router.push(path);
-  };
   return (
     <>
       <div className="animate-fade-in">
-        {/* 1. 메인 히어로 */}
-        <MainHero slidesData={heroSlides} key={heroSlides.length} />
+        {/* 1. 메인 히어로 — null이면 skeleton, 배열이면 실제 데이터 */}
+        <MainHero slidesData={heroSlides} key={heroSlides?.length ?? "loading"} />
 
         {/* 2. 환영 메시지 (Welcome) - 중앙 정렬 타이포그래피 집중형 */}
         <section className="py-24 md:py-32 bg-white flex items-center justify-center">
@@ -157,7 +148,7 @@ export default function MainPage() {
 
         {/* 6. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
         <section className="py-16 bg-slate-50 border-t border-slate-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
               <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">
                 기부금 영수증 및 헌금 안내

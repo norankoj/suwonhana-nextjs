@@ -5,10 +5,13 @@ import { useParams, useRouter } from "next/navigation";
 import {
   MapPin,
   ArrowRight,
-  BookOpen,
   Quote,
   CalendarCheck,
   Info,
+  Heart,
+  BookOpen,
+  Lightbulb,
+  Users,
 } from "lucide-react";
 
 export default function AppendagesContentPage() {
@@ -33,15 +36,14 @@ export default function AppendagesContentPage() {
             </h2>
           </div>
 
-          {/* 2. 사명 및 목표 (박스형) */}
+          {/* 2. 사명 및 목표 */}
           <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 relative overflow-hidden">
-            {/* 배경 장식 */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl -z-10 opacity-60 transform translate-x-1/2 -translate-y-1/2"></div>
 
             <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-8">
               <Quote size={40} className="text-blue-200 fill-blue-50" />
 
-              <h3 className="text-xl md:text-xl font-serif font-bold text-slate-800 leading-relaxed">
+              <h3 className="text-xl font-serif font-bold text-slate-800 leading-relaxed">
                 "평강의 하나님이 친히 너희를 온전히 거룩하게 하시고 또 너희의 온
                 영과 혼과 몸이 우리 주 예수 그리스도께서 강림하실 때에 흠 없게
                 보전되기를 원하노라"
@@ -64,7 +66,6 @@ export default function AppendagesContentPage() {
                 기도하고 축복합니다.
               </p>
 
-              {/* 대상 안내 박스 */}
               <div className="flex items-start gap-4 bg-slate-50 p-6 rounded-xl text-left w-full border border-slate-200/60">
                 <div className="bg-white p-2 rounded-full shadow-sm shrink-0 text-blue-600">
                   <Info size={20} />
@@ -81,7 +82,7 @@ export default function AppendagesContentPage() {
             </div>
           </div>
 
-          {/* 3. 예약하기 버튼 (CTA) */}
+          {/* 3. 예약하기 CTA */}
           <div className="text-center">
             <button
               onClick={() => router.push("/counseling/apply")}
@@ -99,7 +100,7 @@ export default function AppendagesContentPage() {
             </p>
           </div>
 
-          {/* 4. 오시는 길 (지도) */}
+          {/* 4. 오시는 길 */}
           <div className="space-y-8 pt-8 border-t border-slate-100">
             <div className="flex flex-col items-center text-center space-y-2">
               <span className="flex items-center justify-center w-12 h-12 rounded-full bg-slate-100 text-slate-900 mb-2">
@@ -126,7 +127,6 @@ export default function AppendagesContentPage() {
                 title="counseling-map"
                 className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
               ></iframe>
-              {/* 지도 위 안내 뱃지 */}
               <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm px-5 py-3 rounded-xl shadow-lg border border-slate-100">
                 <p className="font-bold text-slate-900 text-sm">
                   하나 상담실 (교육관 1층)
@@ -138,25 +138,164 @@ export default function AppendagesContentPage() {
       )}
 
       {/* =========================================================
-          TAB: DANIEL AMATZ (준비중 페이지 개선)
+          TAB: ENTREPRENEURSHIP (창업보육센터)
+      ========================================================= */}
+      {tab === "entrepreneurship" && (
+        <div className="animate-fade-in space-y-16">
+          {/* 헤더 */}
+          <div className="text-center space-y-4">
+            <span className="inline-block py-1 px-3 rounded text-blue-600 bg-blue-50 text-xs font-bold tracking-widest uppercase">
+              Business Incubation Center
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900">
+              창업보육센터
+            </h2>
+          </div>
+
+          {/* 소개 */}
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100">
+            <div className="max-w-3xl mx-auto space-y-8">
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center">
+                  <Lightbulb size={32} className="text-amber-500" />
+                </div>
+                <p className="text-slate-600 leading-loose break-keep text-base">
+                  수원하나교회 창업보육센터는 하나님의 나라를 위한 비즈니스 창업을 지원하고,
+                  크리스천 창업가들이 신앙과 사업을 통합하여 세상에 선한 영향력을 끼칠 수 있도록 돕습니다.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
+                {[
+                  { icon: <Users size={24} />, label: "멘토링", desc: "경험 있는 크리스천 비즈니스 리더의 멘토링" },
+                  { icon: <Lightbulb size={24} />, label: "교육 프로그램", desc: "창업 실무 및 신앙 통합 교육 지원" },
+                  { icon: <Heart size={24} />, label: "네트워크", desc: "크리스천 창업가 커뮤니티 연결" },
+                ].map((item, i) => (
+                  <div key={i} className="flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 mb-4">
+                      {item.icon}
+                    </div>
+                    <h4 className="font-bold text-slate-900 mb-2">{item.label}</h4>
+                    <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 안내 */}
+          <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 text-center">
+            <p className="text-slate-500 text-base">
+              창업보육센터에 대한 자세한 내용은 곧 업데이트될 예정입니다.
+            </p>
+            <p className="text-slate-400 text-sm mt-2">
+              문의: 교회 사무실 031-203-3693
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================
+          TAB: DANIEL AMATZ (다니엘 아마츠)
       ========================================================= */}
       {tab === "daniel-amatz" && (
-        <div className="animate-fade-in flex flex-col items-center justify-center py-20 text-center space-y-6">
-          <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-4 shadow-sm border border-slate-100">
-            <BookOpen size={40} className="text-slate-300" />
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-brand font-bold tracking-wide uppercase text-sm block">
-              Coming Soon
+        <div className="animate-fade-in space-y-20">
+          {/* 헤더 */}
+          <div className="text-center space-y-4">
+            <span className="inline-block py-1 px-3 rounded text-blue-600 bg-blue-50 text-xs font-bold tracking-widest uppercase">
+              Daniel Amatz
             </span>
-            <h2 className="text-3xl font-bold text-slate-900">다니엘 아마츠</h2>
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900">
+              다니엘 아마츠
+            </h2>
+            <p className="text-slate-500 max-w-xl mx-auto text-base leading-relaxed">
+              다음 세대를 양육하고 훈련하는 수원하나교회의 교육 기관입니다.
+            </p>
           </div>
 
-          <p className="text-slate-500 max-w-md mx-auto leading-relaxed">
-            다니엘 선교원과 훈련센터에 대한 자세한 내용은
-            <br />곧 업데이트 될 예정입니다.
-          </p>
+          {/* 다니엘 선교원 */}
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100">
+            <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
+              <div className="lg:w-1/4 flex flex-col items-center lg:items-start text-center lg:text-left shrink-0">
+                <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mb-4">
+                  <Heart size={32} className="text-rose-500" />
+                </div>
+                <span className="text-xs font-bold tracking-widest text-blue-600 uppercase mb-2 block">
+                  Daniel Missionary School
+                </span>
+                <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 leading-tight">
+                  다니엘 선교원
+                </h3>
+              </div>
+
+              <div className="lg:w-3/4 space-y-6">
+                <p className="text-slate-600 leading-loose break-keep text-base">
+                  다니엘 선교원은 영아 및 유아를 위한 기독교 교육 기관으로, 말씀과 사랑으로 다음 세대를 양육합니다.
+                  어린 시절부터 하나님을 알고 경험하는 신앙의 기초를 세워가는 곳입니다.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[
+                    { label: "대상", value: "영아 ~ 유아 (만 0-7세)" },
+                    { label: "운영", value: "평일 운영 (월-금)" },
+                    { label: "위치", value: "수원하나교회 내" },
+                    { label: "문의", value: "교회 사무실 031-203-3693" },
+                  ].map((info, i) => (
+                    <div key={i} className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">{info.label}</span>
+                      <span className="text-sm font-bold text-slate-700">{info.value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-sm text-amber-700">
+                  자세한 프로그램 안내는 곧 업데이트될 예정입니다.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 다니엘 훈련센터 */}
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100">
+            <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
+              <div className="lg:w-1/4 flex flex-col items-center lg:items-start text-center lg:text-left shrink-0">
+                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4">
+                  <BookOpen size={32} className="text-indigo-500" />
+                </div>
+                <span className="text-xs font-bold tracking-widest text-blue-600 uppercase mb-2 block">
+                  Daniel Training Center
+                </span>
+                <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 leading-tight">
+                  다니엘 훈련센터
+                </h3>
+              </div>
+
+              <div className="lg:w-3/4 space-y-6">
+                <p className="text-slate-600 leading-loose break-keep text-base">
+                  다니엘 훈련센터는 아동 및 청소년을 대상으로 신앙 훈련과 리더십을 양성하는 교육 기관입니다.
+                  말씀과 기도를 통해 하나님의 사람으로 세워지는 훈련의 장을 제공합니다.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[
+                    { label: "대상", value: "초등 ~ 고등학생" },
+                    { label: "과정", value: "신앙 훈련 및 리더십 과정" },
+                    { label: "위치", value: "수원하나교회 내" },
+                    { label: "문의", value: "교회 사무실 031-203-3693" },
+                  ].map((info, i) => (
+                    <div key={i} className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">{info.label}</span>
+                      <span className="text-sm font-bold text-slate-700">{info.value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-sm text-amber-700">
+                  자세한 프로그램 안내는 곧 업데이트될 예정입니다.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </>

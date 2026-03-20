@@ -5,7 +5,7 @@ import { Play, Calendar, ChevronRight, Loader2, Users } from "lucide-react";
 import Link from "next/link";
 import type { WPSermon } from "@/lib/types";
 import { getYouTubeId } from "@/utils/youtube";
-import { formatDate } from "@/utils/format";
+import { formatDate, getCleanTitle } from "@/utils/format";
 
 const WP_DOMAIN =
   process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
@@ -49,7 +49,7 @@ export default function RecentSermons() {
     : "";
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-white">
+    <section className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-white">
       {/* 헤더 */}
       <div className="flex items-end justify-between mb-8 pb-4 border-b border-slate-100">
         <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
@@ -94,12 +94,10 @@ export default function RecentSermons() {
                   {currentSermon.sermon_meta?.speaker || "담임목사"}
                 </span>
               </div>
-              <h3
-                className="text-2xl font-bold text-slate-900 leading-snug break-keep"
-                dangerouslySetInnerHTML={{
-                  __html: currentSermon.title.rendered,
-                }}
-              />
+              <h3 className="text-2xl font-bold text-slate-900 leading-snug break-keep">
+                {currentSermon.sermon_meta?.clean_title ||
+                  getCleanTitle(currentSermon.title.rendered)}
+              </h3>
               <p className="mt-2 text-slate-600 font-medium">
                 {currentSermon.sermon_meta?.scripture}
               </p>
@@ -152,8 +150,10 @@ export default function RecentSermons() {
                   </span>
                   <h4
                     className={`text-sm font-bold leading-tight line-clamp-2 ${isActive ? "text-slate-900" : "text-slate-600"}`}
-                    dangerouslySetInnerHTML={{ __html: item.title.rendered }}
-                  />
+                  >
+                    {item.sermon_meta?.clean_title ||
+                      getCleanTitle(item.title.rendered)}
+                  </h4>
                 </div>
               </div>
             );

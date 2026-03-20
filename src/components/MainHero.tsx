@@ -27,13 +27,25 @@ const DEFAULT_DATA: MainHeroData[] = [
 ];
 
 interface MainHeroProps {
-  slidesData?: MainHeroData[];
+  slidesData?: MainHeroData[] | null; // null = 로딩 중, [] = 없음(기본), 배열 = WP 데이터
 }
 
 export const MainHero = ({ slidesData }: MainHeroProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // null(로딩 중)이면 skeleton 표시
+  if (slidesData === null) {
+    return (
+      <section className="relative h-screen md:h-[90vh] min-h-[500px] bg-slate-900 flex items-center justify-center">
+        <div className="text-center animate-pulse">
+          <div className="w-48 h-8 bg-slate-800 rounded mx-auto mb-4" />
+          <div className="w-32 h-4 bg-slate-800 rounded mx-auto" />
+        </div>
+      </section>
+    );
+  }
 
   const displaySlides =
     slidesData && slidesData.length > 0
@@ -73,7 +85,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
     // [수정 포인트 1] 높이 설정
     // 모바일: h-[calc(100vh-5rem)] -> 헤더(5rem/80px)를 뺀 나머지 화면을 꽉 채움
     // PC: h-[85vh] -> 적당한 비율 유지
-    <section className="relative mt-20 md:mt-24 h-[calc(100vh-5rem)] md:h-[85vh] min-h-[500px] overflow-hidden group bg-slate-900">
+    <section className="relative h-screen md:h-[90vh] min-h-[500px] overflow-hidden group bg-slate-900">
       {/* 1. 슬라이드 트랙 */}
       <div
         className="flex w-full h-full transition-transform duration-700 ease-in-out will-change-transform"
