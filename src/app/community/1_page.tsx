@@ -8,7 +8,7 @@ export default function CommunityPage() {
   return (
     <div className="bg-slate-50 min-h-screen pb-32">
       {/* 1. 상단 히어로 영역 */}
-      <HeroSub title="공동체" subtitle="우리가 함께 세워가는 하나님 나라" />
+      <HeroSub title="공동체" />
 
       {/* 2. 본문 영역 (빛의 군대 -> 여호수아 -> 모세 -> EM 순차 노출) */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 md:mt-24 space-y-32">

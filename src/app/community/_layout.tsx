@@ -22,10 +22,7 @@ export default function CommunityLayout({
 
   return (
     <div className="bg-white min-h-screen">
-      <HeroSub
-        title="공동체"
-        subtitle={tabs.find((t) => t.slug === currentTab)?.name || "빛의 군대"}
-      />
+      <HeroSub title="공동체" />
 
       {/* 레이아웃 변경: 사이드바 제거 및 상단 탭 메뉴 적용 */}
       <div className="flex flex-col">

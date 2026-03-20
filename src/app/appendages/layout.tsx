@@ -21,7 +21,7 @@ export default function AppendagesLayout({
 
   return (
     <div className="bg-white min-h-screen">
-      <HeroSub title={getPageTitle()} subtitle="부속기관" />
+      <HeroSub title={getPageTitle()} />
       <div className="w-full max-w-content mx-auto px-6 py-12 md:py-20 animate-fade-in">
         {children}
       </div>

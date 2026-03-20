@@ -29,19 +29,15 @@ export const CustomPlayButton = ({
 
 interface HeroSubProps {
   title: string;
-  subtitle?: string;
   image?: string;
   desc?: string;
 }
 
-export function HeroSub({ title, subtitle, desc }: HeroSubProps) {
+export function HeroSub({ title, desc }: HeroSubProps) {
   return (
     <div className="bg-white pt-28 pb-8 border-b border-slate-100">
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         <div className="pt-4">
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-4">
-            {subtitle || title}
-          </p>
           <h1 className="text-fluid-2xl font-extrabold text-slate-900 mb-2">
             {title}
           </h1>

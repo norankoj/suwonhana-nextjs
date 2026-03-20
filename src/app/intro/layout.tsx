@@ -23,7 +23,7 @@ export default function IntroLayout({
 
   return (
     <div className="bg-white min-h-screen">
-      <HeroSub title={getPageTitle()} subtitle="교회소개" />
+      <HeroSub title={getPageTitle()} />
       <div className="w-full flex flex-col">{children}</div>
     </div>
   );

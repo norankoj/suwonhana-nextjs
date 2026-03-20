@@ -8,7 +8,7 @@ export default function CommunityPage() {
   return (
     <div className="bg-white min-h-screen pb-32 font-sans text-black selection:bg-black selection:text-white">
       {/* 1. 상단 히어로 영역 */}
-      <HeroSub title="COMMUNITY" subtitle="우리가 함께 세워가는 하나님 나라" />
+      <HeroSub title="COMMUNITY" />
 
       {/* 2. 본문 영역 */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mt-16 md:mt-32 space-y-32 md:space-y-48">
