@@ -3,33 +3,23 @@
 import React, { useState, useEffect } from "react";
 import { Play, Calendar, ChevronRight, Loader2, Users } from "lucide-react";
 import Link from "next/link";
+import type { WPSermon } from "@/lib/types";
+import { getYouTubeId } from "@/utils/youtube";
+import { formatDate } from "@/utils/format";
 
-const WP_API_DOMAIN = "http://suwonhana.local";
-
-interface Sermon {
-  id: number;
-  title: { rendered: string };
-  date: string;
-  _embedded?: {
-    "wp:featuredmedia"?: Array<{ source_url: string }>;
-  };
-  sermon_meta?: {
-    video_url?: string;
-    speaker?: string;
-    scripture?: string;
-  };
-}
+const WP_DOMAIN =
+  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 
 export default function RecentSermons() {
-  const [sermons, setSermons] = useState<Sermon[]>([]);
-  const [currentSermon, setCurrentSermon] = useState<Sermon | null>(null);
+  const [sermons, setSermons] = useState<WPSermon[]>([]);
+  const [currentSermon, setCurrentSermon] = useState<WPSermon | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecent = async () => {
       try {
         const res = await fetch(
-          `${WP_API_DOMAIN}/wp-json/wp/v2/risen_multimedia?per_page=5&_embed`,
+          `${WP_DOMAIN}/wp-json/wp/v2/risen_multimedia?per_page=5&_embed`,
         );
         if (res.ok) {
           const data = await res.json();
@@ -44,22 +34,6 @@ export default function RecentSermons() {
     };
     fetchRecent();
   }, []);
-
-  const getYouTubeId = (url?: string) => {
-    if (!url) return null;
-    let videoId = "";
-    if (url.includes("youtu.be/"))
-      videoId = url.split("youtu.be/")[1]?.split("?")[0];
-    else if (url.includes("v=")) videoId = url.split("v=")[1]?.split("&")[0];
-    else if (url.includes("/embed/"))
-      videoId = url.split("/embed/")[1]?.split("?")[0];
-    return videoId || null;
-  };
-
-  const formatDate = (dateString: string) => {
-    const d = new Date(dateString);
-    return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
-  };
 
   if (isLoading)
     return (
@@ -76,7 +50,7 @@ export default function RecentSermons() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-white">
-      {/* 헤더: 영어 삭제 및 정렬 */}
+      {/* 헤더 */}
       <div className="flex items-end justify-between mb-8 pb-4 border-b border-slate-100">
         <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
           최근 설교

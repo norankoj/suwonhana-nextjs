@@ -1,79 +1,16 @@
 import React from "react";
+import type { Metadata } from "next";
 import CoreValueAccordion from "./CoreValueAccordion";
+import type { CoreValueItem } from "@/lib/types";
+import { fetchCoreValuesData } from "@/lib/wordpress";
 
-async function getCoreValuesData() {
-  const query = `
-    query GetCoreValuesPage {
-      page(id: "핵심가치", idType: URI) {
-        coreValueFields {
-          valueStatement 
-          mainTitle
-          subDesc
-          part1Title
-          part2Title
-          value1Title
-          value1Sub
-          value1Desc
-          value2Title
-          value2Sub
-          value2Desc
-          value3Title
-          value3Sub
-          value3Desc
-          value4Title
-          value4Sub
-          value4Desc
-          value5Title
-          value5Sub
-          value5Desc
-          value6Title
-          value6Sub
-          value6Desc
-          value7Title
-          value7Sub
-          value7Desc
-          value8Title
-          value8Sub
-          value8Desc
-          value9Title
-          value9Sub
-          value9Desc
-          value10Title
-          value10Sub
-          value10Desc
-          value11Title
-          value11Sub
-          value11Desc
-          value12Title
-          value12Sub
-          value12Desc
-        }
-      }
-    }
-  `;
-
-  try {
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-        next: { revalidate: 60 },
-      },
-    );
-
-    if (!res.ok) throw new Error("Network response was not ok");
-    const json = await res.json();
-    return json.data?.page;
-  } catch (error) {
-    console.error("WPGraphQL Fetch Error:", error);
-    return null;
-  }
-}
+export const metadata: Metadata = {
+  title: "핵심가치",
+  description: "수원하나교회가 중요하게 여기는 12가지 핵심가치",
+};
 
 export default async function CoreValuesPage() {
-  const pageData = await getCoreValuesData();
+  const pageData = await fetchCoreValuesData();
 
   if (!pageData) {
     return (
@@ -85,8 +22,7 @@ export default async function CoreValuesPage() {
 
   const fields = pageData.coreValueFields || {};
 
-  // 타이틀 기본값 세팅
-  const valueStatementText = fields.valueStatement || "Value Statement"; // 워드프레스 데이터 연동
+  const valueStatementText = fields.valueStatement || "Value Statement";
   const mainTitle = fields.mainTitle || "핵심가치들";
   const subDesc =
     fields.subDesc ||
@@ -94,72 +30,23 @@ export default async function CoreValuesPage() {
   const part1Title = fields.part1Title || "Part 1. 6가지 핵심가치";
   const part2Title = fields.part2Title || "Part 2. 6가지 핵심가치";
 
-  // 워드프레스에서 받아온 낱개 데이터들을 Part 1(1~6)과 Part 2(7~12) 배열로 재구성
-  const coreValuePart1 = [
-    {
-      title: fields.value1Title,
-      sub: fields.value1Sub,
-      desc: fields.value1Desc,
-    },
-    {
-      title: fields.value2Title,
-      sub: fields.value2Sub,
-      desc: fields.value2Desc,
-    },
-    {
-      title: fields.value3Title,
-      sub: fields.value3Sub,
-      desc: fields.value3Desc,
-    },
-    {
-      title: fields.value4Title,
-      sub: fields.value4Sub,
-      desc: fields.value4Desc,
-    },
-    {
-      title: fields.value5Title,
-      sub: fields.value5Sub,
-      desc: fields.value5Desc,
-    },
-    {
-      title: fields.value6Title,
-      sub: fields.value6Sub,
-      desc: fields.value6Desc,
-    },
-  ].filter((item) => item.title); // 데이터가 있는 것만 남김
+  const buildCoreValues = (startIdx: number, count: number): CoreValueItem[] => {
+    const result: CoreValueItem[] = [];
+    for (let i = startIdx; i < startIdx + count; i++) {
+      const title = fields[`value${i}Title`];
+      if (title) {
+        result.push({
+          title,
+          sub: fields[`value${i}Sub`] || "",
+          desc: fields[`value${i}Desc`] || "",
+        });
+      }
+    }
+    return result;
+  };
 
-  const coreValuePart2 = [
-    {
-      title: fields.value7Title,
-      sub: fields.value7Sub,
-      desc: fields.value7Desc,
-    },
-    {
-      title: fields.value8Title,
-      sub: fields.value8Sub,
-      desc: fields.value8Desc,
-    },
-    {
-      title: fields.value9Title,
-      sub: fields.value9Sub,
-      desc: fields.value9Desc,
-    },
-    {
-      title: fields.value10Title,
-      sub: fields.value10Sub,
-      desc: fields.value10Desc,
-    },
-    {
-      title: fields.value11Title,
-      sub: fields.value11Sub,
-      desc: fields.value11Desc,
-    },
-    {
-      title: fields.value12Title,
-      sub: fields.value12Sub,
-      desc: fields.value12Desc,
-    },
-  ].filter((item) => item.title);
+  const coreValuePart1 = buildCoreValues(1, 6);
+  const coreValuePart2 = buildCoreValues(7, 6);
 
   return (
     <div className="bg-white pb-32">

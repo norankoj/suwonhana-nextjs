@@ -32,7 +32,7 @@ export default function CommunityPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const allItems = groups.flatMap((group) =>
-    group.items.map((item) => ({ ...item, groupName: group.subtitle })),
+    group.items.map((item) => ({ ...item, groupName: group.subtitle } as Record<string, unknown> & { id: string; name: string; age: string; sub: string; desc: string; img: string; groupName: string; eng?: string; slogan?: string; gallery?: string[] })),
   );
 
   const filteredItems = allItems.filter((item) => item.id === activeId);
@@ -154,7 +154,7 @@ export default function CommunityPage() {
               <div className="border-t border-slate-200 py-12 md:py-16 flex flex-col lg:flex-row items-start gap-12 lg:gap-20">
                 <div className="w-full lg:w-[35%] flex flex-col lg:sticky lg:top-32 shrink-0">
                   <span className="text-xs font-bold tracking-widest text-blue-600 uppercase mb-4">
-                    {item.eng ? `${item.eng}` : ""}
+                    {"eng" in item && item.eng ? item.eng : ""}
                   </span>
 
                   {/* 🔥 첫 번째 줄: 큰 슬로건 타이틀 ("예배의 토양을 함께 만들어가는 조이베이비!") */}

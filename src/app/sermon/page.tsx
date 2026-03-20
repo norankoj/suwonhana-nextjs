@@ -21,8 +21,12 @@ import {
   AlignJustify,
 } from "lucide-react";
 import { HeroSub } from "@/components/Common";
+import type { WPSermon, WPTaxonomyItem } from "@/lib/types";
+import { getYouTubeId } from "@/utils/youtube";
+import { formatDate, getCleanTitle } from "@/utils/format";
 
-const WP_API_DOMAIN = "http://suwonhana.local";
+const WP_DOMAIN =
+  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 const ITEMS_PER_PAGE = 9;
 
 // --- 데이터 상수 ---
@@ -79,23 +83,6 @@ const SERIES_TOPICS = [
 
 const YEARS = Array.from({ length: 20 }, (_, i) => (2026 - i).toString());
 
-interface Sermon {
-  id: number;
-  title: { rendered: string };
-  content: { rendered: string };
-  date: string;
-  _embedded?: {
-    "wp:featuredmedia"?: Array<{ source_url: string }>;
-  };
-  sermon_meta?: {
-    video_url?: string;
-    audio_url?: string;
-    speaker?: string;
-    tags?: string[];
-    scripture?: string;
-  };
-}
-
 // 태그 색상
 const getTagColor = (tag: string) => {
   if (
@@ -111,53 +98,15 @@ const getTagColor = (tag: string) => {
   return "bg-slate-50 text-slate-500 border-slate-100";
 };
 
-// --- [NEW] 제목 정제 유틸리티 함수 추가됨 ---
-const getCleanTitle = (rawTitle: string) => {
-  if (!rawTitle) return "";
-
-  // 1. 워드프레스 특수문자 엔티티 처리
-  let title = rawTitle
-    .replace(/&#8211;/g, "-") // en-dash
-    .replace(/&#8212;/g, "-") // em-dash
-    .replace(/&nbsp;/g, " ");
-
-  // 2. 대시(-) 기준으로 분리하여 마지막 부분(제목) 추출
-  // 예: "날짜 - 시리즈 - 제목" 형태라면 "제목"만 가져옴
-  const parts = title.split(/[-–—]/);
-  let mainTitle = parts.length > 1 ? parts[parts.length - 1] : title;
-
-  // 3. 뒤에 붙은 성경 구절 괄호 제거 (예: "(갈2:3-5절)")
-  mainTitle = mainTitle.replace(/\s*\([^)]*\)\s*$/, "");
-
-  return mainTitle.trim();
-};
-
-// 유틸리티 함수
-const formatDate = (dateString: string) => {
-  const d = new Date(dateString);
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
-};
-
-const getYouTubeId = (url?: string) => {
-  if (!url) return null;
-  let videoId = "";
-  if (url.includes("youtu.be/"))
-    videoId = url.split("youtu.be/")[1]?.split("?")[0];
-  else if (url.includes("v=")) videoId = url.split("v=")[1]?.split("&")[0];
-  else if (url.includes("/embed/"))
-    videoId = url.split("/embed/")[1]?.split("?")[0];
-  return videoId || null;
-};
-
 // --- 개별 설교 카드 컴포넌트 ---
 const SermonCard = ({
   item,
   viewMode,
   onClick,
 }: {
-  item: Sermon;
+  item: WPSermon;
   viewMode: "grid" | "list";
-  onClick: (item: Sermon) => void;
+  onClick: (item: WPSermon) => void;
 }) => {
   const tags = item.sermon_meta?.tags || ["주일예배"];
   const youtubeId = getYouTubeId(item.sermon_meta?.video_url);
@@ -327,8 +276,8 @@ function Accordion({
 }
 
 export default function SermonPage() {
-  const [selectedSermon, setSelectedSermon] = useState<Sermon | null>(null);
-  const [sermons, setSermons] = useState<Sermon[]>([]);
+  const [selectedSermon, setSelectedSermon] = useState<WPSermon | null>(null);
+  const [sermons, setSermons] = useState<WPSermon[]>([]);
 
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -351,12 +300,12 @@ export default function SermonPage() {
     const fetchAllTaxonomies = async () => {
       try {
         const getAllItems = async (endpoint: string) => {
-          let allItems: any[] = [];
+          let allItems: WPTaxonomyItem[] = [];
           let page = 1;
           let hasMore = true;
           while (hasMore) {
             const res = await fetch(
-              `${WP_API_DOMAIN}/wp-json/wp/v2/${endpoint}?per_page=100&page=${page}`,
+              `${WP_DOMAIN}/wp-json/wp/v2/${endpoint}?per_page=100&page=${page}`,
             );
             if (!res.ok) break;
             const data = await res.json();
@@ -375,7 +324,7 @@ export default function SermonPage() {
         const catMap: Record<string, number[]> = {};
         BIBLE_BOOKS.forEach((bookName) => {
           catMap[bookName] = [];
-          allCategories.forEach((apiCat: any) => {
+          allCategories.forEach((apiCat: WPTaxonomyItem) => {
             if (apiCat.name.includes(bookName))
               catMap[bookName].push(apiCat.id);
           });
@@ -384,7 +333,7 @@ export default function SermonPage() {
 
         const allTags = await getAllItems("risen_multimedia_tag");
         const tMap: Record<string, number> = {};
-        allTags.forEach((item: any) => {
+        allTags.forEach((item: WPTaxonomyItem) => {
           tMap[item.name] = item.id;
         });
         setTagMap(tMap);
@@ -410,7 +359,7 @@ export default function SermonPage() {
   const fetchSermons = async (page = 1) => {
     setIsLoading(true);
     try {
-      let url = `${WP_API_DOMAIN}/wp-json/wp/v2/risen_multimedia?_embed&per_page=${ITEMS_PER_PAGE}&page=${page}`;
+      let url = `${WP_DOMAIN}/wp-json/wp/v2/risen_multimedia?_embed&per_page=${ITEMS_PER_PAGE}&page=${page}`;
 
       const tagIds: number[] = [];
       if (activeTab !== "전체") {
@@ -488,17 +437,6 @@ export default function SermonPage() {
     setSearchTerm(tag);
     setSelectedSermon(null);
     setSearchTrigger((prev) => prev + 1);
-  };
-
-  const getYouTubeId = (url?: string) => {
-    if (!url) return null;
-    let videoId = "";
-    if (url.includes("youtu.be/"))
-      videoId = url.split("youtu.be/")[1]?.split("?")[0];
-    else if (url.includes("v=")) videoId = url.split("v=")[1]?.split("&")[0];
-    else if (url.includes("/embed/"))
-      videoId = url.split("/embed/")[1]?.split("?")[0];
-    return videoId || null;
   };
 
   const getEmbedUrl = (url?: string) => {

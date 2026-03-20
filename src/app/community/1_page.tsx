@@ -48,9 +48,9 @@ export default function CommunityPage() {
                   <div className="p-6 md:p-8 flex flex-col flex-1">
                     <div className="mb-4">
                       {/* 영문 이름 */}
-                      {item?.eng && (
+                      {"eng" in item && item.eng && (
                         <span className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-1 block">
-                          {item?.eng}
+                          {"eng" in item ? item.eng : ""}
                         </span>
                       )}
                       {/* 부서 이름 */}

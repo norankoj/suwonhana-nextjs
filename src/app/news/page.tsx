@@ -3,11 +3,12 @@
 import React, { useState } from "react";
 import { ChevronLeft, Calendar } from "lucide-react";
 import { HeroSub } from "@/components/Common";
+import type { NewsItem } from "@/lib/types";
 
 export default function NewsPage() {
-  const [selectedNews, setSelectedNews] = useState<any>(null);
+  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
-  const newsData = [
+  const newsData: NewsItem[] = [
     {
       id: 1,
       title: "2025년도 전반기 제자훈련 신청 안내 및 학습세례 문답 일정",
@@ -138,7 +139,7 @@ export default function NewsPage() {
                   {item.title}
                 </h3>
                 <p className="text-slate-500 text-sm line-clamp-2">
-                  {item.content.replace(/<[^>]*>?/gm, "")}
+                  {item.content.replace(/<[^>]+>/g, "")}
                 </p>
               </div>
             </div>

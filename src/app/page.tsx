@@ -6,13 +6,14 @@ import { ArrowRight, ChevronRight, Copy, X, ChevronDown } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
 import RecentSermons from "@/components/RecentSermons";
 import WelcomeSection from "@/components/WelcomeSection";
+import type { WPSlide } from "@/lib/types";
 
 // =================================================================
 // [설정 영역] 워드프레스 연결 정보
 // =================================================================
 
-// [상태 관리] 슬라이드 데이터 & 로딩
-const WP_API_DOMAIN = "http://suwonhana.local";
+const WP_DOMAIN =
+  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 const SLIDE_POST_TYPE = "risen_slide";
 
 const RECEIPT_URL =
@@ -31,7 +32,7 @@ export default function MainPage() {
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const endpoint = `${WP_API_DOMAIN}/wp-json/wp/v2/${SLIDE_POST_TYPE}?per_page=10&_embed`;
+        const endpoint = `${WP_DOMAIN}/wp-json/wp/v2/${SLIDE_POST_TYPE}?per_page=10&_embed`;
         const res = await fetch(endpoint);
 
         if (!res.ok) throw new Error("API Network Error");
@@ -40,7 +41,7 @@ export default function MainPage() {
         console.log("워드프레스 데이터:", data);
 
         const slideData = data
-          .map((item: any) => {
+          .map((item: WPSlide) => {
             // 특성 이미지 추출
             if (
               item._embedded &&
@@ -74,7 +75,7 @@ export default function MainPage() {
             }
             return null;
           })
-          .filter((item): item is MainHeroData => item !== null);
+          .filter((item: MainHeroData | null): item is MainHeroData => item !== null);
 
         if (slideData.length > 0) {
           setHeroSlides(slideData);

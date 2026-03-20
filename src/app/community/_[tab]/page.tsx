@@ -61,7 +61,7 @@ export default function CommunityContentPage() {
               <div className="w-10 h-1 bg-blue-600 mb-6 rounded-full"></div>
 
               <span className="text-blue-600 font-bold text-xs tracking-[0.15em] uppercase mb-3 block font-mono">
-                {selectedGroup.eng || activeTabName}
+                {"eng" in selectedGroup && selectedGroup.eng ? selectedGroup.eng : activeTabName}
               </span>
               <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-[1.1] break-keep tracking-tight">
                 {selectedGroup.name}
@@ -131,7 +131,7 @@ export default function CommunityContentPage() {
             {/* 오버레이 버튼들 */}
             <div className="absolute bottom-8 left-8 right-8 flex items-center justify-between">
               <div className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase hidden md:block">
-                {selectedGroup.eng}
+                {"eng" in selectedGroup ? selectedGroup.eng : ""}
               </div>
               <a
                 href="#"

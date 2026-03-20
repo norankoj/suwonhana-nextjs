@@ -38,7 +38,7 @@ export default function CommunityPage() {
                   {/* [좌측] 거대한 부서명 */}
                   <div className="w-full lg:w-[45%] flex flex-col">
                     <span className="text-xs font-bold tracking-widest text-gray-500 group-hover:text-gray-400 uppercase mb-4 transition-colors duration-500">
-                      {item.age} {item.eng ? `| ${item.eng}` : ""}
+                      {item.age} {"eng" in item && item.eng ? `| ${item.eng}` : ""}
                     </span>
                     <h3 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter break-keep leading-none">
                       {item.name}

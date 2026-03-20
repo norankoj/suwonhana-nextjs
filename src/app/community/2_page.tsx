@@ -53,9 +53,9 @@ export default function CommunityPage() {
                   {/* 텍스트 영역 (여백 극대화, 모노톤) */}
                   <div className="w-full md:w-1/2 flex flex-col justify-center py-4">
                     {/* 영문명 */}
-                    {item.eng && (
+                    {"eng" in item && item.eng && (
                       <span className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-4 block">
-                        {item.eng}
+                        {"eng" in item ? item.eng : ""}
                       </span>
                     )}
 

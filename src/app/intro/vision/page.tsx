@@ -1,72 +1,15 @@
 import React from "react";
+import type { Metadata } from "next";
+import type { VisionItem, WPImageField } from "@/lib/types";
+import { fetchVisionData } from "@/lib/wordpress";
 
-// ==========================================
-// 1. WPGraphQL 통신을 위한 fetch 함수
-// ==========================================
-async function getVisionData() {
-  const query = `
-    query GetVisionPage {
-      page(id: "비전-및-사역", idType: URI) {
-        visionFields {
-          mainTitle
-          visionStatement # 추가된 영문 타이틀
-          
-          value1Title
-          value1Desc
-          value1Verse     # 추가된 성경 구절
-          value1Image {   # 추가된 이미지
-            node {
-              sourceUrl
-            }
-          }
-          
-          value2Title
-          value2Desc
-          value2Verse
-          value2Image {
-            node {
-              sourceUrl
-            }
-          }
-          
-          value3Title
-          value3Desc
-          value3Verse
-          value3Image {
-            node {
-              sourceUrl
-            }
-          }
-        }
-      }
-    }
-  `;
-
-  try {
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-        next: { revalidate: 60 },
-      },
-    );
-
-    if (!res.ok) throw new Error("Network response was not ok");
-    const json = await res.json();
-    return json.data?.page;
-  } catch (error) {
-    console.error("WPGraphQL Fetch Error:", error);
-    return null;
-  }
-}
+export const metadata: Metadata = {
+  title: "비전",
+  description: "수원하나교회의 비전 — 하나님을 즐거워하고 그 분의 목적에 헌신하는 공동체",
+};
 
 export default async function VisionPage() {
-  // ==========================================
-  // 2. 서버에서 데이터 페칭
-  // ==========================================
-  const pageData = await getVisionData();
+  const pageData = await fetchVisionData();
 
   if (!pageData) {
     return (
@@ -79,17 +22,12 @@ export default async function VisionPage() {
 
   const fields = pageData.visionFields || {};
 
-  // 메인 타이틀 & 영문 서브타이틀 (데이터가 없을 때 기존 텍스트 유지)
   const mainTitleText =
     fields.mainTitle || "하나님을 즐거워하고\n그 분의 목적에 헌신하는 공동체";
   const visionStatementText = fields.visionStatement || "Vision Statement";
 
-  // 워드프레스 이미지 객체에서 URL만 안전하게 뽑아내는 헬퍼 함수
-  const getImageUrl = (imageField: any, fallbackIndex: number) => {
-    // WPGraphQL에서 가져온 이미지 URL 반환
+  const getImageUrl = (imageField: WPImageField | undefined, fallbackIndex: number) => {
     if (imageField?.node?.sourceUrl) return imageField.node.sourceUrl;
-
-    // 이미지를 등록하지 않았을 경우 기존 디자인 유지를 위한 기본 이미지
     const fallbacks = [
       "https://images.unsplash.com/photo-1529070538774-1843cb3265df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -98,26 +36,26 @@ export default async function VisionPage() {
     return fallbacks[fallbackIndex];
   };
 
-  const vision = [
+  const vision: VisionItem[] = [
     {
-      title: fields.value1Title,
-      desc: fields.value1Desc,
+      title: fields.value1Title || "",
+      desc: fields.value1Desc || "",
       verse: fields.value1Verse,
       image: getImageUrl(fields.value1Image, 0),
     },
     {
-      title: fields.value2Title,
-      desc: fields.value2Desc,
+      title: fields.value2Title || "",
+      desc: fields.value2Desc || "",
       verse: fields.value2Verse,
       image: getImageUrl(fields.value2Image, 1),
     },
     {
-      title: fields.value3Title,
-      desc: fields.value3Desc,
+      title: fields.value3Title || "",
+      desc: fields.value3Desc || "",
       verse: fields.value3Verse,
       image: getImageUrl(fields.value3Image, 2),
     },
-  ].filter((item) => item.title); // 타이틀이 입력된 것만 화면에 렌더링
+  ].filter((item) => item.title);
 
   return (
     <div className="bg-white pb-32">
@@ -139,7 +77,7 @@ export default async function VisionPage() {
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
         <div className="flex flex-col gap-24 md:gap-32">
-          {vision?.map((item: any, idx: number) => {
+          {vision.map((item, idx) => {
             const index = idx + 1;
             const mainText = item.desc || "";
             const isEven = idx % 2 === 0;
@@ -181,7 +119,7 @@ export default async function VisionPage() {
                   {item.verse && (
                     <div className="relative bg-slate-50 rounded-sm p-6 pr-8">
                       <p className="text-slate-500 text-sm md:text-base font-medium leading-relaxed text-justify whitespace-pre-wrap">
-                        "{item.verse}"
+                        &ldquo;{item.verse}&rdquo;
                       </p>
                     </div>
                   )}
