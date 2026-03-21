@@ -149,7 +149,7 @@ export default function MainPage() {
 
         {/* 6. 공동체 사진 갤러리 */}
         {(() => {
-          const communityPhotos = groups
+          const communityPhotos = (groups as Array<{ subtitle: string; items: Array<{ name: string; img: string }> }>)
             .flatMap((g) => g.items)
             .map((item) => ({ name: item.name, img: item.img }))
             .filter((i) => i.img);
