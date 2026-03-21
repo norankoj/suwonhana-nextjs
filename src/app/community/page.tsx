@@ -70,22 +70,21 @@ export default function CommunityPage() {
               id={item.id}
               className="animate-fade-in pt-8 md:pt-12"
             >
-              <div className="mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight uppercase leading-none text-slate-900">
-                  {item.name}
-                </h2>
-                <span className="text-xs md:text-sm font-bold tracking-[0.2em] text-slate-400 mt-4 md:mt-0 uppercase">
-                  {item.groupName}
-                </span>
-              </div>
-
-              <div className="mb-12 md:mb-16">
-                <div className="w-full aspect-video md:aspect-[21/9] overflow-hidden rounded-md bg-slate-50 border border-slate-100 shadow-sm">
-                  <img
-                    src={item.img}
-                    alt={`${item.name} 대표 사진`}
-                    className="w-full h-full object-cover opacity-90 transition-transform duration-700 ease-out hover:scale-105"
-                  />
+              {/* 히어로 이미지 + 오버레이 */}
+              <div className="mb-12 md:mb-16 relative w-full aspect-video md:aspect-[21/9] overflow-hidden rounded-2xl bg-slate-50 shadow-sm">
+                <img
+                  src={item.img}
+                  alt={`${item.name} 대표 사진`}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 p-6 md:p-10">
+                  <span className="text-xs font-bold tracking-[0.25em] text-white/60 uppercase block mb-2">
+                    {item.groupName}
+                  </span>
+                  <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight uppercase leading-none">
+                    {item.name}
+                  </h2>
                 </div>
               </div>
 
