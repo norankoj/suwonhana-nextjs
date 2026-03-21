@@ -18,7 +18,7 @@ export default function RecentSermons() {
     const fetchRecent = async () => {
       try {
         const res = await fetch(
-          `${WP_DOMAIN}/wp-json/wp/v2/risen_multimedia?per_page=5&_embed`,
+          `${WP_DOMAIN}/wp-json/wp/v2/risen_multimedia?per_page=6&_embed`,
         );
         if (res.ok) {
           const data = await res.json();
@@ -34,10 +34,10 @@ export default function RecentSermons() {
   }, []);
 
   return (
-    <section className="py-16 md:py-24 bg-white border-t border-slate-100">
+    <section className="py-16 md:py-24 bg-white">
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         {/* 섹션 헤더 */}
-        <div className="flex items-end justify-between mb-8 pb-5 border-b border-slate-100">
+        <div className="flex items-end justify-between mb-6">
           <div>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-1.5">
               Message
@@ -48,7 +48,7 @@ export default function RecentSermons() {
           </div>
           <Link
             href="/sermon"
-            className="flex items-center gap-1 text-sm font-semibold text-slate-400 hover:text-slate-900 transition-colors pb-1"
+            className="flex items-center gap-1 text-sm font-semibold text-slate-400 hover:text-slate-900 transition-colors"
           >
             전체보기 <ChevronRight size={14} />
           </Link>
@@ -57,15 +57,18 @@ export default function RecentSermons() {
         {/* 로딩 스켈레톤 */}
         {isLoading ? (
           <div className="space-y-4">
-            <div className="w-full aspect-[16/7] bg-slate-100 animate-pulse" />
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="animate-pulse aspect-[16/9] bg-slate-100" />
+              ))}
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="aspect-video bg-slate-100" />
-                  <div className="pt-3 space-y-1.5">
+                  <div className="pt-2 space-y-1.5">
                     <div className="h-3 bg-slate-100 rounded w-1/3" />
                     <div className="h-4 bg-slate-100 rounded w-3/4" />
-                    <div className="h-3 bg-slate-100 rounded w-1/4" />
                   </div>
                 </div>
               ))}
@@ -78,81 +81,81 @@ export default function RecentSermons() {
           </div>
         ) : (
           <div className="space-y-4">
-            {/* 상단 - 1개 큰 카드 */}
-            {sermons[0] && (() => {
-              const item = sermons[0];
-              const vidId = getYouTubeId(item.sermon_meta?.video_url);
-              const thumb = vidId
-                ? `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`
-                : item._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
-              const title =
-                item.sermon_meta?.clean_title || getCleanTitle(item.title.rendered);
-              const tags = item.sermon_meta?.tags || [];
+            {/* 상단 - 2개 큰 카드 (이미지 안에 텍스트) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {sermons.slice(0, 2).map((item) => {
+                const vidId = getYouTubeId(item.sermon_meta?.video_url);
+                const thumb = vidId
+                  ? `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`
+                  : item._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+                const title =
+                  item.sermon_meta?.clean_title || getCleanTitle(item.title.rendered);
+                const tags = item.sermon_meta?.tags || [];
 
-              return (
-                <Link href="/sermon" className="group block">
-                  <div className="flex flex-col md:flex-row border border-slate-100 hover:border-slate-300 transition-colors duration-200">
+                return (
+                  <Link
+                    key={item.id}
+                    href="/sermon"
+                    className="group relative block aspect-[4/3] overflow-hidden bg-slate-900"
+                  >
                     {/* 썸네일 */}
-                    <div className="relative md:w-[55%] aspect-video overflow-hidden bg-slate-100 shrink-0">
-                      {thumb ? (
-                        <img
-                          src={thumb}
-                          alt={title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-slate-100">
-                          <Play size={40} className="text-slate-300" />
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                        <div className="w-14 h-14 bg-white/90 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <Play size={22} className="text-slate-900 fill-slate-900 ml-0.5" />
-                        </div>
-                      </div>
+                    {thumb && (
+                      <img
+                        src={thumb}
+                        alt={title}
+                        className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-50 group-hover:scale-105 transition-all duration-700 ease-out"
+                      />
+                    )}
+                    {/* 그라디언트 */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+                    {/* 플레이 버튼 */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 rounded-full flex items-center justify-center border border-white/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Play size={18} className="text-white fill-white ml-0.5" />
                     </div>
-                    {/* 텍스트 정보 */}
-                    <div className="flex flex-col justify-center p-6 md:p-8 md:w-[45%]">
-                      <div className="flex items-center gap-2 mb-3">
+
+                    {/* 텍스트 오버레이 */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                      <div className="flex items-center gap-2 mb-2">
                         {tags[0] && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 uppercase tracking-wide">
+                          <span className="text-[10px] font-bold px-2 py-0.5 bg-white/20 text-white/90 uppercase tracking-wide backdrop-blur-sm">
                             {tags[0]}
                           </span>
                         )}
                         {tags[1] && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-50 text-slate-500 uppercase tracking-wide">
+                          <span className="text-[10px] font-bold px-2 py-0.5 bg-white/10 text-white/70 uppercase tracking-wide">
                             {tags[1]}
                           </span>
                         )}
                       </div>
-                      <h3 className="font-extrabold text-xl md:text-2xl lg:text-3xl text-slate-900 leading-snug mb-4 line-clamp-3">
+                      <h3 className="font-extrabold text-lg md:text-xl text-white leading-snug mb-2 line-clamp-2">
                         {title}
                       </h3>
-                      <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                      <div className="flex items-center gap-2 text-[11px] text-white/60 font-medium">
                         {item.sermon_meta?.scripture && (
                           <>
                             <span>{item.sermon_meta.scripture}</span>
-                            <span className="w-px h-3 bg-slate-200" />
+                            <span className="w-px h-2.5 bg-white/30" />
                           </>
                         )}
                         {item.sermon_meta?.speaker && (
                           <>
                             <span>{item.sermon_meta.speaker}</span>
-                            <span className="w-px h-3 bg-slate-200" />
+                            <span className="w-px h-2.5 bg-white/30" />
                           </>
                         )}
                         <span>{formatDate(item.date)}</span>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })()}
+                  </Link>
+                );
+              })}
+            </div>
 
             {/* 하단 - 4열 소카드 */}
-            {sermons.length > 1 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-1">
-                {sermons.slice(1, 5).map((item) => {
+            {sermons.length > 2 && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {sermons.slice(2, 6).map((item) => {
                   const vidId = getYouTubeId(item.sermon_meta?.video_url);
                   const thumb = vidId
                     ? `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`
@@ -167,8 +170,7 @@ export default function RecentSermons() {
                       href="/sermon"
                       className="group flex flex-col"
                     >
-                      {/* 썸네일 */}
-                      <div className="relative aspect-video bg-slate-100 overflow-hidden border border-slate-100 group-hover:border-slate-300 transition-colors duration-200">
+                      <div className="relative aspect-video bg-slate-100 overflow-hidden">
                         {thumb ? (
                           <img
                             src={thumb}
@@ -176,17 +178,16 @@ export default function RecentSermons() {
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-slate-100">
+                          <div className="w-full h-full flex items-center justify-center">
                             <Play size={20} className="text-slate-300" />
                           </div>
                         )}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                          <div className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <Play size={14} className="text-slate-900 fill-slate-900 ml-0.5" />
+                          <div className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <Play size={12} className="text-slate-900 fill-slate-900 ml-0.5" />
                           </div>
                         </div>
                       </div>
-                      {/* 텍스트 */}
                       <div className="pt-2.5 flex flex-col gap-1">
                         {tags[0] && (
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
