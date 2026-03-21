@@ -22,7 +22,17 @@ const navItems = [
   {
     name: "공동체",
     path: "/community",
-    sub: [],
+    sub: [
+      { name: "조이베이비", path: "/community?id=joybaby" },
+      { name: "조이코너", path: "/community?id=joycorner" },
+      { name: "조이랜드", path: "/community?id=joyland" },
+      { name: "YCM", path: "/community?id=ycm" },
+      { name: "UCM", path: "/community?id=ucm" },
+      { name: "1진 청년1부", path: "/community?id=1jin_1" },
+      { name: "1진 청년2부", path: "/community?id=1jin_2" },
+      { name: "2진", path: "/community?id=2jin" },
+      { name: "3진", path: "/community?id=3jin" },
+    ],
   },
   { name: "훈련", path: "/discipleship", sub: [] },
   {
@@ -67,7 +77,7 @@ export const Header = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 h-20 md:h-28 flex items-center transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 h-14 md:h-16 flex items-center transition-all duration-500 ${
           isTransparent
             ? "bg-transparent border-transparent"
             : "bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm"
@@ -76,11 +86,11 @@ export const Header = () => {
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center h-full">
           <Link
             href="/"
-            className="flex-shrink-0 flex items-center h-full py-2 md:py-3"
+            className="flex-shrink-0 flex items-center"
           >
             <img
               src="/images/mainlogo-removebg-preview.png"
-              className={`h-full w-auto object-contain transition-all duration-500 ${
+              className={`h-7 md:h-8 w-auto object-contain transition-all duration-500 ${
                 isTransparent
                   ? "brightness-0 invert opacity-95"
                   : "hover:opacity-80"
@@ -90,7 +100,7 @@ export const Header = () => {
           </Link>
 
           {/* 데스크탑 메뉴 */}
-          <nav className="hidden md:flex items-center gap-8 lg:gap-10 h-full">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8 h-full">
             {navItems.map((item) => (
               <div
                 key={item.name}
@@ -98,7 +108,7 @@ export const Header = () => {
               >
                 <Link
                   href={item.path}
-                  className={`flex items-center px-2 transition-all duration-200 text-[15px] md:text-base font-bold ${
+                  className={`flex items-center px-2 transition-all duration-200 text-sm font-semibold ${
                     pathname.startsWith(item.path)
                       ? isTransparent
                         ? "text-white"
@@ -118,8 +128,8 @@ export const Header = () => {
                         <Link
                           key={subItem.name}
                           href={subItem.path}
-                          className={`block px-4 py-2.5 text-[15px] font-medium rounded-lg transition-colors cursor-pointer ${
-                            pathname === subItem.path
+                          className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
+                            pathname === subItem.path || subItem.path.startsWith(pathname + "?")
                               ? "bg-slate-50 text-slate-900 font-bold"
                               : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
                           }`}
