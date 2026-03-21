@@ -147,24 +147,20 @@ export default function MainPage() {
         {/* 5. 최근 설교 (bg-white) */}
         <RecentSermons />
 
-        {/* 6. 공동체 사진 갤러리 */}
+        {/* 6. 공동체 사진 자동 슬라이드 */}
         {(() => {
           const communityPhotos = (groups as Array<{ subtitle: string; items: Array<{ name: string; img: string }> }>)
             .flatMap((g) => g.items)
             .map((item) => ({ name: item.name, img: item.img }))
             .filter((i) => i.img);
+          const doubled = [...communityPhotos, ...communityPhotos];
           return (
-            <section className="py-14 md:py-20 bg-white border-t border-slate-100">
-              <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-6">
-                  공동체
-                </h2>
-              </div>
-              <div className="flex gap-2 overflow-x-auto px-4 sm:px-6 lg:px-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                {communityPhotos.map((photo, idx) => (
+            <section className="py-10 md:py-14 bg-white overflow-hidden">
+              <div className="flex animate-marquee gap-2">
+                {doubled.map((photo, idx) => (
                   <div
                     key={idx}
-                    className="relative shrink-0 w-[180px] md:w-[220px] aspect-[3/4] overflow-hidden bg-slate-100"
+                    className="relative shrink-0 w-[160px] md:w-[200px] aspect-[3/4] overflow-hidden bg-slate-100"
                   >
                     <img
                       src={photo.img}
