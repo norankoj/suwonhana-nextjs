@@ -41,10 +41,10 @@ export default function CommunityPage() {
               <button
                 key={idx}
                 onClick={() => handleTabClick(link.target)}
-                className={`shrink-0 px-5 md:px-6 py-3 font-bold text-sm md:text-[15px] transition-all duration-300 border ${
+                className={`shrink-0 px-5 md:px-6 py-2.5 font-bold text-sm md:text-[15px] rounded-full transition-all duration-200 border ${
                   isActive
-                    ? "bg-slate-900 border-slate-900 text-white shadow-md"
-                    : "bg-white border-slate-200 text-slate-600 hover:border-slate-900 hover:text-slate-900"
+                    ? "bg-slate-900 border-slate-900 text-white shadow-lg shadow-slate-900/20"
+                    : "bg-white border-slate-200 text-slate-500 hover:border-slate-400 hover:text-slate-900 hover:shadow-sm"
                 }`}
               >
                 {link.name}
