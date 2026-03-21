@@ -31,7 +31,7 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen pt-28 md:pt-36 pb-20 font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900 relative">
+    <div className="bg-white min-h-screen pt-32 md:pt-40 pb-20 font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900 relative">
       {/* 1. 탭 네비게이션 */}
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 mb-16 md:mb-20">
         <div className="flex flex-nowrap justify-start lg:justify-center overflow-x-auto gap-2 md:gap-3 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">

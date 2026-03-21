@@ -67,7 +67,7 @@ export const Header = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 h-16 md:h-20 flex items-center transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 h-20 md:h-28 flex items-center transition-all duration-500 ${
           isTransparent
             ? "bg-transparent border-transparent"
             : "bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm"
@@ -76,7 +76,7 @@ export const Header = () => {
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center h-full">
           <Link
             href="/"
-            className="flex-shrink-0 flex items-center h-full py-3 md:py-4"
+            className="flex-shrink-0 flex items-center h-full py-2 md:py-3"
           >
             <img
               src="/images/mainlogo-removebg-preview.png"
@@ -90,7 +90,7 @@ export const Header = () => {
           </Link>
 
           {/* 데스크탑 메뉴 */}
-          <nav className="hidden md:flex items-center gap-6 h-full">
+          <nav className="hidden md:flex items-center gap-8 lg:gap-10 h-full">
             {navItems.map((item) => (
               <div
                 key={item.name}
@@ -98,7 +98,7 @@ export const Header = () => {
               >
                 <Link
                   href={item.path}
-                  className={`flex items-center px-2 transition-all duration-200 text-sm font-semibold tracking-wide ${
+                  className={`flex items-center px-2 transition-all duration-200 text-[15px] md:text-base font-bold ${
                     pathname.startsWith(item.path)
                       ? isTransparent
                         ? "text-white"
@@ -118,7 +118,7 @@ export const Header = () => {
                         <Link
                           key={subItem.name}
                           href={subItem.path}
-                          className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
+                          className={`block px-4 py-2.5 text-[15px] font-medium rounded-lg transition-colors cursor-pointer ${
                             pathname === subItem.path
                               ? "bg-slate-50 text-slate-900 font-bold"
                               : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"

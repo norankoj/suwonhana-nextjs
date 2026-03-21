@@ -35,7 +35,7 @@ interface HeroSubProps {
 
 export function HeroSub({ title, desc }: HeroSubProps) {
   return (
-    <div className="bg-white pt-28 pb-8 border-b border-slate-100">
+    <div className="bg-white pt-36 pb-8 border-b border-slate-100">
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         <div className="pt-4">
           <h1 className="text-fluid-2xl font-extrabold text-slate-900 mb-2">
