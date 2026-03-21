@@ -18,7 +18,7 @@ export default function RecentSermons() {
     const fetchRecent = async () => {
       try {
         const res = await fetch(
-          `${WP_DOMAIN}/wp-json/wp/v2/risen_multimedia?per_page=6&_embed`,
+          `${WP_DOMAIN}/wp-json/wp/v2/risen_multimedia?per_page=5&_embed`,
         );
         if (res.ok) {
           const data = await res.json();
@@ -34,39 +34,42 @@ export default function RecentSermons() {
   }, []);
 
   return (
-    <section className="py-20 md:py-28 bg-white">
+    <section className="py-16 md:py-24 bg-white border-t border-slate-100">
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         {/* 섹션 헤더 */}
-        <div className="flex items-end justify-between mb-10 pb-5 border-b border-slate-100">
+        <div className="flex items-end justify-between mb-8 pb-5 border-b border-slate-100">
           <div>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-2">
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-1.5">
               Message
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
               최근 설교
             </h2>
           </div>
           <Link
             href="/sermon"
-            className="flex items-center gap-1 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors pb-1"
+            className="flex items-center gap-1 text-sm font-semibold text-slate-400 hover:text-slate-900 transition-colors pb-1"
           >
-            전체보기 <ChevronRight size={15} />
+            전체보기 <ChevronRight size={14} />
           </Link>
         </div>
 
-        {/* 카드 그리드 */}
+        {/* 로딩 스켈레톤 */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="rounded-2xl overflow-hidden animate-pulse">
-                <div className="aspect-video bg-slate-100" />
-                <div className="pt-4 space-y-2">
-                  <div className="h-3 bg-slate-100 rounded w-1/4" />
-                  <div className="h-5 bg-slate-100 rounded w-3/4" />
-                  <div className="h-3 bg-slate-100 rounded w-1/3" />
+          <div className="space-y-4">
+            <div className="w-full aspect-[16/7] bg-slate-100 animate-pulse" />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-video bg-slate-100" />
+                  <div className="pt-3 space-y-1.5">
+                    <div className="h-3 bg-slate-100 rounded w-1/3" />
+                    <div className="h-4 bg-slate-100 rounded w-3/4" />
+                    <div className="h-3 bg-slate-100 rounded w-1/4" />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         ) : sermons.length === 0 ? (
           <div className="text-center py-16 text-slate-400">
@@ -74,75 +77,134 @@ export default function RecentSermons() {
             <p className="font-medium">최근 설교를 불러올 수 없습니다.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {sermons.map((item) => {
+          <div className="space-y-4">
+            {/* 상단 - 1개 큰 카드 */}
+            {sermons[0] && (() => {
+              const item = sermons[0];
               const vidId = getYouTubeId(item.sermon_meta?.video_url);
               const thumb = vidId
                 ? `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`
                 : item._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
               const title =
-                item.sermon_meta?.clean_title ||
-                getCleanTitle(item.title.rendered);
+                item.sermon_meta?.clean_title || getCleanTitle(item.title.rendered);
               const tags = item.sermon_meta?.tags || [];
 
               return (
-                <Link
-                  key={item.id}
-                  href="/sermon"
-                  className="group flex flex-col cursor-pointer"
-                >
-                  {/* 썸네일 */}
-                  <div className="relative aspect-video bg-slate-100 rounded-2xl overflow-hidden mb-4 shadow-sm group-hover:shadow-lg transition-shadow duration-300">
-                    {thumb ? (
-                      <img
-                        src={thumb}
-                        alt={title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-slate-100">
-                        <Play size={32} className="text-slate-300" />
-                      </div>
-                    )}
-                    {/* 플레이 버튼 오버레이 */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                      <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform scale-90 group-hover:scale-100">
-                        <Play size={18} className="text-slate-900 fill-slate-900 ml-0.5" />
-                      </div>
-                    </div>
-                    {/* 태그 뱃지 */}
-                    {tags[0] && (
-                      <div className="absolute top-3 left-3">
-                        <span className="text-[10px] font-bold px-2 py-1 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full shadow-sm">
-                          {tags[0]}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 텍스트 정보 */}
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <span className="font-medium">{formatDate(item.date)}</span>
-                      {item.sermon_meta?.speaker && (
-                        <>
-                          <span className="w-px h-3 bg-slate-200"></span>
-                          <span>{item.sermon_meta.speaker}</span>
-                        </>
+                <Link href="/sermon" className="group block">
+                  <div className="flex flex-col md:flex-row border border-slate-100 hover:border-slate-300 transition-colors duration-200">
+                    {/* 썸네일 */}
+                    <div className="relative md:w-[55%] aspect-video overflow-hidden bg-slate-100 shrink-0">
+                      {thumb ? (
+                        <img
+                          src={thumb}
+                          alt={title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-slate-100">
+                          <Play size={40} className="text-slate-300" />
+                        </div>
                       )}
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                        <div className="w-14 h-14 bg-white/90 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <Play size={22} className="text-slate-900 fill-slate-900 ml-0.5" />
+                        </div>
+                      </div>
                     </div>
-                    <h3 className="font-bold text-base text-slate-900 leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors">
-                      {title}
-                    </h3>
-                    {item.sermon_meta?.scripture && (
-                      <p className="text-xs text-slate-400 font-medium">
-                        {item.sermon_meta.scripture}
-                      </p>
-                    )}
+                    {/* 텍스트 정보 */}
+                    <div className="flex flex-col justify-center p-6 md:p-8 md:w-[45%]">
+                      <div className="flex items-center gap-2 mb-3">
+                        {tags[0] && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 uppercase tracking-wide">
+                            {tags[0]}
+                          </span>
+                        )}
+                        {tags[1] && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-50 text-slate-500 uppercase tracking-wide">
+                            {tags[1]}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="font-extrabold text-xl md:text-2xl lg:text-3xl text-slate-900 leading-snug mb-4 line-clamp-3">
+                        {title}
+                      </h3>
+                      <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                        {item.sermon_meta?.scripture && (
+                          <>
+                            <span>{item.sermon_meta.scripture}</span>
+                            <span className="w-px h-3 bg-slate-200" />
+                          </>
+                        )}
+                        {item.sermon_meta?.speaker && (
+                          <>
+                            <span>{item.sermon_meta.speaker}</span>
+                            <span className="w-px h-3 bg-slate-200" />
+                          </>
+                        )}
+                        <span>{formatDate(item.date)}</span>
+                      </div>
+                    </div>
                   </div>
                 </Link>
               );
-            })}
+            })()}
+
+            {/* 하단 - 4열 소카드 */}
+            {sermons.length > 1 && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-1">
+                {sermons.slice(1, 5).map((item) => {
+                  const vidId = getYouTubeId(item.sermon_meta?.video_url);
+                  const thumb = vidId
+                    ? `https://img.youtube.com/vi/${vidId}/maxresdefault.jpg`
+                    : item._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+                  const title =
+                    item.sermon_meta?.clean_title || getCleanTitle(item.title.rendered);
+                  const tags = item.sermon_meta?.tags || [];
+
+                  return (
+                    <Link
+                      key={item.id}
+                      href="/sermon"
+                      className="group flex flex-col"
+                    >
+                      {/* 썸네일 */}
+                      <div className="relative aspect-video bg-slate-100 overflow-hidden border border-slate-100 group-hover:border-slate-300 transition-colors duration-200">
+                        {thumb ? (
+                          <img
+                            src={thumb}
+                            alt={title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-slate-100">
+                            <Play size={20} className="text-slate-300" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                          <div className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <Play size={14} className="text-slate-900 fill-slate-900 ml-0.5" />
+                          </div>
+                        </div>
+                      </div>
+                      {/* 텍스트 */}
+                      <div className="pt-2.5 flex flex-col gap-1">
+                        {tags[0] && (
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                            {tags[0]}
+                          </span>
+                        )}
+                        <h3 className="font-bold text-sm text-slate-900 leading-snug line-clamp-2">
+                          {title}
+                        </h3>
+                        <span className="text-[11px] text-slate-400 font-medium">
+                          {formatDate(item.date)}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </div>
