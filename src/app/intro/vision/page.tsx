@@ -59,24 +59,28 @@ export default async function VisionPage() {
 
   return (
     <div className="bg-white pb-32">
-      <section className="pt-20 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center border-b border-slate-100">
-        <p className="text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-6">
-          {visionStatementText}
-        </p>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.45] tracking-normal">
-          {mainTitleText
-            .split(/<br\s*\/?>|\n/i)
-            .map((line: string, i: number, array: string[]) => (
-              <React.Fragment key={i}>
-                {line.trim()}
-                {i < array.length - 1 && <br />}
-              </React.Fragment>
-            ))}
-        </h1>
+      {/* 히어로 섹션 */}
+      <section className="bg-slate-900 pt-28 md:pt-36 pb-20 md:pb-28">
+        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-6">
+            {visionStatementText}
+          </p>
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-white leading-[1.2] tracking-tight break-keep">
+            {mainTitleText
+              .split(/<br\s*\/?>|\n/i)
+              .map((line: string, i: number, array: string[]) => (
+                <React.Fragment key={i}>
+                  {line.trim()}
+                  {i < array.length - 1 && <br />}
+                </React.Fragment>
+              ))}
+          </h1>
+        </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
-        <div className="flex flex-col gap-24 md:gap-32">
+      {/* Vision 항목들 */}
+      <section className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 mt-24 md:mt-32">
+        <div className="flex flex-col gap-24 md:gap-36">
           {vision.map((item, idx) => {
             const index = idx + 1;
             const mainText = item.desc || "";
@@ -85,12 +89,12 @@ export default async function VisionPage() {
             return (
               <div
                 key={`vision-${idx}`}
-                className={`flex flex-col md:flex-row gap-10 md:gap-16 items-center ${
+                className={`flex flex-col md:flex-row gap-10 md:gap-20 items-center ${
                   isEven ? "" : "md:flex-row-reverse"
                 }`}
               >
                 <div className="w-full md:w-1/2">
-                  <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100 rounded-lg">
+                  <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100 rounded-3xl shadow-lg">
                     <img
                       src={item.image}
                       alt={item.title}
@@ -100,14 +104,15 @@ export default async function VisionPage() {
                 </div>
 
                 <div className="w-full md:w-1/2 flex flex-col justify-center">
-                  <span className="text-blue-600 font-bold tracking-widest text-sm mb-4 uppercase">
+                  <div className="w-10 h-1 bg-blue-600 mb-6 rounded-full"></div>
+                  <span className="text-blue-600 font-bold tracking-widest text-xs mb-3 uppercase font-mono">
                     Vision 0{index}
                   </span>
-                  <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 leading-tight">
+                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-8 leading-tight break-keep tracking-tight">
                     {item.title}
                   </h3>
 
-                  <div className="text-lg text-slate-600 leading-loose text-justify mb-8 space-y-4">
+                  <div className="text-base md:text-lg text-slate-600 leading-loose text-justify mb-8 space-y-4">
                     {mainText
                       .split("\n")
                       .map((paragraph: string, pIdx: number) => {
@@ -117,8 +122,8 @@ export default async function VisionPage() {
                   </div>
 
                   {item.verse && (
-                    <div className="relative bg-slate-50 rounded-sm p-6 pr-8">
-                      <p className="text-slate-500 text-sm md:text-base font-medium leading-relaxed text-justify whitespace-pre-wrap">
+                    <div className="border-l-2 border-slate-200 pl-6 py-1">
+                      <p className="text-slate-500 text-sm md:text-base font-medium leading-relaxed whitespace-pre-wrap italic">
                         &ldquo;{item.verse}&rdquo;
                       </p>
                     </div>
