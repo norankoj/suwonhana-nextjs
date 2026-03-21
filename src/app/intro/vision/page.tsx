@@ -66,18 +66,20 @@ export default async function VisionPage() {
           alt="수원하나교회 공동체"
           className="w-full h-full object-cover object-center opacity-70"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-12 md:pb-16 max-w-content mx-auto">
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-snug break-keep">
-            {mainTitleText
-              .split(/<br\s*\/?>|\n/i)
-              .map((line: string, i: number, array: string[]) => (
-                <React.Fragment key={i}>
-                  {line.trim()}
-                  {i < array.length - 1 && <br />}
-                </React.Fragment>
-              ))}
-          </h1>
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 flex items-center justify-center px-6">
+          <div className="max-w-content w-full text-center">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-snug break-keep">
+              {mainTitleText
+                .split(/<br\s*\/?>|\n/i)
+                .map((line: string, i: number, array: string[]) => (
+                  <React.Fragment key={i}>
+                    {line.trim()}
+                    {i < array.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+            </h1>
+          </div>
         </div>
       </section>
 
