@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import BackToTopButton from "../history/BackToTopButton";
+import IntroPageHeader from "@/components/IntroPageHeader";
 import type { StaffMember, BookItem, WPStaffNode, ServingFields } from "@/lib/types";
 import { fetchPastorAndStaffData } from "@/lib/wordpress";
 import { decodeHtmlEntities } from "@/utils/format";
@@ -106,14 +107,7 @@ export default async function PastorPage() {
   return (
     <div className="bg-white pb-20 font-sans">
       {/* [섹션 1] 통합 페이지 헤더 */}
-      <section className="pt-32 md:pt-40 pb-12 px-4 sm:px-6 lg:px-8 max-w-content mx-auto text-center border-b border-slate-100 mb-16 lg:mb-20">
-        <p className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-6">
-          Serving People
-        </p>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.3] tracking-wide">
-          섬기는 이들
-        </h1>
-      </section>
+      <IntroPageHeader label="Serving People" title="섬기는 이들" />
 
       {/* [섹션 2] 담임목사 프로필 */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 lg:mb-24">

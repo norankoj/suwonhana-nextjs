@@ -10,19 +10,13 @@ import {
   Navigation,
   Clock,
 } from "lucide-react";
+import IntroPageHeader from "@/components/IntroPageHeader";
 
 export default function LocationPage() {
   return (
     <div className="bg-white pb-32 font-sans">
       {/* 페이지 헤더 */}
-      <section className="pt-32 md:pt-40 pb-10 px-4 sm:px-6 lg:px-8 max-w-content mx-auto text-center border-b border-slate-100 mb-12">
-        <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
-          Location & Contact
-        </p>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          오시는 길
-        </h1>
-      </section>
+      <IntroPageHeader label="Location & Contact" title="오시는 길" />
 
       <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* =========================================

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Clock, MapPin, ArrowRight } from "lucide-react";
+import IntroPageHeader from "@/components/IntroPageHeader";
 
 // 재사용 가능한 예배 리스트 아이템 컴포넌트 (원래 소스 그대로!)
 const ServiceItem = ({
@@ -63,14 +64,7 @@ export default function WorshipPage() {
   return (
     <div className="bg-white pb-32 font-sans">
       {/* 헤더 */}
-      <section className="pt-32 md:pt-40 pb-10 px-4 sm:px-6 lg:px-8 max-w-content mx-auto text-center border-b border-slate-100 mb-12">
-        <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
-          Worship Guide
-        </p>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          예배 안내
-        </h1>
-      </section>
+      <IntroPageHeader label="Worship Guide" title="예배 안내" />
 
       <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* 1. 환영 메시지 (Welcome) - 기존 오리지널 소스 */}

@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import CoreValueAccordion from "./CoreValueAccordion";
+import IntroPageHeader from "@/components/IntroPageHeader";
 import type { CoreValueItem } from "@/lib/types";
 import { fetchCoreValuesData } from "@/lib/wordpress";
 
@@ -51,19 +52,12 @@ export default async function CoreValuesPage() {
   return (
     <div className="bg-white pb-32">
       {/* 1. 페이지 헤더 */}
-      <section className="bg-white pt-32 md:pt-40 pb-12 md:pb-16 border-b border-slate-100">
-        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-4">
-            {valueStatementText}
-          </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.2] tracking-tight break-keep mb-6">
-            {mainTitle}
-          </h1>
-          <p className="text-base md:text-lg text-slate-500 font-medium break-keep whitespace-pre-wrap max-w-2xl mx-auto leading-relaxed">
-            {subDesc}
-          </p>
-        </div>
-      </section>
+      <IntroPageHeader label={valueStatementText} title={mainTitle} />
+      {subDesc && (
+        <p className="text-base md:text-lg text-slate-500 font-medium break-keep whitespace-pre-wrap max-w-2xl mx-auto leading-relaxed text-center px-4 -mt-8 mb-12">
+          {subDesc}
+        </p>
+      )}
 
       {/* 2. 핵심가치 아코디언 리스트 */}
       <section className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 mt-16 md:mt-24">
