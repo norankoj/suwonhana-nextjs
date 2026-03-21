@@ -6,6 +6,7 @@ import { MainHero, MainHeroData } from "@/components/MainHero";
 import RecentSermons from "@/components/RecentSermons";
 import WelcomeSection from "@/components/WelcomeSection";
 import type { WPSlide } from "@/lib/types";
+import { groups } from "@/data/data";
 
 // =================================================================
 // [설정 영역] 워드프레스 연결 정보
@@ -146,7 +147,38 @@ export default function MainPage() {
         {/* 5. 최근 설교 (bg-white) */}
         <RecentSermons />
 
-        {/* 6. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
+        {/* 6. 공동체 사진 갤러리 */}
+        {(() => {
+          const communityPhotos = groups
+            .flatMap((g) => g.items)
+            .map((item) => ({ name: item.name, img: item.img }))
+            .filter((i) => i.img);
+          return (
+            <section className="py-14 md:py-20 bg-white border-t border-slate-100">
+              <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-6">
+                  공동체
+                </h2>
+              </div>
+              <div className="flex gap-2 overflow-x-auto px-4 sm:px-6 lg:px-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                {communityPhotos.map((photo, idx) => (
+                  <div
+                    key={idx}
+                    className="relative shrink-0 w-[180px] md:w-[220px] aspect-[3/4] overflow-hidden bg-slate-100"
+                  >
+                    <img
+                      src={photo.img}
+                      alt={photo.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          );
+        })()}
+
+        {/* 7. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
         <section className="py-16 bg-slate-50 border-t border-slate-100">
           <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
