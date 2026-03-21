@@ -77,7 +77,7 @@ export const Header = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 h-14 md:h-16 flex items-center transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 h-16 md:h-20 flex items-center transition-all duration-500 ${
           isTransparent
             ? "bg-transparent border-transparent"
             : "bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm"
@@ -90,7 +90,7 @@ export const Header = () => {
           >
             <img
               src="/images/mainlogo-removebg-preview.png"
-              className={`h-7 md:h-8 w-auto object-contain transition-all duration-500 ${
+              className={`h-9 md:h-11 w-auto object-contain transition-all duration-500 ${
                 isTransparent
                   ? "brightness-0 invert opacity-95"
                   : "hover:opacity-80"
@@ -129,7 +129,7 @@ export const Header = () => {
                           key={subItem.name}
                           href={subItem.path}
                           className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
-                            pathname === subItem.path || subItem.path.startsWith(pathname + "?")
+                            pathname === subItem.path
                               ? "bg-slate-50 text-slate-900 font-bold"
                               : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
                           }`}
