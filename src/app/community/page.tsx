@@ -1,149 +1,130 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense } from "react";
 import { Users, Clock, MapPin } from "lucide-react";
 import { groups } from "@/data/data";
+import { useSearchParams } from "next/navigation";
 
-const quickLinks = [
-  { name: "조이베이비", target: "joybaby" },
-  { name: "조이코너", target: "joycorner" },
-  { name: "조이랜드", target: "joyland" },
-  { name: "YCM", target: "ycm" },
-  { name: "UCM", target: "ucm" },
-  { name: "1진 청년1부", target: "1jin_1" },
-  { name: "1진 청년2부", target: "1jin_2" },
-  { name: "2진", target: "2jin" },
-  { name: "3진", target: "3jin" },
-];
-
-export default function CommunityPage() {
-  const [activeId, setActiveId] = useState<string>("joybaby");
+function CommunityContent() {
+  const searchParams = useSearchParams();
+  const activeId = searchParams.get("id") || "joybaby";
 
   const allItems = groups.flatMap((group) =>
-    group.items.map((item) => ({ ...item, groupName: group.subtitle } as Record<string, unknown> & { id: string; name: string; age: string; sub: string; desc: string; img: string; groupName: string; eng?: string; slogan?: string })),
+    group.items.map((item) => ({
+      ...item,
+      groupName: group.subtitle,
+    } as Record<string, unknown> & {
+      id: string;
+      name: string;
+      age: string;
+      sub: string;
+      desc: string;
+      img: string;
+      groupName: string;
+      eng?: string;
+      slogan?: string;
+    })),
   );
 
   const filteredItems = allItems.filter((item) => item.id === activeId);
 
-  const handleTabClick = (targetId: string) => {
-    setActiveId(targetId);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
-    <div className="bg-white min-h-screen pt-32 md:pt-40 pb-20 font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900 relative">
-      {/* 1. 탭 네비게이션 */}
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 mb-16 md:mb-20">
-        <div className="flex flex-nowrap justify-start lg:justify-center overflow-x-auto gap-2 md:gap-3 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {quickLinks.map((link, idx) => {
-            const isActive = activeId === link.target;
-            return (
-              <button
-                key={idx}
-                onClick={() => handleTabClick(link.target)}
-                className={`shrink-0 px-5 md:px-6 py-2.5 font-bold text-sm md:text-[15px] rounded-full transition-all duration-200 border ${
-                  isActive
-                    ? "bg-slate-900 border-slate-900 text-white shadow-lg shadow-slate-900/20"
-                    : "bg-white border-slate-200 text-slate-500 hover:border-slate-400 hover:text-slate-900 hover:shadow-sm"
-                }`}
-              >
-                {link.name}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+    <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 space-y-24 md:space-y-32">
+      {filteredItems.map((item) => {
+        const subParts = item.sub ? item.sub.split("\n") : [];
+        const slogan = subParts[0] ? subParts[0].trim() : "";
+        const infoLine = subParts.length > 1 ? subParts[1].trim() : "";
+        const infos = infoLine
+          ? infoLine.split(",").map((s: string) => s.trim())
+          : [];
 
-      {/* 2. 본문 영역 */}
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 space-y-24 md:space-y-32">
-        {filteredItems.map((item) => {
-          const subParts = item.sub ? item.sub.split("\n") : [];
-          const slogan = subParts[0] ? subParts[0].trim() : "";
-          const infoLine = subParts.length > 1 ? subParts[1].trim() : "";
-          const infos = infoLine
-            ? infoLine.split(",").map((s: string) => s.trim())
-            : [];
+        return (
+          <section
+            key={`${item.id}-${activeId}`}
+            id={item.id}
+            className="animate-fade-in"
+          >
+            {/* 공동체명 + 영문 */}
+            <div className="mb-6">
+              {item.eng && (
+                <p className="text-xs font-bold tracking-[0.25em] text-slate-400 uppercase mb-2">
+                  {item.eng}
+                </p>
+              )}
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                {item.name}
+              </h2>
+            </div>
 
-          return (
-            <section
-              key={`${item.id}-${activeId}`}
-              id={item.id}
-              className="animate-fade-in pt-8 md:pt-12"
-            >
-              {/* 히어로 이미지 + 오버레이 */}
-              <div className="mb-12 md:mb-16 relative w-full aspect-video md:aspect-[21/9] overflow-hidden rounded-2xl bg-slate-50 shadow-sm">
-                <img
-                  src={item.img}
-                  alt={`${item.name} 대표 사진`}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6 md:p-10">
-                  <span className="text-xs font-bold tracking-[0.25em] text-white/60 uppercase block mb-2">
-                    {item.groupName}
-                  </span>
-                  <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight uppercase leading-none">
-                    {item.name}
-                  </h2>
-                </div>
+            {/* 히어로 이미지 */}
+            <div className="mb-10 relative w-full aspect-video md:aspect-[21/9] overflow-hidden bg-slate-100">
+              <img
+                src={item.img}
+                alt={`${item.name} 대표 사진`}
+                className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              <div className="absolute bottom-0 left-0 p-6 md:p-8">
+                <span className="text-xs font-bold tracking-[0.2em] text-white/70 uppercase">
+                  {item.groupName}
+                </span>
               </div>
+            </div>
 
-              <div className="border-t border-slate-200 py-12 md:py-16">
-                <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
-                  {/* 슬로건 + 인포 카드 */}
-                  <div className="lg:w-1/3 shrink-0">
-                    <span className="text-xs font-bold tracking-widest text-blue-600 uppercase mb-4 block">
-                      {"eng" in item && item.eng ? item.eng : ""}
-                    </span>
+            {/* 정보 + 본문 */}
+            <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 pt-2">
+              {/* 왼쪽: 슬로건 + 인포 */}
+              <div className="lg:w-[320px] shrink-0">
+                {slogan && (
+                  <h3 className="text-xl md:text-2xl font-extrabold mb-6 leading-snug break-keep text-slate-900 border-l-4 border-slate-900 pl-4">
+                    {slogan}
+                  </h3>
+                )}
 
-                    {slogan && (
-                      <h3 className="text-2xl md:text-3xl font-extrabold mb-8 leading-snug break-keep text-slate-900">
-                        {slogan}
-                      </h3>
+                {infos.length > 0 && (
+                  <div className="flex flex-col divide-y divide-slate-100 border border-slate-100">
+                    {infos[0] && (
+                      <div className="flex items-center gap-3 py-3 px-4 text-sm text-slate-700">
+                        <Users size={15} className="text-slate-400 shrink-0" />
+                        <span className="font-medium">{infos[0]}</span>
+                      </div>
                     )}
-
-                    {infos.length > 0 && (
-                      <div className="flex flex-col gap-3 bg-slate-50 p-5 rounded-xl border border-slate-100 shadow-sm">
-                        {infos[0] && (
-                          <div className="flex items-center gap-3 text-[15px] text-slate-700 font-bold break-keep">
-                            <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                              <Users size={18} />
-                            </div>
-                            {infos[0]}
-                          </div>
-                        )}
-                        {infos[1] && (
-                          <div className="flex items-center gap-3 text-[15px] text-slate-700 font-bold break-keep">
-                            <div className="w-9 h-9 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                              <Clock size={18} />
-                            </div>
-                            {infos[1]}
-                          </div>
-                        )}
-                        {infos[2] && (
-                          <div className="flex items-center gap-3 text-[15px] text-slate-700 font-bold break-keep">
-                            <div className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                              <MapPin size={18} />
-                            </div>
-                            {infos[2]}
-                          </div>
-                        )}
+                    {infos[1] && (
+                      <div className="flex items-center gap-3 py-3 px-4 text-sm text-slate-700">
+                        <Clock size={15} className="text-slate-400 shrink-0" />
+                        <span className="font-medium">{infos[1]}</span>
+                      </div>
+                    )}
+                    {infos[2] && (
+                      <div className="flex items-center gap-3 py-3 px-4 text-sm text-slate-700">
+                        <MapPin size={15} className="text-slate-400 shrink-0" />
+                        <span className="font-medium">{infos[2]}</span>
                       </div>
                     )}
                   </div>
-
-                  {/* 본문 설명 */}
-                  <div className="lg:w-2/3 text-[15px] md:text-base text-slate-600 leading-loose break-keep space-y-5">
-                    {item.desc.split("\n").map((line: string, i: number) => (
-                      <p key={i}>{line}</p>
-                    ))}
-                  </div>
-                </div>
+                )}
               </div>
-            </section>
-          );
-        })}
-      </div>
+
+              {/* 오른쪽: 본문 */}
+              <div className="flex-1 text-[15px] md:text-base text-slate-600 leading-loose break-keep space-y-4">
+                {item.desc.split("\n").map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function CommunityPage() {
+  return (
+    <div className="bg-white min-h-screen pt-32 md:pt-40 pb-20 font-sans text-slate-900">
+      <Suspense fallback={<div className="max-w-content mx-auto px-4 py-20 text-slate-400 text-center">로딩 중...</div>}>
+        <CommunityContent />
+      </Suspense>
     </div>
   );
 }
