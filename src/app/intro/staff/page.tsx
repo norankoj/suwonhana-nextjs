@@ -104,9 +104,9 @@ export default async function PastorPage() {
   });
 
   return (
-    <div className="bg-white pb-20 font-sans selection:bg-blue-50 selection:text-blue-900">
+    <div className="bg-white pb-20 font-sans">
       {/* [섹션 1] 통합 페이지 헤더 */}
-      <section className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center border-b border-slate-100 mb-16 lg:mb-20">
+      <section className="pt-32 md:pt-40 pb-12 px-4 sm:px-6 lg:px-8 max-w-content mx-auto text-center border-b border-slate-100 mb-16 lg:mb-20">
         <p className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-6">
           Serving People
         </p>
@@ -150,7 +150,7 @@ export default async function PastorPage() {
                     return (
                       <li key={idx} className="flex items-start gap-3">
                         <span
-                          className={`w-1.5 h-1.5 rounded-full mt-2.5 shrink-0 ${isLast ? "bg-blue-600" : "bg-slate-300"}`}
+                          className={`w-1.5 h-1.5 rounded-full mt-2.5 shrink-0 ${isLast ? "bg-slate-900" : "bg-slate-300"}`}
                         ></span>
                         <span
                           className={isLast ? "font-bold text-slate-900" : ""}
@@ -202,7 +202,7 @@ export default async function PastorPage() {
                       </div>
                     </div>
                   </div>
-                  <h4 className="text-[15px] font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1 px-1">
+                  <h4 className="text-[15px] font-bold text-slate-900 mb-1 group-hover:text-slate-600 transition-colors line-clamp-1 px-1">
                     {book.title}
                   </h4>
                   <p className="text-xs md:text-sm text-slate-500 leading-snug line-clamp-2 break-keep px-1">

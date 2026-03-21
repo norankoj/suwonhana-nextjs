@@ -52,7 +52,7 @@ const ServiceItem = ({
       </div>
     </div>
     <div
-      className={`text-right ${isMain ? "text-xl md:text-2xl" : "text-lg"} font-bold text-blue-900`}
+      className={`text-right ${isMain ? "text-xl md:text-2xl" : "text-lg"} font-bold text-slate-900`}
     >
       {time}
     </div>
@@ -61,20 +61,18 @@ const ServiceItem = ({
 
 export default function WorshipPage() {
   return (
-    <div className="bg-white pb-32 font-sans selection:bg-blue-50 selection:text-blue-900">
-      {/* =========================================
-          [헤더] 상단 여백을 대폭 줄였습니다 (pt-12 pb-8)
-          ========================================= */}
-      <section className="pt-12 pb-8 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-b border-slate-100 mb-10">
+    <div className="bg-white pb-32 font-sans">
+      {/* 헤더 */}
+      <section className="pt-32 md:pt-40 pb-10 px-4 sm:px-6 lg:px-8 max-w-content mx-auto text-center border-b border-slate-100 mb-12">
         <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
           Worship Guide
         </p>
-        <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
           예배 안내
         </h1>
       </section>
 
-      <div className="animate-fade-in max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* 1. 환영 메시지 (Welcome) - 기존 오리지널 소스 */}
         <section className="mb-16">
           <div className="bg-slate-50 rounded-2xl p-8 md:p-10 text-center border border-slate-100">
@@ -92,7 +90,7 @@ export default function WorshipPage() {
                 새가족 담당
               </span>
               <span className="hidden md:block w-px h-3 bg-slate-300"></span>
-              <span className="text-blue-600 font-medium text-sm">
+              <span className="text-slate-700 font-medium text-sm">
                 신상철 목사 (010-2484-0776)
               </span>
             </div>
@@ -133,14 +131,14 @@ export default function WorshipPage() {
               target="청년 및 일반"
             />
           </div>
-          <div className="mt-4 bg-blue-50 p-4 rounded-lg flex items-start gap-3">
-            <div className="mt-0.5 text-blue-600 shrink-0">
+          <div className="mt-4 bg-slate-50 p-4 rounded-lg flex items-start gap-3 border border-slate-100">
+            <div className="mt-0.5 text-slate-500 shrink-0">
               <Clock size={16} />
             </div>
             <p className="text-sm text-slate-700 leading-relaxed break-keep">
               <strong>자녀와 함께 드리는 열린예배:</strong> 모든 주일 예배는
               자녀들과 함께 드리며,
-              <span className="text-blue-700 font-bold ml-1">
+              <span className="font-bold ml-1">
                 '복음과 구원'
               </span>
               에 초점을 맞추어 드려집니다.

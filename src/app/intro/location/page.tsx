@@ -13,20 +13,18 @@ import {
 
 export default function LocationPage() {
   return (
-    <div className="bg-white pb-32 font-sans selection:bg-blue-50 selection:text-blue-900">
-      {/* =========================================
-          [섹션 1] 페이지 헤더 (통일된 규격)
-          ========================================= */}
-      <section className="pt-12 pb-8 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-b border-slate-100 mb-10">
+    <div className="bg-white pb-32 font-sans">
+      {/* 페이지 헤더 */}
+      <section className="pt-32 md:pt-40 pb-10 px-4 sm:px-6 lg:px-8 max-w-content mx-auto text-center border-b border-slate-100 mb-12">
         <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
           Location & Contact
         </p>
-        <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
           오시는 길
         </h1>
       </section>
 
-      <div className="animate-fade-in max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* =========================================
             [섹션 2] 지도 및 기본 정보
             ========================================= */}
@@ -97,7 +95,7 @@ export default function LocationPage() {
           {/* 대중교통 안내 */}
           <section>
             <div className="flex items-center gap-2 mb-6 border-b-2 border-slate-900 pb-3">
-              <Bus className="text-blue-600 shrink-0" size={24} />
+              <Bus className="text-slate-600 shrink-0" size={24} />
               <h3 className="font-bold text-xl md:text-2xl text-slate-900">
                 대중교통 이용 시
               </h3>
@@ -142,7 +140,7 @@ export default function LocationPage() {
                 </h4>
                 <ul className="text-[15px] text-slate-600 space-y-2.5">
                   <li className="flex items-start gap-2.5">
-                    <span className="shrink-0 font-bold bg-blue-100 text-blue-700 text-[11px] px-2 py-0.5 rounded mt-0.5">
+                    <span className="shrink-0 font-bold bg-slate-100 text-slate-700 text-[11px] px-2 py-0.5 rounded mt-0.5">
                       일반버스
                     </span>
                     <span>
@@ -166,7 +164,7 @@ export default function LocationPage() {
                 </h5>
                 <div className="space-y-3 text-[14px]">
                   <div className="flex gap-4 items-start">
-                    <span className="font-bold text-blue-600 shrink-0 w-8">
+                    <span className="font-bold text-slate-600 shrink-0 w-8">
                       일반
                     </span>
                     <span className="text-slate-600 break-keep leading-relaxed">
@@ -188,7 +186,7 @@ export default function LocationPage() {
           {/* 자가용 및 주차 안내 */}
           <section>
             <div className="flex items-center gap-2 mb-6 border-b-2 border-slate-900 pb-3">
-              <Car className="text-blue-600 shrink-0" size={24} />
+              <Car className="text-slate-600 shrink-0" size={24} />
               <h3 className="font-bold text-xl md:text-2xl text-slate-900">
                 주차 및 셔틀버스
               </h3>
@@ -196,29 +194,29 @@ export default function LocationPage() {
 
             <div className="space-y-6 pt-2">
               {/* 중요 알림: 교육관 주차장 */}
-              <div className="bg-blue-50/50 rounded-md p-6 md:p-8 border border-blue-100 relative overflow-hidden group">
+              <div className="bg-slate-50 rounded-md p-6 md:p-8 border border-slate-100 relative overflow-hidden group">
                 <div className="absolute -top-4 -right-4 p-4 opacity-[0.03] group-hover:scale-110 transition-transform duration-500 pointer-events-none">
                   <Car size={120} />
                 </div>
-                <h4 className="font-bold text-blue-900 mb-3 text-lg relative z-10 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                <h4 className="font-bold text-slate-900 mb-3 text-lg relative z-10 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-900"></span>
                   교육관 주차장 이용 안내
                 </h4>
                 <p className="text-[14px] md:text-[15px] text-slate-600 mb-6 relative z-10 leading-[1.7] break-keep">
                   본당 주차 공간이 매우 협소합니다.{" "}
                   <br className="hidden md:block" />
                   방문객 및 성도님들은 넓고 편리한{" "}
-                  <strong className="text-blue-800">교육관 주차장</strong>을
+                  <strong className="text-slate-900">교육관 주차장</strong>을
                   이용해 주시면 감사하겠습니다.
                 </p>
-                <div className="bg-white rounded-md p-4 text-[14px] md:text-[15px] relative z-10 shadow-sm border border-blue-50">
+                <div className="bg-white rounded-md p-4 text-[14px] md:text-[15px] relative z-10 shadow-sm border border-slate-100">
                   <span className="font-bold text-slate-900 block mb-1">
                     교육관 주소
                   </span>
                   <span className="text-slate-500 flex items-start sm:items-center gap-1.5 break-keep">
                     <Navigation
                       size={14}
-                      className="shrink-0 mt-0.5 sm:mt-0 text-blue-400"
+                      className="shrink-0 mt-0.5 sm:mt-0 text-slate-400"
                     />
                     경기 용인시 기흥구 서그내로53번길 30
                   </span>
