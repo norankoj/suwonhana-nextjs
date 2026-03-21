@@ -11,6 +11,7 @@ import type {
   WPStaffNode,
   CoreValueFields,
   HistoryFields,
+  WPCommunityPage,
 } from "./types";
 
 // --- 도메인 설정 (환경변수 우선, 폴백으로 로컬) ---
@@ -256,4 +257,77 @@ export async function fetchHistoryData() {
     page: { historyFields: HistoryFields };
   }>(query);
   return data?.page ?? null;
+}
+
+// ==========================================
+// 공동체 페이지 (REST API)
+// ==========================================
+
+interface WPPageRaw {
+  id: number;
+  title: { rendered: string };
+  content: { rendered: string };
+  featured_media: number;
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string }>;
+    "wp:term"?: unknown;
+  };
+}
+
+interface WPMediaRaw {
+  id: number;
+  source_url: string;
+  media_details?: { sizes?: { large?: { source_url: string } } };
+}
+
+function extractGalleryImages(html: string): string[] {
+  // Extract href links inside gallery-item <a> tags (full-size images)
+  const matches = html.matchAll(/<a href='([^']+\.(jpg|jpeg|png|webp))'>/gi);
+  const urls: string[] = [];
+  for (const m of matches) {
+    if (!urls.includes(m[1])) urls.push(m[1]);
+  }
+  return urls;
+}
+
+export async function fetchCommunityPage(
+  wpId: number,
+): Promise<WPCommunityPage | null> {
+  try {
+    const [pageRes, mediaRes] = await Promise.all([
+      fetch(`${WP_DOMAIN}/wp-json/wp/v2/pages/${wpId}?_embed`, {
+        next: { revalidate: 300 },
+      }),
+      fetch(`${WP_DOMAIN}/wp-json/wp/v2/media?parent=${wpId}&per_page=20`, {
+        next: { revalidate: 300 },
+      }),
+    ]);
+
+    if (!pageRes.ok) return null;
+
+    const page: WPPageRaw = await pageRes.json();
+    const mediaItems: WPMediaRaw[] = mediaRes.ok ? await mediaRes.json() : [];
+
+    const featuredImageUrl =
+      page._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? null;
+
+    // Gallery: prefer attached media items (full-size), fallback to parsing HTML
+    const galleryImages =
+      mediaItems.length > 0
+        ? mediaItems.map(
+            (m) => m.media_details?.sizes?.large?.source_url ?? m.source_url,
+          )
+        : extractGalleryImages(page.content.rendered);
+
+    return {
+      wpId,
+      title: page.title.rendered,
+      contentHtml: page.content.rendered,
+      featuredImageUrl,
+      galleryImages,
+    };
+  } catch (error) {
+    console.error(`fetchCommunityPage error (ID ${wpId}):`, error);
+    return null;
+  }
 }

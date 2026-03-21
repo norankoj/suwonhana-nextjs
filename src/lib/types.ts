@@ -146,3 +146,11 @@ export interface NewsItem {
   content: string;
   image: string;
 }
+
+export interface WPCommunityPage {
+  wpId: number;
+  title: string;
+  contentHtml: string;
+  featuredImageUrl: string | null;
+  galleryImages: string[];
+}
