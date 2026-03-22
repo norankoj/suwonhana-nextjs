@@ -157,7 +157,7 @@ export default function MainPage() {
         const ts = Date.now();
         const pageRes = await fetch(
           `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=content&_=${ts}`,
-          { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
+          { cache: "no-store" }
         );
         if (!pageRes.ok) { setBulletinImages([]); return; }
         const pages: { content: { rendered: string } }[] = await pageRes.json();

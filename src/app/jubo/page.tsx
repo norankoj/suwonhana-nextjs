@@ -24,7 +24,7 @@ async function getBulletinImages(): Promise<{
     const ts = Date.now();
     const res = await fetch(
       `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id,title,date,content&_=${ts}`,
-      { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
+      { cache: "no-store" }
     );
     if (!res.ok) return { images: [] };
 
