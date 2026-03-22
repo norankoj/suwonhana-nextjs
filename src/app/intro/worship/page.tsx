@@ -1,18 +1,11 @@
-"use client";
-
 import React from "react";
+import { ArrowRight } from "lucide-react";
 import IntroPageHeader from "@/components/IntroPageHeader";
+import { fetchWorshipData } from "@/lib/wordpress";
+import type { WorshipServiceItem } from "@/lib/types";
 
-// 주일예배 행 (이름 좌 | 시간 우)
-const SundayRow = ({
-  name,
-  schedule,
-  place,
-}: {
-  name: string;
-  schedule: string;
-  place?: string;
-}) => (
+// 주일예배 행
+const SundayRow = ({ name, schedule, place }: WorshipServiceItem) => (
   <div className="flex items-center justify-between py-4 border-b border-slate-100 last:border-0">
     <div>
       <p className="font-bold text-slate-900 text-base">{name}</p>
@@ -22,7 +15,7 @@ const SundayRow = ({
   </div>
 );
 
-// 이미지 카드형 (다음세대용)
+// 이미지 카드형 (다음세대용 — 하드코딩)
 const ServiceCard = ({
   image,
   name,
@@ -49,7 +42,46 @@ const ServiceCard = ({
   </div>
 );
 
-export default function WorshipPage() {
+// 멤버십 행
+const MembershipRow = ({ name, englishName, schedule, place }: WorshipServiceItem) => (
+  <div className="flex items-center justify-between py-4 border-b border-slate-100 last:border-0">
+    <div>
+      <p className="font-bold text-slate-900 text-base">{name}</p>
+      {englishName && (
+        <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">
+          {englishName}
+        </p>
+      )}
+      {place && <p className="text-sm text-slate-500 mt-0.5">{place}</p>}
+    </div>
+    {schedule && (
+      <p className="text-lg font-bold text-slate-900 tabular-nums shrink-0 ml-6">{schedule}</p>
+    )}
+  </div>
+);
+
+// 다음세대 예배 데이터 (이미지 준비 전까지 하드코딩)
+const NEXT_GEN_SERVICES = [
+  { name: "영아부 (조이베이비)", englishName: "Infant Ministry", schedule: "주일 오전 9시 30분", place: "NGC 지하예배실 · 36개월 미만 + 부모님", image: "/images/temp01.jpg" },
+  { name: "유치부 (조이코너)", englishName: "Kids Corner", schedule: "주일 오후 1시", place: "본당 2층 · 36개월 이상 미취학 + 부모님", image: "/images/temp02.jpg" },
+  { name: "초등부 (조이랜드)", englishName: "Joyland", schedule: "화요일 오후 7시", place: "NGC 지하예배실 · 초등학생", image: "/images/temp03.jpg" },
+  { name: "중고등부 (YCM)", englishName: "Youth Church Ministry", schedule: "주일 오후 4시 30분", place: "본당 2층 · 청소년", image: "/images/worship01.png" },
+];
+
+export default async function WorshipPage() {
+  const worshipData = await fetchWorshipData();
+
+  // WP 데이터 없을 때 폴백
+  const sundayServices = worshipData?.sunday ?? [
+    { name: "주일 1부", schedule: "09:00", place: "본당 2층 대예배실" },
+    { name: "주일 2부", schedule: "11:00", place: "본당 2층 대예배실" },
+    { name: "주일 3부", schedule: "14:30", place: "본당 2층 대예배실 · 청년 및 일반" },
+  ];
+  const membershipServices = worshipData?.membership ?? [
+    { name: "금요 예배", englishName: "Friday Worship Service", schedule: "금요일 오후 9시", place: "본당 2층 대예배실" },
+  ];
+  const sundayNote = worshipData?.sundayNote ?? "모든 주일 예배는 자녀들과 함께 드리며, '복음과 구원'에 초점을 맞추어 드려집니다.";
+
   return (
     <div className="bg-white pb-32 font-sans">
       <IntroPageHeader label="Worship Guide" title="예배 안내" />
@@ -62,32 +94,24 @@ export default function WorshipPage() {
           <div>
             <h3 className="text-xl font-bold text-slate-900 mb-2">주일 예배</h3>
             <div className="border-t border-slate-200">
-              <SundayRow name="주일 1부" schedule="09:00" place="본당 2층 대예배실" />
-              <SundayRow name="주일 2부" schedule="11:00" place="본당 2층 대예배실" />
-              <SundayRow name="주일 3부" schedule="14:30" place="본당 2층 대예배실 · 청년 및 일반" />
+              {sundayServices.map((s) => (
+                <SundayRow key={s.name} {...s} />
+              ))}
             </div>
-            <p className="mt-4 text-sm text-slate-500 break-keep">
-              모든 주일 예배는 자녀들과 함께 드리며, '복음과 구원'에 초점을 맞추어 드려집니다.
-            </p>
+            <p className="mt-4 text-sm text-slate-500 break-keep">{sundayNote}</p>
           </div>
 
-          {/* 우: 멤버십 예배 + 온라인 예배 */}
+          {/* 우: 멤버십 + 온라인 */}
           <div className="space-y-8">
-            {/* 멤버십 예배 */}
             <div>
               <h3 className="text-xl font-bold text-slate-900 mb-2">멤버십 예배</h3>
               <div className="border-t border-slate-200">
-                <div className="flex items-center justify-between py-4">
-                  <div>
-                    <p className="font-bold text-slate-900 text-base">금요 예배</p>
-                    <p className="text-sm text-slate-500 mt-0.5">본당 2층 대예배실</p>
-                  </div>
-                  <p className="text-2xl font-bold text-slate-900 tabular-nums shrink-0 ml-6">금 21:00</p>
-                </div>
+                {membershipServices.map((s) => (
+                  <MembershipRow key={s.name} {...s} />
+                ))}
               </div>
             </div>
 
-            {/* 온라인 예배 */}
             <div>
               <h3 className="text-xl font-bold text-slate-900 mb-2">온라인 예배</h3>
               <div className="border-t border-slate-200 pt-4">
@@ -110,38 +134,13 @@ export default function WorshipPage() {
           </div>
         </section>
 
-        {/* 다음세대 예배 — 이미지 카드형 */}
+        {/* 다음세대 예배 — 이미지 카드형 (하드코딩) */}
         <section>
           <h3 className="text-xl font-bold text-slate-900 mb-8">다음세대 예배</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <ServiceCard
-              image="/images/temp01.jpg"
-              name="영아부 (조이베이비)"
-              englishName="Infant Ministry"
-              schedule="주일 오전 9시 30분"
-              place="NGC 지하예배실 · 36개월 미만 + 부모님"
-            />
-            <ServiceCard
-              image="/images/temp02.jpg"
-              name="유치부 (조이코너)"
-              englishName="Kids Corner"
-              schedule="주일 오후 1시"
-              place="본당 2층 · 36개월 이상 미취학 + 부모님"
-            />
-            <ServiceCard
-              image="/images/temp03.jpg"
-              name="초등부 (조이랜드)"
-              englishName="Joyland"
-              schedule="화요일 오후 7시"
-              place="NGC 지하예배실 · 초등학생"
-            />
-            <ServiceCard
-              image="/images/worship01.png"
-              name="중고등부 (YCM)"
-              englishName="Youth Church Ministry"
-              schedule="주일 오후 4시 30분"
-              place="본당 2층 · 청소년"
-            />
+            {NEXT_GEN_SERVICES.map((s) => (
+              <ServiceCard key={s.name} {...s} />
+            ))}
           </div>
         </section>
 

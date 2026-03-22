@@ -11,6 +11,8 @@ import type {
   WPStaffNode,
   CoreValueFields,
   HistoryFields,
+  WorshipFields,
+  WorshipData,
   WPCommunityPage,
 } from "./types";
 
@@ -99,6 +101,24 @@ async function wpGraphQL<T>(query: string): Promise<T | null> {
 }
 
 // ==========================================
+// 홈페이지 설정 (ACF — Bento Grid 이미지)
+// ==========================================
+
+export async function fetchHomepageData(): Promise<Record<string, string> | null> {
+  try {
+    const res = await fetch(
+      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=homepage-settings&_fields=acf`,
+      { next: { revalidate: 300 } },
+    );
+    if (!res.ok) return null;
+    const pages: Array<{ acf?: Record<string, string> }> = await res.json();
+    return pages[0]?.acf ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// ==========================================
 // 슬라이드 (메인 히어로)
 // ==========================================
 
@@ -146,6 +166,7 @@ export async function fetchVisionData() {
   const query = `
     query GetVisionPage {
       page(id: "비전-및-사역", idType: URI) {
+        featuredImage { node { sourceUrl } }
         visionFields {
           mainTitle
           visionStatement
@@ -165,10 +186,14 @@ export async function fetchVisionData() {
       }
     }
   `;
-  const data = await wpGraphQL<{ page: { visionFields: VisionFields } }>(
-    query,
-  );
-  return data?.page ?? null;
+  const data = await wpGraphQL<{
+    page: { featuredImage?: { node: { sourceUrl: string } }; visionFields: VisionFields };
+  }>(query);
+  if (!data?.page) return null;
+  return {
+    ...data.page,
+    heroImageUrl: data.page.featuredImage?.node?.sourceUrl ?? null,
+  };
 }
 
 // ==========================================
@@ -260,6 +285,35 @@ export async function fetchHistoryData() {
 }
 
 // ==========================================
+// 예배 안내 페이지 (GraphQL)
+// ==========================================
+
+export async function fetchWorshipData(): Promise<WorshipData | null> {
+  const query = `
+    query GetWorshipPage {
+      page(id: "예배-안내", idType: URI) {
+        worshipFields {
+          worshipJsonData
+        }
+      }
+    }
+  `;
+  const data = await wpGraphQL<{
+    page: { worshipFields: WorshipFields };
+  }>(query);
+
+  const raw = data?.page?.worshipFields?.worshipJsonData;
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw) as WorshipData;
+  } catch {
+    console.error("fetchWorshipData: JSON 파싱 실패", raw);
+    return null;
+  }
+}
+
+// ==========================================
 // 공동체 페이지 (REST API)
 // ==========================================
 
@@ -268,6 +322,7 @@ interface WPPageRaw {
   title: { rendered: string };
   content: { rendered: string };
   featured_media: number;
+  acf?: Record<string, string>;
   _embedded?: {
     "wp:featuredmedia"?: Array<{ source_url: string }>;
     "wp:term"?: unknown;
@@ -277,57 +332,56 @@ interface WPPageRaw {
 interface WPMediaRaw {
   id: number;
   source_url: string;
+  status?: string;
   media_details?: { sizes?: { large?: { source_url: string } } };
 }
 
-function extractGalleryImages(html: string): string[] {
-  // Extract href links inside gallery-item <a> tags (full-size images)
-  const matches = html.matchAll(/<a href='([^']+\.(jpg|jpeg|png|webp))'>/gi);
-  const urls: string[] = [];
-  for (const m of matches) {
-    if (!urls.includes(m[1])) urls.push(m[1]);
-  }
-  return urls;
-}
-
 export async function fetchCommunityPage(
-  wpId: number,
+  slug: string,
 ): Promise<WPCommunityPage | null> {
   try {
-    const [pageRes, mediaRes] = await Promise.all([
-      fetch(`${WP_DOMAIN}/wp-json/wp/v2/pages/${wpId}?_embed`, {
-        next: { revalidate: 300 },
-      }),
-      fetch(`${WP_DOMAIN}/wp-json/wp/v2/media?parent=${wpId}&per_page=20`, {
-        next: { revalidate: 300 },
-      }),
-    ]);
-
+    // 슬러그로 페이지 조회 (ACF + 피처드 이미지 포함)
+    const pageRes = await fetch(
+      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=${slug}&_embed`,
+      { next: { revalidate: 300 } },
+    );
     if (!pageRes.ok) return null;
 
-    const page: WPPageRaw = await pageRes.json();
-    const mediaItems: WPMediaRaw[] = mediaRes.ok ? await mediaRes.json() : [];
+    const pages: WPPageRaw[] = await pageRes.json();
+    const page = pages[0];
+    if (!page) return null;
+
+    // 첨부 미디어 조회 — status=inherit 로 trash 제외
+    const mediaRes = await fetch(
+      `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${page.id}&per_page=20&status=inherit`,
+      { next: { revalidate: 300 } },
+    );
+    const rawMedia: WPMediaRaw[] = mediaRes.ok ? await mediaRes.json() : [];
 
     const featuredImageUrl =
       page._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? null;
 
-    // Gallery: prefer attached media items (full-size), fallback to parsing HTML
-    const galleryImages =
-      mediaItems.length > 0
-        ? mediaItems.map(
-            (m) => m.media_details?.sizes?.large?.source_url ?? m.source_url,
-          )
-        : extractGalleryImages(page.content.rendered);
+    // 갤러리: 첨부 미디어만 사용 (content 파싱 제거 → 삭제된 이미지 표시 방지)
+    const galleryImages = rawMedia.map(
+      (m) => m.media_details?.sizes?.large?.source_url ?? m.source_url,
+    );
+
+    // ACF 필드 (WP REST API가 `acf` 키로 자동 노출)
+    const acf = page.acf || {};
 
     return {
-      wpId,
+      wpId: page.id,
       title: page.title.rendered,
       contentHtml: page.content.rendered,
       featuredImageUrl,
       galleryImages,
+      acfTitle: acf.community_title || "",
+      acfAge: acf.community_age || "",
+      acfSchedule: acf.community_schedule || "",
+      acfLocation: acf.community_location || "",
     };
   } catch (error) {
-    console.error(`fetchCommunityPage error (ID ${wpId}):`, error);
+    console.error(`fetchCommunityPage error (slug: ${slug}):`, error);
     return null;
   }
 }

@@ -97,6 +97,25 @@ export interface HistoryFields {
   historyJsonData: string;
 }
 
+export interface WorshipFields {
+  worshipJsonData: string;
+}
+
+// --- 예배 안내 UI 타입 ---
+
+export interface WorshipServiceItem {
+  name: string;
+  englishName?: string;
+  schedule: string;
+  place?: string;
+}
+
+export interface WorshipData {
+  sundayNote: string;
+  sunday: WorshipServiceItem[];
+  membership: WorshipServiceItem[];
+}
+
 // --- 공통 UI 타입 ---
 
 export interface VisionItem {
@@ -153,4 +172,9 @@ export interface WPCommunityPage {
   contentHtml: string;
   featuredImageUrl: string | null;
   galleryImages: string[];
+  // ACF 필드
+  acfTitle?: string;       // community_title (슬로건/타이틀)
+  acfAge?: string;         // community_age (대상 나이)
+  acfSchedule?: string;    // community_schedule (예배 일시)
+  acfLocation?: string;    // community_location (장소)
 }
