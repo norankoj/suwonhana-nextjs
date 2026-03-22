@@ -5,6 +5,7 @@ import { ArrowRight, ChevronRight, Copy, X, ChevronDown } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
 import RecentSermons from "@/components/RecentSermons";
 import WelcomeSection from "@/components/WelcomeSection";
+import HomePhotoCarousel from "@/components/HomePhotoCarousel";
 import type { WPSlide } from "@/lib/types";
 import { groups } from "@/data/data";
 
@@ -24,6 +25,70 @@ export default function MainPage() {
 
   // null = 로딩 중, [] = 데이터 없음, 배열 = 데이터 있음
   const [heroSlides, setHeroSlides] = useState<MainHeroData[] | null>(null);
+  // null = 로딩 중, {} = 로딩 완료(데이터 없음), { key: url } = 로딩 완료(데이터 있음)
+  const [wpHomeData, setWpHomeData] = useState<Record<string, string> | null>(null);
+
+  // =================================================================
+  // [API 연동] 홈페이지 ACF 데이터 (Bento Grid 이미지)
+  // =================================================================
+  useEffect(() => {
+    const loadHomeData = async () => {
+      try {
+        const url = `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=homepage-settings`;
+        const r = await fetch(url);
+        const pages: Array<{ id?: number; acf?: Record<string, unknown> | false }> = r.ok ? await r.json() : [];
+
+        if (!pages.length) {
+          console.warn("[WP] ❌ homepage-settings 페이지 없음");
+          return;
+        }
+        const page = pages[0];
+        if (!page.acf) {
+          console.warn("[WP] ❌ acf false — ACF 위치 규칙 확인 필요. page.id:", page.id);
+          return;
+        }
+
+        // 반환 형식 자동 처리: URL string / 배열 object / ID number
+        const normalized: Record<string, string> = {};
+        const idEntries: Array<[string, number]> = [];
+
+        for (const [key, val] of Object.entries(page.acf as Record<string, unknown>)) {
+          if (typeof val === "string" && val) {
+            normalized[key] = val;
+          } else if (typeof val === "number" && val) {
+            idEntries.push([key, val]);
+          } else if (val && typeof val === "object") {
+            if ("url" in val) normalized[key] = (val as { url: string }).url;
+            else if ("sizes" in val) {
+              const s = (val as { sizes?: { large?: string; full?: string } }).sizes;
+              normalized[key] = s?.large || s?.full || "";
+            }
+          }
+        }
+
+        // Image ID → media API로 URL 조회
+        if (idEntries.length > 0) {
+          console.log("[WP] Image ID 형식 감지, media API 조회 중...", idEntries);
+          const results = await Promise.all(
+            idEntries.map(async ([key, id]) => {
+              const mr = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/media/${id}`).catch(() => null);
+              const m = mr?.ok ? await mr.json() : null;
+              return m?.source_url ? [key, m.source_url as string] as [string, string] : null;
+            })
+          );
+          results.forEach((res) => { if (res) normalized[res[0]] = res[1]; });
+        }
+
+        console.log("[WP] ✅ home images:", normalized);
+        setWpHomeData(normalized);
+      } catch (err) {
+        console.error("[WP] homepage-settings fetch 실패:", err);
+        setWpHomeData({}); // 실패해도 로딩 완료 처리
+      }
+    };
+    loadHomeData();
+  }, []);
+
   // =================================================================
   // [API 연동] 워드프레스에서 슬라이드 이미지 가져오기
   // =================================================================
@@ -138,16 +203,63 @@ export default function MainPage() {
           </div>
         </section>
 
-        {/* 3. 새가족 안내 (bg-slate-50으로 자연스러운 구분) */}
+        {/* 3. 교회 소개 이미지 — 캐러셀 */}
+        <section className="pb-20 md:pb-28 bg-white">
+          {wpHomeData === null ? (
+            /* ── 로딩 스켈레톤 ── */
+            <div className="flex flex-col items-center gap-5">
+              {/* 메인 슬라이드 스켈레톤 */}
+              <div className="w-full flex items-center justify-center gap-3 md:gap-4 overflow-hidden">
+                {/* 좌측 흐린 카드 */}
+                <div className="shrink-0 w-[12%] md:w-[16%] aspect-[16/9] bg-slate-100 rounded opacity-40" />
+                {/* 중앙 메인 카드 */}
+                <div className="shrink-0 w-[75%] md:w-[58%] aspect-[16/9] bg-slate-200 rounded overflow-hidden relative">
+                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+                </div>
+                {/* 우측 흐린 카드 */}
+                <div className="shrink-0 w-[12%] md:w-[16%] aspect-[16/9] bg-slate-100 rounded opacity-40" />
+              </div>
+              {/* 로딩 텍스트 + 점 애니메이션 */}
+              <div className="flex items-center gap-1.5 text-slate-400 text-sm">
+                <span>사진을 불러오는 중</span>
+                <span className="flex gap-0.5">
+                  <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce [animation-delay:0ms]" />
+                  <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce [animation-delay:150ms]" />
+                  <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce [animation-delay:300ms]" />
+                </span>
+              </div>
+              {/* 닷 인디케이터 스켈레톤 */}
+              <div className="flex gap-1.5">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className={`h-1.5 rounded-full bg-slate-200 ${i === 0 ? "w-6" : "w-1.5"}`} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            /* ── 로딩 완료: 실제 캐러셀 ── */
+            <HomePhotoCarousel
+              images={[
+                { src: wpHomeData.bento_image_1 || "/images/worship01.png"    },
+                { src: wpHomeData.bento_image_2 || "/images/temp01.jpg"       },
+                { src: wpHomeData.bento_image_3 || "/images/temp02.jpg"       },
+                { src: wpHomeData.bento_image_4 || "/images/pastor_ko2.jpg"   },
+                { src: wpHomeData.bento_image_5 || "/images/corner.jpg"       },
+                { src: wpHomeData.bento_image_6 || "/images/background01.jpg" },
+              ]}
+            />
+          )}
+        </section>
+
+        {/* 4. 새가족 안내 (bg-slate-50으로 자연스러운 구분) */}
         <WelcomeSection />
 
-        {/* 4. 이벤트 배너 (필요시 활성화, bg-white 영역) */}
+        {/* 5. 이벤트 배너 (필요시 활성화, bg-white 영역) */}
         {/* <EventBanner slidesData={heroSlides} /> */}
 
-        {/* 5. 최근 설교 (bg-white) */}
+        {/* 6. 최근 설교 (bg-white) */}
         <RecentSermons />
 
-        {/* 6. 공동체 사진 자동 슬라이드 */}
+        {/* 7. 공동체 사진 자동 슬라이드 */}
         {(() => {
           const communityPhotos = (groups as Array<{ subtitle: string; items: Array<{ name: string; img: string }> }>)
             .flatMap((g) => g.items)
@@ -174,7 +286,7 @@ export default function MainPage() {
           );
         })()}
 
-        {/* 7. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
+        {/* 8. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
         <section className="py-16 bg-slate-50 border-t border-slate-100">
           <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
