@@ -172,19 +172,11 @@ export default function MainPage() {
           if (clean && !seen.has(clean)) { seen.add(clean); images.push({ url: clean }); }
         };
 
+        // src에서 -NxN suffix 제거 → 원본 URL 복원 (srcset은 크롭 썸네일만 포함)
         const imgTagRegex = /<img[^>]+>/gi;
         let tag;
         while ((tag = imgTagRegex.exec(html)) !== null) {
-          const imgTag = tag[0];
-          // 1순위: srcset 마지막(최대) 항목
-          const srcsetMatch = /srcset="([^"]+)"/.exec(imgTag);
-          if (srcsetMatch) {
-            const entries = srcsetMatch[1].split(",").map((s) => s.trim()).filter(Boolean);
-            const url = entries[entries.length - 1]?.split(/\s+/)[0];
-            if (url) { addImage(url); continue; }
-          }
-          // 2순위: src 썸네일 suffix 제거
-          const srcMatch = /src="([^"]+)"/.exec(imgTag);
+          const srcMatch = /src="([^"]+)"/.exec(tag[0]);
           if (srcMatch) {
             addImage(srcMatch[1].replace(/-\d+x\d+(\.[^.?]+)$/, "$1"));
           }

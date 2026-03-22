@@ -42,24 +42,13 @@ async function getBulletinImages(): Promise<{
       if (clean && !seen.has(clean)) { seen.add(clean); images.push({ url: clean }); }
     };
 
-    // img 태그 하나씩 순회
+    // img 태그 src에서 썸네일 suffix 제거 → 원본 URL 복원
+    // WP 갤러리 srcset은 정사각형 크롭(150x150 등)만 포함해 화질이 깨짐
+    // src에서 -NxN을 제거하면 원본 파일을 가리킴
     const imgTagRegex = /<img[^>]+>/gi;
     let tag;
     while ((tag = imgTagRegex.exec(html)) !== null) {
-      const imgTag = tag[0];
-
-      // 1순위: srcset에서 가장 큰 이미지 추출
-      const srcsetMatch = /srcset="([^"]+)"/.exec(imgTag);
-      if (srcsetMatch) {
-        const entries = srcsetMatch[1].split(",").map((s) => s.trim()).filter(Boolean);
-        // 마지막 항목이 가장 큰 이미지
-        const lastEntry = entries[entries.length - 1];
-        const url = lastEntry?.split(/\s+/)[0];
-        if (url) { addImage(url); continue; }
-      }
-
-      // 2순위: src에서 썸네일 suffix 제거 → 원본 URL 복원
-      const srcMatch = /src="([^"]+)"/.exec(imgTag);
+      const srcMatch = /src="([^"]+)"/.exec(tag[0]);
       if (srcMatch) {
         const original = srcMatch[1].replace(/-\d+x\d+(\.[^.?]+)$/, "$1");
         addImage(original);
