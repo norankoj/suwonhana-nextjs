@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MapPin, Phone, Navigation, Clock } from "lucide-react";
+import { MapPin, Phone, Navigation } from "lucide-react";
 import IntroPageHeader from "@/components/IntroPageHeader";
 
 export default function LocationPage() {
@@ -65,11 +65,9 @@ export default function LocationPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
           {/* 대중교통 */}
           <section>
-            <div className="mb-5 pb-3 border-b border-slate-200">
-              <h3 className="font-bold text-lg text-slate-900">대중교통 이용 시</h3>
-            </div>
+            <h3 className="font-bold text-xl text-slate-900 mb-6">대중교통 이용 시</h3>
 
-            <div className="space-y-6 text-sm text-slate-600">
+            <div className="space-y-5 text-sm text-slate-600">
               <div>
                 <p className="font-semibold text-slate-900 mb-1">
                   수인분당선 영통역{" "}
@@ -92,8 +90,8 @@ export default function LocationPage() {
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-slate-100">
-                <p className="text-slate-500 mb-2">주변 경유 버스</p>
+              <div>
+                <p className="text-slate-500 mb-1.5">주변 경유 버스</p>
                 <p>
                   <span className="text-slate-700 font-medium">일반</span>{" "}
                   <span className="text-slate-500">1112, M5107, 5100, 7000 등</span>
@@ -108,16 +106,14 @@ export default function LocationPage() {
 
           {/* 주차 및 셔틀버스 */}
           <section>
-            <div className="mb-5 pb-3 border-b border-slate-200">
-              <h3 className="font-bold text-lg text-slate-900">주차 및 셔틀버스</h3>
-            </div>
+            <h3 className="font-bold text-xl text-slate-900 mb-6">주차 및 셔틀버스</h3>
 
-            <div className="space-y-6 text-sm text-slate-600">
+            <div className="space-y-5 text-sm text-slate-600">
               <div>
                 <p className="font-semibold text-slate-900 mb-1">
                   교육관 주차장 이용 안내
                 </p>
-                <p className="mb-3 break-keep">
+                <p className="mb-2 break-keep">
                   본당 주차 공간이 협소하므로 방문객 및 성도님들은{" "}
                   <strong className="text-slate-800">교육관 주차장</strong>을
                   이용해 주시기 바랍니다.
@@ -128,15 +124,10 @@ export default function LocationPage() {
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-slate-100">
-                <p className="font-semibold text-slate-900 mb-1 flex items-center gap-1.5">
-                  <Clock size={14} className="text-slate-400" />
-                  셔틀버스 운행 안내
-                </p>
+              <div>
+                <p className="font-semibold text-slate-900 mb-1">셔틀버스 운행 안내</p>
                 <p className="text-slate-500 mb-3 break-keep">
-                  교육관 ↔ 본당 간 셔틀버스 운행
-                  <br />
-                  (각 예배 20분 전부터 수시 운행)
+                  교육관 ↔ 본당 간 셔틀버스 운행 (각 예배 20분 전부터 수시 운행)
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {[
