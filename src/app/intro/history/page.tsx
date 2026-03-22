@@ -114,7 +114,7 @@ export default async function HistoryPage() {
                         return (
                           <div
                             key={eIdx}
-                            className="text-white text-sm md:text-base leading-relaxed break-keep"
+                            className="text-white text-[15px] md:text-[17px] leading-[1.8] break-keep"
                           >
                             {formattedDate && (
                               <span className="text-white/80 mr-2 font-medium">
