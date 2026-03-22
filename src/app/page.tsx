@@ -168,20 +168,25 @@ export default function MainPage() {
         const images: { url: string }[] = [];
         const seen = new Set<string>();
         const addImage = (url: string) => {
-          if (!seen.has(url)) { seen.add(url); images.push({ url }); }
+          const clean = url.split("?")[0];
+          if (clean && !seen.has(clean)) { seen.add(clean); images.push({ url: clean }); }
         };
 
-        // 1순위: 갤러리 <a href="원본"> 에서 추출
-        const hrefRegex = /href="([^"]+\.(?:jpg|jpeg|png|webp))"/gi;
-        let m;
-        while ((m = hrefRegex.exec(html)) !== null) addImage(m[1]);
-
-        // 2순위: 직접 삽입 이미지 img src
-        if (images.length === 0) {
-          const imgRegex = /<img[^>]+src="([^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/gi;
-          while ((m = imgRegex.exec(html)) !== null) {
-            const url = m[1].split("?")[0];
-            if (!/-\d+x\d+\./.test(url)) addImage(url);
+        const imgTagRegex = /<img[^>]+>/gi;
+        let tag;
+        while ((tag = imgTagRegex.exec(html)) !== null) {
+          const imgTag = tag[0];
+          // 1순위: srcset 마지막(최대) 항목
+          const srcsetMatch = /srcset="([^"]+)"/.exec(imgTag);
+          if (srcsetMatch) {
+            const entries = srcsetMatch[1].split(",").map((s) => s.trim()).filter(Boolean);
+            const url = entries[entries.length - 1]?.split(/\s+/)[0];
+            if (url) { addImage(url); continue; }
+          }
+          // 2순위: src 썸네일 suffix 제거
+          const srcMatch = /src="([^"]+)"/.exec(imgTag);
+          if (srcMatch) {
+            addImage(srcMatch[1].replace(/-\d+x\d+(\.[^.?]+)$/, "$1"));
           }
         }
         setBulletinImages(images);

@@ -37,24 +37,32 @@ async function getBulletinImages(): Promise<{
     const html = page.content.rendered;
     const images: { url: string }[] = [];
     const seen = new Set<string>();
-
     const addImage = (url: string) => {
-      if (!seen.has(url)) { seen.add(url); images.push({ url }); }
+      const clean = url.split("?")[0];
+      if (clean && !seen.has(clean)) { seen.add(clean); images.push({ url: clean }); }
     };
 
-    // 1순위: 갤러리 <a href="원본이미지"> 링크에서 추출 (썸네일의 원본)
-    const hrefRegex = /href="([^"]+\.(?:jpg|jpeg|png|webp))"/gi;
-    let match;
-    while ((match = hrefRegex.exec(html)) !== null) {
-      addImage(match[1]);
-    }
+    // img 태그 하나씩 순회
+    const imgTagRegex = /<img[^>]+>/gi;
+    let tag;
+    while ((tag = imgTagRegex.exec(html)) !== null) {
+      const imgTag = tag[0];
 
-    // 2순위: href에서 못 찾았을 때(직접 삽입 이미지) img src에서 추출
-    if (images.length === 0) {
-      const imgRegex = /<img[^>]+src="([^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/gi;
-      while ((match = imgRegex.exec(html)) !== null) {
-        const url = match[1].split("?")[0]; // 쿼리스트링 제거
-        if (!/-\d+x\d+\./.test(url)) addImage(url); // 썸네일 제외
+      // 1순위: srcset에서 가장 큰 이미지 추출
+      const srcsetMatch = /srcset="([^"]+)"/.exec(imgTag);
+      if (srcsetMatch) {
+        const entries = srcsetMatch[1].split(",").map((s) => s.trim()).filter(Boolean);
+        // 마지막 항목이 가장 큰 이미지
+        const lastEntry = entries[entries.length - 1];
+        const url = lastEntry?.split(/\s+/)[0];
+        if (url) { addImage(url); continue; }
+      }
+
+      // 2순위: src에서 썸네일 suffix 제거 → 원본 URL 복원
+      const srcMatch = /src="([^"]+)"/.exec(imgTag);
+      if (srcMatch) {
+        const original = srcMatch[1].replace(/-\d+x\d+(\.[^.?]+)$/, "$1");
+        addImage(original);
       }
     }
 
