@@ -96,12 +96,14 @@ export default function WorshipPage() {
                   href="https://youtube.com/@수원하나교회"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF0000] text-white text-sm font-semibold rounded hover:opacity-90 transition-opacity"
+                  className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors group"
                 >
-                  <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white" xmlns="http://www.w3.org/2000/svg">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 fill-[#FF0000] shrink-0" xmlns="http://www.w3.org/2000/svg">
                     <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/>
                   </svg>
-                  유튜브 채널 바로가기
+                  <span className="underline underline-offset-2 decoration-slate-300 group-hover:decoration-slate-600 transition-colors">
+                    유튜브 채널 바로가기
+                  </span>
                 </a>
               </div>
             </div>
