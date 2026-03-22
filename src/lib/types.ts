@@ -99,6 +99,10 @@ export interface HistoryFields {
 
 export interface WorshipFields {
   worshipJsonData: string;
+  nextgen1Image?: WPImageField;
+  nextgen2Image?: WPImageField;
+  nextgen3Image?: WPImageField;
+  nextgen4Image?: WPImageField;
 }
 
 // --- 예배 안내 UI 타입 ---
@@ -116,6 +120,11 @@ export interface WorshipData {
   sunday: WorshipServiceItem[];
   nextGen: WorshipServiceItem[];
   membership: WorshipServiceItem[];
+}
+
+export interface WorshipFetchResult {
+  data: WorshipData | null;
+  nextGenImages: (string | null)[];
 }
 
 // --- 공통 UI 타입 ---

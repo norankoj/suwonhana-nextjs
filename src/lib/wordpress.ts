@@ -13,6 +13,7 @@ import type {
   HistoryFields,
   WorshipFields,
   WorshipData,
+  WorshipFetchResult,
   WPCommunityPage,
 } from "./types";
 
@@ -288,29 +289,45 @@ export async function fetchHistoryData() {
 // 예배 안내 페이지 (GraphQL)
 // ==========================================
 
-export async function fetchWorshipData(): Promise<WorshipData | null> {
+export async function fetchWorshipData(): Promise<WorshipFetchResult> {
   const query = `
     query GetWorshipPage {
       page(id: "예배-안내", idType: URI) {
         worshipFields {
           worshipJsonData
+          nextgen1Image { node { sourceUrl } }
+          nextgen2Image { node { sourceUrl } }
+          nextgen3Image { node { sourceUrl } }
+          nextgen4Image { node { sourceUrl } }
         }
       }
     }
   `;
-  const data = await wpGraphQL<{
+  const result = await wpGraphQL<{
     page: { worshipFields: WorshipFields };
   }>(query);
 
-  const raw = data?.page?.worshipFields?.worshipJsonData;
-  if (!raw) return null;
+  const fields = result?.page?.worshipFields;
 
-  try {
-    return JSON.parse(raw) as WorshipData;
-  } catch {
-    console.error("fetchWorshipData: JSON 파싱 실패", raw);
-    return null;
+  // JSON 파싱
+  let data: WorshipData | null = null;
+  if (fields?.worshipJsonData) {
+    try {
+      data = JSON.parse(fields.worshipJsonData) as WorshipData;
+    } catch {
+      console.error("fetchWorshipData: JSON 파싱 실패");
+    }
   }
+
+  // ACF 이미지 필드 (순서: 1~4)
+  const nextGenImages: (string | null)[] = [
+    fields?.nextgen1Image?.node?.sourceUrl ?? null,
+    fields?.nextgen2Image?.node?.sourceUrl ?? null,
+    fields?.nextgen3Image?.node?.sourceUrl ?? null,
+    fields?.nextgen4Image?.node?.sourceUrl ?? null,
+  ];
+
+  return { data, nextGenImages };
 }
 
 // ==========================================

@@ -70,7 +70,7 @@ const NEXT_GEN_FALLBACK = [
 ];
 
 export default async function WorshipPage() {
-  const worshipData = await fetchWorshipData();
+  const { data: worshipData, nextGenImages } = await fetchWorshipData();
 
   // WP 데이터 없을 때 폴백
   const sundayServices = worshipData?.sunday ?? [
@@ -82,7 +82,11 @@ export default async function WorshipPage() {
     { name: "금요 예배", englishName: "Friday Worship Service", schedule: "금요일 오후 9시", place: "본당 2층 대예배실" },
   ];
   const sundayNote = worshipData?.sundayNote ?? "모든 주일 예배는 자녀들과 함께 드리며, '복음과 구원'에 초점을 맞추어 드려집니다.";
-  const nextGenServices = worshipData?.nextGen ?? NEXT_GEN_FALLBACK;
+
+  // 다음세대: JSON 기본 정보 + ACF 이미지 필드 병합
+  const nextGenServices = (worshipData?.nextGen ?? NEXT_GEN_FALLBACK).map(
+    (s, i) => ({ ...s, image: nextGenImages[i] ?? s.image })
+  );
 
   return (
     <div className="bg-white pb-32 font-sans">
