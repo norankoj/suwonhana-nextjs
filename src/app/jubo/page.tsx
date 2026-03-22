@@ -27,7 +27,7 @@ async function getBulletinImages(): Promise<{
     // 1. jubo 슬러그 페이지 ID 가져오기
     const pageRes = await fetch(
       `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id,title,date`,
-      { next: { revalidate: 3600 } }
+      { cache: "no-store" }
     );
     if (!pageRes.ok) return { images: [] };
 
@@ -39,7 +39,7 @@ async function getBulletinImages(): Promise<{
     // 2. 해당 페이지에 첨부된 이미지 목록 가져오기 (업로드 순서대로)
     const mediaRes = await fetch(
       `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${page.id}&per_page=100&mime_type=image&orderby=date&order=asc`,
-      { next: { revalidate: 3600 } }
+      { cache: "no-store" }
     );
     if (!mediaRes.ok) return { images: [], pageTitle: page.title.rendered };
 
