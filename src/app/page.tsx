@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ArrowRight, ChevronRight, Copy, X, ChevronDown, BookOpen } from "lucide-react";
+import { ArrowRight, ChevronRight, Copy, X, ChevronDown } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
 import WelcomeSection from "@/components/WelcomeSection";
 import HomePhotoCarousel from "@/components/HomePhotoCarousel";
+import BulletinFlipbook from "@/components/BulletinFlipbook";
 import type { WPSlide } from "@/lib/types";
 
 // =================================================================
@@ -23,6 +24,7 @@ export default function MainPage() {
 
   const [heroSlides, setHeroSlides] = useState<MainHeroData[] | null>(null);
   const [wpHomeData, setWpHomeData] = useState<Record<string, string> | null>(null);
+  const [bulletinImages, setBulletinImages] = useState<{ url: string; alt?: string }[] | null>(null);
 
   // =================================================================
   // [API 연동] 홈페이지 ACF 데이터 (Bento Grid 이미지)
@@ -146,6 +148,31 @@ export default function MainPage() {
     fetchSlides();
   }, []);
 
+  // =================================================================
+  // [API 연동] 온라인 주보 이미지 (jubo 페이지 첨부 미디어)
+  // =================================================================
+  useEffect(() => {
+    const loadBulletin = async () => {
+      try {
+        const pageRes = await fetch(
+          `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id`
+        );
+        if (!pageRes.ok) { setBulletinImages([]); return; }
+        const pages: { id: number }[] = await pageRes.json();
+        if (!pages.length) { setBulletinImages([]); return; }
+
+        const mediaRes = await fetch(
+          `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${pages[0].id}&per_page=100&mime_type=image&orderby=date&order=asc`
+        );
+        if (!mediaRes.ok) { setBulletinImages([]); return; }
+        const media: { source_url: string; alt_text?: string }[] = await mediaRes.json();
+        setBulletinImages(media.map((m) => ({ url: m.source_url, alt: m.alt_text })));
+      } catch {
+        setBulletinImages([]);
+      }
+    };
+    loadBulletin();
+  }, []);
 
   return (
     <>
@@ -271,33 +298,32 @@ export default function MainPage() {
 
         {/* 7. 온라인 주보 */}
         <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100">
-          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-
-              {/* 텍스트 */}
-              <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
-                  Weekly Bulletin
-                </p>
-                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3 break-keep">
-                  온라인 주보
-                </h2>
-                <p className="text-slate-500 text-base leading-relaxed break-keep">
-                  매주 업데이트되는 주보를 온라인으로 확인하세요.
-                </p>
-              </div>
-
-              {/* 버튼 */}
-              <a
-                href="/jubo"
-                className="shrink-0 inline-flex items-center gap-3 px-8 py-5 bg-slate-900 text-white rounded-2xl font-bold text-base hover:bg-slate-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/20 group"
-              >
-                <BookOpen size={20} className="shrink-0" />
-                이번 주 주보 보기
-                <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </a>
-
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* 헤더 */}
+            <div className="text-center mb-10 md:mb-14">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
+                Weekly Bulletin
+              </p>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                온라인 주보
+              </h2>
             </div>
+
+            {/* 플립북 or 로딩 */}
+            {bulletinImages === null ? (
+              /* 로딩 중 */
+              <div className="flex flex-col items-center gap-3 py-20 text-slate-300">
+                <div className="w-48 h-64 bg-slate-200 rounded animate-pulse" />
+                <p className="text-sm">주보를 불러오는 중...</p>
+              </div>
+            ) : bulletinImages.length > 0 ? (
+              <BulletinFlipbook images={bulletinImages} />
+            ) : (
+              /* 이미지 없음 */
+              <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
+                <p className="text-slate-400 text-sm">아직 업로드된 주보가 없습니다.</p>
+              </div>
+            )}
           </div>
         </section>
 
