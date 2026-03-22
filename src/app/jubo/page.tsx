@@ -2,6 +2,9 @@ import React from "react";
 import BulletinFlipbook from "@/components/BulletinFlipbook";
 import { BookOpen } from "lucide-react";
 
+// 페이지를 항상 동적 렌더링 (정적 캐시 완전 차단)
+export const dynamic = "force-dynamic";
+
 const WP_DOMAIN =
   process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 
@@ -25,9 +28,10 @@ async function getBulletinImages(): Promise<{
 }> {
   try {
     // 1. jubo 슬러그 페이지 ID 가져오기
+    const ts = Date.now();
     const pageRes = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id,title,date`,
-      { cache: "no-store" }
+      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id,title,date&_=${ts}`,
+      { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
     );
     if (!pageRes.ok) return { images: [] };
 
@@ -38,8 +42,8 @@ async function getBulletinImages(): Promise<{
 
     // 2. 해당 페이지에 첨부된 이미지 목록 가져오기 (업로드 순서대로)
     const mediaRes = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${page.id}&per_page=100&mime_type=image&orderby=date&order=asc`,
-      { cache: "no-store" }
+      `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${page.id}&per_page=100&mime_type=image&orderby=date&order=asc&_=${ts}`,
+      { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
     );
     if (!mediaRes.ok) return { images: [], pageTitle: page.title.rendered };
 

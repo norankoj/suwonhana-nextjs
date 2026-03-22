@@ -154,17 +154,18 @@ export default function MainPage() {
   useEffect(() => {
     const loadBulletin = async () => {
       try {
+        const ts = Date.now();
         const pageRes = await fetch(
-          `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id`,
-          { cache: "no-store" }
+          `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id&_=${ts}`,
+          { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
         );
         if (!pageRes.ok) { setBulletinImages([]); return; }
         const pages: { id: number }[] = await pageRes.json();
         if (!pages.length) { setBulletinImages([]); return; }
 
         const mediaRes = await fetch(
-          `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${pages[0].id}&per_page=100&mime_type=image&orderby=date&order=asc`,
-          { cache: "no-store" }
+          `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${pages[0].id}&per_page=100&mime_type=image&orderby=date&order=asc&_=${ts}`,
+          { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
         );
         if (!mediaRes.ok) { setBulletinImages([]); return; }
         const media: { source_url: string; alt_text?: string }[] = await mediaRes.json();
