@@ -27,32 +27,39 @@ function ValueCard({
   isSelected: boolean;
   onClick: () => void;
 }) {
+  const numStr = index < 10 ? `0${index}` : `${index}`;
+
   return (
     <button
       onClick={onClick}
       className={`text-left p-5 md:p-6 rounded-xl border-2 transition-all duration-200 w-full ${
         isSelected
-          ? "border-blue-600 bg-blue-600 shadow-lg scale-[1.02]"
-          : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-md"
+          ? "border-slate-900 bg-slate-900 shadow-lg scale-[1.02]"
+          : "border-slate-200 bg-white hover:border-slate-400 hover:shadow-md"
       }`}
     >
-      <span
-        className={`text-2xl font-light font-serif block mb-3 ${
-          isSelected ? "text-blue-200" : "text-slate-300"
-        }`}
-      >
-        {index < 10 ? `0${index}` : index}.
-      </span>
-      <h3
-        className={`text-base md:text-lg font-bold leading-snug mb-2 break-keep ${
-          isSelected ? "text-white" : "text-slate-900"
-        }`}
-      >
-        {item.title}
-      </h3>
+      {/* 숫자 + 제목 한 줄 */}
+      <div className="flex items-baseline gap-2 mb-2">
+        <span
+          className={`text-sm font-mono font-medium shrink-0 ${
+            isSelected ? "text-slate-400" : "text-slate-300"
+          }`}
+        >
+          {numStr}.
+        </span>
+        <h3
+          className={`text-sm md:text-base font-bold leading-snug break-keep ${
+            isSelected ? "text-white" : "text-slate-900"
+          }`}
+        >
+          {item.title}
+        </h3>
+      </div>
+
+      {/* 부제 */}
       <p
         className={`text-xs md:text-sm leading-relaxed break-keep ${
-          isSelected ? "text-blue-200" : "text-slate-500"
+          isSelected ? "text-slate-400" : "text-slate-500"
         }`}
       >
         {item.sub}
@@ -70,6 +77,9 @@ function DetailPanel({
   index: number | null;
   onClose: () => void;
 }) {
+  const numStr =
+    index !== null ? (index < 10 ? `0${index}` : `${index}`) : "";
+
   return (
     <div
       className={`grid transition-all duration-500 ease-in-out ${
@@ -78,26 +88,30 @@ function DetailPanel({
     >
       <div className="overflow-hidden">
         {item && (
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-10">
-            <div className="flex items-start justify-between mb-6">
+          <div className="bg-[#F8F9FA] border border-slate-100 rounded-2xl p-6 md:p-10">
+            {/* 패널 헤더 */}
+            <div className="flex items-start justify-between mb-8">
               <div>
-                <span className="text-3xl font-light font-serif text-blue-600 block mb-2">
-                  {index !== null && (index < 10 ? `0${index}` : index)}.
-                </span>
-                <h3 className="text-2xl md:text-3xl font-bold text-slate-900">
-                  {item.title}
-                </h3>
-                <p className="text-slate-500 mt-1">{item.sub}</p>
+                <div className="flex items-baseline gap-3 mb-1">
+                  <span className="text-3xl font-mono font-light text-slate-300">
+                    {numStr}.
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-bold text-slate-900">
+                    {item.title}
+                  </h3>
+                </div>
+                <p className="text-slate-500 mt-1 ml-[2.75rem]">{item.sub}</p>
               </div>
               <button
                 onClick={onClose}
-                className="text-slate-400 hover:text-slate-600 transition-colors ml-4 mt-1 shrink-0"
+                className="text-slate-400 hover:text-slate-700 transition-colors ml-4 mt-1 shrink-0"
               >
-                <X size={24} />
+                <X size={22} />
               </button>
             </div>
 
-            <div className="text-sm md:text-base text-slate-700 leading-loose break-keep space-y-8">
+            {/* 본문 */}
+            <div className="text-sm md:text-base text-slate-700 leading-loose break-keep space-y-8 border-t border-slate-200 pt-8">
               {item.desc?.split(/\n\s*\n/).map((block, bIdx) => {
                 if (!block.trim()) return null;
                 const lines = block
@@ -108,7 +122,7 @@ function DetailPanel({
                 const descLines = lines.slice(1);
                 return (
                   <div key={bIdx} className="space-y-2">
-                    <strong className="block text-slate-900 font-bold text-base md:text-md leading-snug">
+                    <strong className="block text-slate-900 font-bold text-base leading-snug">
                       {titleLine.trim()}
                     </strong>
                     {descLines.map((line, lIdx) => (
@@ -133,7 +147,6 @@ export default function CoreValueGrid({
   part1Items,
   part2Items,
 }: Props) {
-  // selected: { part: 1|2, idx: number } | null
   const [selected, setSelected] = useState<{
     part: 1 | 2;
     idx: number;
@@ -167,7 +180,7 @@ export default function CoreValueGrid({
       {part1Items.length > 0 && (
         <div>
           <div className="flex items-center gap-4 mb-6">
-            <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase whitespace-nowrap">
+            <h2 className="text-sm font-bold text-slate-400 tracking-widest uppercase whitespace-nowrap">
               {part1Title}
             </h2>
             <div className="h-px flex-1 bg-slate-200" />
@@ -185,7 +198,6 @@ export default function CoreValueGrid({
             ))}
           </div>
 
-          {/* Part 1 패널 */}
           {selected?.part === 1 && (
             <DetailPanel
               item={selectedItem}
@@ -200,7 +212,7 @@ export default function CoreValueGrid({
       {part2Items.length > 0 && (
         <div>
           <div className="flex items-center gap-4 mb-6">
-            <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase whitespace-nowrap">
+            <h2 className="text-sm font-bold text-slate-400 tracking-widest uppercase whitespace-nowrap">
               {part2Title}
             </h2>
             <div className="h-px flex-1 bg-slate-200" />
@@ -218,7 +230,6 @@ export default function CoreValueGrid({
             ))}
           </div>
 
-          {/* Part 2 패널 */}
           {selected?.part === 2 && (
             <DetailPanel
               item={selectedItem}
