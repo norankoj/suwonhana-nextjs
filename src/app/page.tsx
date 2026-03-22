@@ -256,8 +256,47 @@ export default function MainPage() {
         {/* 5. 이벤트 배너 (필요시 활성화, bg-white 영역) */}
         {/* <EventBanner slidesData={heroSlides} /> */}
 
-        {/* 6. 최근 설교 (bg-white) */}
-        <RecentSermons />
+        {/* 6. 교회 영상 */}
+        <section className="py-16 md:py-24 bg-white">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* 섹션 헤더 */}
+            <div className="text-center mb-10">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
+                Video
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+                교회 영상
+              </h2>
+            </div>
+
+            {/* 유튜브 임베드 — autoplay + mute + loop */}
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-xl shadow-slate-900/10">
+              <iframe
+                src="https://www.youtube.com/embed/a6vpGcSwX-o?autoplay=1&mute=1&loop=1&playlist=a6vpGcSwX-o&rel=0&modestbranding=1"
+                title="수원하나교회 영상"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+
+            {/* 유튜브 채널 링크 */}
+            <div className="mt-6 text-center">
+              <a
+                href="https://www.youtube.com/@suwonhana"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-700 transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                유튜브 채널에서 더 보기
+              </a>
+            </div>
+          </div>
+        </section>
+        {/* <RecentSermons /> */}
 
         {/* 7. 공동체 사진 자동 슬라이드 */}
         {(() => {
