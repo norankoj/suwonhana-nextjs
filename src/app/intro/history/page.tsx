@@ -48,7 +48,7 @@ export default async function HistoryPage() {
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 lg:py-32 flex flex-col lg:flex-row gap-16 lg:gap-24">
         {/* [좌측] 타이틀 영역 */}
         <div className="lg:w-1/3 lg:sticky lg:top-32 h-fit relative z-10">
-          <p className="text-xs md:text-sm font-bold text-white/60 uppercase tracking-widest md:tracking-[0.2em] mb-8 whitespace-nowrap">
+          <p className="text-xs md:text-sm font-bold text-white/80 uppercase tracking-widest md:tracking-[0.2em] mb-8 whitespace-nowrap">
             SUWON HANA BAPTIST CHURCH
           </p>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-[1.4] mb-10 tracking-wide">
@@ -58,14 +58,14 @@ export default async function HistoryPage() {
           </h2>
           <div className="w-12 h-1 bg-white/30 mb-12"></div>
 
-          <p className="text-sm md:text-base text-white/70 leading-loose break-keep">
+          <p className="text-sm md:text-base text-white/90 leading-loose break-keep">
             성령 안에서 하나님이 거하실 처소가
             <br className="hidden md:block" />
             되기 위하여 그리스도 예수 안에서
             <br className="hidden md:block" />
             함께 지어져 가느니라
           </p>
-          <p className="text-xs text-white/50 mt-6 font-medium">
+          <p className="text-xs text-white/70 mt-6 font-medium">
             에베소서 2:22
           </p>
         </div>
@@ -114,10 +114,10 @@ export default async function HistoryPage() {
                         return (
                           <div
                             key={eIdx}
-                            className="text-white/80 text-sm md:text-base leading-relaxed break-keep"
+                            className="text-white text-sm md:text-base leading-relaxed break-keep"
                           >
                             {formattedDate && (
-                              <span className="text-white/60 mr-2 font-medium">
+                              <span className="text-white/80 mr-2 font-medium">
                                 {formattedDate}
                               </span>
                             )}
