@@ -2,11 +2,11 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
 
-// SSR 비활성화 (react-pageflip은 브라우저 전용)
+// react-pageflip은 default export — SSR 비활성화
 const HTMLFlipBook = dynamic(
-  () => import("react-pageflip").then((m) => m.HTMLFlipBook as never),
+  () => import("react-pageflip").then((m) => m.default ?? m),
   { ssr: false }
 ) as React.ComponentType<FlipBookProps>;
 
