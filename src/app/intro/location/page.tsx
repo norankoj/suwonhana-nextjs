@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MapPin, Phone, Bus, Car, Navigation, Clock } from "lucide-react";
+import { MapPin, Phone, Navigation, Clock } from "lucide-react";
 import IntroPageHeader from "@/components/IntroPageHeader";
 
 export default function LocationPage() {
@@ -27,33 +27,37 @@ export default function LocationPage() {
 
         {/* 주소 및 연락처 */}
         <section className="mb-12 pb-12 border-b border-slate-100">
-          <h3 className="font-bold text-xl text-slate-900 mb-1">
-            수원하나교회
-          </h3>
-          <p className="text-slate-500 text-sm mb-1">
-            (17103) 경기도 용인시 기흥구 서그내로 16번길 11-6
-          </p>
-          <p className="text-slate-500 text-sm flex items-center gap-1.5 mb-6">
-            <Phone size={13} className="text-slate-400" />
-            031-202-0697
-          </p>
-          <div className="flex gap-3">
-            <a
-              href="https://map.kakao.com/link/search/수원하나교회"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#FAE100] text-[#3C1E1E] font-semibold text-sm hover:brightness-95 transition-all"
-            >
-              <MapPin size={15} /> 카카오맵
-            </a>
-            <a
-              href="https://map.naver.com/v5/search/수원하나교회"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#03C75A] text-white font-semibold text-sm hover:brightness-110 transition-all"
-            >
-              <MapPin size={15} /> 네이버지도
-            </a>
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+            <div>
+              <h3 className="font-bold text-xl text-slate-900 mb-1">
+                수원하나교회
+              </h3>
+              <p className="text-slate-500 text-sm mb-1">
+                (17103) 경기도 용인시 기흥구 서그내로 16번길 11-6
+              </p>
+              <p className="text-slate-500 text-sm flex items-center gap-1.5">
+                <Phone size={13} className="text-slate-400" />
+                031-202-0697
+              </p>
+            </div>
+            <div className="flex gap-3 shrink-0">
+              <a
+                href="https://map.kakao.com/link/search/수원하나교회"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#FAE100] text-[#3C1E1E] font-semibold text-sm hover:brightness-95 transition-all"
+              >
+                <MapPin size={15} /> 카카오맵
+              </a>
+              <a
+                href="https://map.naver.com/v5/search/수원하나교회"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#03C75A] text-white font-semibold text-sm hover:brightness-110 transition-all"
+              >
+                <MapPin size={15} /> 네이버지도
+              </a>
+            </div>
           </div>
         </section>
 
@@ -61,8 +65,7 @@ export default function LocationPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
           {/* 대중교통 */}
           <section>
-            <div className="flex items-center gap-2 mb-5 pb-3 border-b border-slate-200">
-              <Bus size={18} className="text-slate-500" />
+            <div className="mb-5 pb-3 border-b border-slate-200">
               <h3 className="font-bold text-lg text-slate-900">대중교통 이용 시</h3>
             </div>
 
@@ -105,8 +108,7 @@ export default function LocationPage() {
 
           {/* 주차 및 셔틀버스 */}
           <section>
-            <div className="flex items-center gap-2 mb-5 pb-3 border-b border-slate-200">
-              <Car size={18} className="text-slate-500" />
+            <div className="mb-5 pb-3 border-b border-slate-200">
               <h3 className="font-bold text-lg text-slate-900">주차 및 셔틀버스</h3>
             </div>
 
