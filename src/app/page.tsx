@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChevronRight, Copy, X, ChevronDown, BookOpen } from "lucide-react";
+import { ArrowRight, ChevronRight, Copy, X, ChevronDown, BookOpen } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
 import WelcomeSection from "@/components/WelcomeSection";
 import HomePhotoCarousel from "@/components/HomePhotoCarousel";
