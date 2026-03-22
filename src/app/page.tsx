@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ArrowRight, ChevronRight, Copy, X, ChevronDown } from "lucide-react";
+import { ChevronRight, Copy, X, ChevronDown, BookOpen } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
-import RecentSermons from "@/components/RecentSermons";
 import WelcomeSection from "@/components/WelcomeSection";
 import HomePhotoCarousel from "@/components/HomePhotoCarousel";
 import type { WPSlide } from "@/lib/types";
-import { groups } from "@/data/data";
 
 // =================================================================
 // [설정 영역] 워드프레스 연결 정보
@@ -23,9 +21,7 @@ const RECEIPT_URL =
 export default function MainPage() {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
 
-  // null = 로딩 중, [] = 데이터 없음, 배열 = 데이터 있음
   const [heroSlides, setHeroSlides] = useState<MainHeroData[] | null>(null);
-  // null = 로딩 중, {} = 로딩 완료(데이터 없음), { key: url } = 로딩 완료(데이터 있음)
   const [wpHomeData, setWpHomeData] = useState<Record<string, string> | null>(null);
 
   // =================================================================
@@ -150,6 +146,7 @@ export default function MainPage() {
     fetchSlides();
   }, []);
 
+
   return (
     <>
       <div className="animate-fade-in">
@@ -257,20 +254,9 @@ export default function MainPage() {
         {/* <EventBanner slidesData={heroSlides} /> */}
 
         {/* 6. 교회 영상 */}
-        <section className="py-16 md:py-24 bg-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* 섹션 헤더 */}
-            <div className="text-center mb-10">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
-                Video
-              </p>
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
-                교회 영상
-              </h2>
-            </div>
-
-            {/* 유튜브 임베드 — autoplay + mute + loop */}
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-xl shadow-slate-900/10">
+        <section className="py-12 md:py-20 bg-white">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative w-full aspect-video overflow-hidden shadow-2xl shadow-slate-900/15">
               <iframe
                 src="https://www.youtube.com/embed/a6vpGcSwX-o?autoplay=1&mute=1&loop=1&playlist=a6vpGcSwX-o&rel=0&modestbranding=1"
                 title="수원하나교회 영상"
@@ -279,51 +265,43 @@ export default function MainPage() {
                 className="absolute inset-0 w-full h-full"
               />
             </div>
-
-            {/* 유튜브 채널 링크 */}
-            <div className="mt-6 text-center">
-              <a
-                href="https://www.youtube.com/@suwonhana"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-700 transition-colors"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                유튜브 채널에서 더 보기
-              </a>
-            </div>
           </div>
         </section>
         {/* <RecentSermons /> */}
 
-        {/* 7. 공동체 사진 자동 슬라이드 */}
-        {(() => {
-          const communityPhotos = (groups as Array<{ subtitle: string; items: Array<{ name: string; img: string }> }>)
-            .flatMap((g) => g.items)
-            .map((item) => ({ name: item.name, img: item.img }))
-            .filter((i) => i.img);
-          const doubled = [...communityPhotos, ...communityPhotos];
-          return (
-            <section className="py-10 md:py-14 bg-white overflow-hidden">
-              <div className="flex animate-marquee gap-2">
-                {doubled.map((photo, idx) => (
-                  <div
-                    key={idx}
-                    className="relative shrink-0 w-[160px] md:w-[200px] aspect-[3/4] overflow-hidden bg-slate-100"
-                  >
-                    <img
-                      src={photo.img}
-                      alt={photo.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
+        {/* 7. 온라인 주보 */}
+        <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100">
+          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+
+              {/* 텍스트 */}
+              <div>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
+                  Weekly Bulletin
+                </p>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3 break-keep">
+                  온라인 주보
+                </h2>
+                <p className="text-slate-500 text-base leading-relaxed break-keep">
+                  매주 업데이트되는 주보를 온라인으로 확인하세요.
+                </p>
               </div>
-            </section>
-          );
-        })()}
+
+              {/* 버튼 */}
+              <a
+                href="http://pf.kakao.com/_edDsxb/112788612"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 inline-flex items-center gap-3 px-8 py-5 bg-slate-900 text-white rounded-2xl font-bold text-base hover:bg-slate-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/20 group"
+              >
+                <BookOpen size={20} className="shrink-0" />
+                이번 주 주보 보기
+                <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </a>
+
+            </div>
+          </div>
+        </section>
 
         {/* 8. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
         <section className="py-16 bg-slate-50 border-t border-slate-100">
