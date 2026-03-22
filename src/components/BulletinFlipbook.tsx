@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
 
@@ -69,7 +70,10 @@ export default function BulletinFlipbook({ images }: Props) {
   const bookRef = useRef<FlipBookRef>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
   const totalPages = images.length;
+
+  useEffect(() => { setMounted(true); }, []);
 
   const handleFlip = useCallback((e: { data: number }) => {
     setCurrentPage(e.data);
@@ -158,68 +162,60 @@ export default function BulletinFlipbook({ images }: Props) {
         </button>
       </div>
 
-      {/* 썸네일 페이지 점프 */}
-      {totalPages <= 20 && (
-        <div className="flex flex-wrap justify-center gap-1.5 max-w-lg">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => bookRef.current?.pageFlip().flip(i)}
-              className={`w-7 h-7 text-xs rounded font-medium transition-all ${
-                i === currentPage
-                  ? "bg-slate-900 text-white"
-                  : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* 라이트박스 */}
-      {lightboxIdx !== null && (
+      {/* 라이트박스 — Portal로 body에 직접 렌더 */}
+      {lightboxIdx !== null && mounted && createPortal(
         <div
-          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
           onClick={() => setLightboxIdx(null)}
         >
+          {/* 닫기 */}
           <button
-            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors"
+            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
             onClick={() => setLightboxIdx(null)}
           >
             <X size={32} />
           </button>
 
-          <div className="absolute top-5 left-1/2 -translate-x-1/2 text-white/50 text-sm">
+          {/* 페이지 카운터 */}
+          <div className="absolute top-5 left-1/2 -translate-x-1/2 text-white/50 text-sm z-10 pointer-events-none">
             {lightboxIdx + 1} / {totalPages}
           </div>
 
+          {/* 이전 */}
           {lightboxIdx > 0 && (
             <button
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white"
+              className="absolute left-3 md:left-8 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white z-10"
               onClick={(e) => { e.stopPropagation(); setLightboxIdx((i) => (i ?? 0) - 1); }}
             >
               <ChevronLeft size={40} />
             </button>
           )}
 
-          <img
-            src={images[lightboxIdx].url}
-            alt={`주보 ${lightboxIdx + 1}페이지`}
-            style={{ maxHeight: "90vh", maxWidth: "90vw", objectFit: "contain" }}
+          {/* 이미지 */}
+          <div
+            className="flex items-center justify-center w-full h-full p-16"
             onClick={(e) => e.stopPropagation()}
-            draggable={false}
-          />
+          >
+            <img
+              src={images[lightboxIdx].url}
+              alt={`주보 ${lightboxIdx + 1}페이지`}
+              style={{ maxHeight: "85vh", maxWidth: "85vw", objectFit: "contain" }}
+              draggable={false}
+            />
+          </div>
 
+          {/* 다음 */}
           {lightboxIdx < totalPages - 1 && (
             <button
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white"
+              className="absolute right-3 md:right-8 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white z-10"
               onClick={(e) => { e.stopPropagation(); setLightboxIdx((i) => (i ?? 0) + 1); }}
             >
               <ChevronRight size={40} />
             </button>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
