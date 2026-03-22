@@ -2,7 +2,7 @@ import React from "react";
 import BulletinFlipbook from "@/components/BulletinFlipbook";
 import { BookOpen } from "lucide-react";
 
-// 페이지를 항상 동적 렌더링 (정적 캐시 완전 차단)
+// 항상 동적 렌더링 (캐시 완전 차단)
 export const dynamic = "force-dynamic";
 
 const WP_DOMAIN =
@@ -12,49 +12,40 @@ interface WPPage {
   id: number;
   title: { rendered: string };
   date: string;
-}
-
-interface WPMedia {
-  id: number;
-  source_url: string;
-  alt_text?: string;
-  media_details?: { width: number; height: number };
+  content: { rendered: string };
 }
 
 async function getBulletinImages(): Promise<{
-  images: { url: string; alt?: string }[];
+  images: { url: string }[];
   pageTitle?: string;
   pageDate?: string;
 }> {
   try {
-    // 1. jubo 슬러그 페이지 ID 가져오기
     const ts = Date.now();
-    const pageRes = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id,title,date&_=${ts}`,
+    const res = await fetch(
+      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id,title,date,content&_=${ts}`,
       { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
     );
-    if (!pageRes.ok) return { images: [] };
+    if (!res.ok) return { images: [] };
 
-    const pages: WPPage[] = await pageRes.json();
+    const pages: WPPage[] = await res.json();
     if (!pages.length) return { images: [] };
 
     const page = pages[0];
 
-    // 2. 해당 페이지에 첨부된 이미지 목록 가져오기 (업로드 순서대로)
-    const mediaRes = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${page.id}&per_page=100&mime_type=image&orderby=date&order=asc&_=${ts}`,
-      { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
-    );
-    if (!mediaRes.ok) return { images: [], pageTitle: page.title.rendered };
+    // 구텐베르크 페이지 본문 HTML에서 img src 추출
+    const html = page.content.rendered;
+    const images: { url: string }[] = [];
+    const imgRegex = /<img[^>]+src="([^"]+)"/g;
+    let match;
+    while ((match = imgRegex.exec(html)) !== null) {
+      const url = match[1];
+      // 썸네일(-150x150 등) 제외, 원본만 사용
+      if (!/-\d+x\d+\.(jpg|jpeg|png|webp)/i.test(url)) {
+        images.push({ url });
+      }
+    }
 
-    const mediaList: WPMedia[] = await mediaRes.json();
-
-    const images = mediaList.map((m) => ({
-      url: m.source_url,
-      alt: m.alt_text || undefined,
-    }));
-
-    // 날짜를 한국식으로 포맷
     const d = new Date(page.date);
     const pageDate = `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
 
@@ -100,7 +91,7 @@ export default async function JuboPage() {
                 </p>
                 <p className="text-slate-300 text-sm leading-relaxed">
                   워드프레스 관리자 → <strong className="text-slate-400">페이지 &gt; 주보</strong>에서
-                  <br />이미지를 업로드해 주세요.
+                  <br />이미지 블록을 추가해 주세요.
                 </p>
               </div>
             </div>

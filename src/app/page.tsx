@@ -156,20 +156,24 @@ export default function MainPage() {
       try {
         const ts = Date.now();
         const pageRes = await fetch(
-          `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id&_=${ts}`,
+          `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=content&_=${ts}`,
           { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
         );
         if (!pageRes.ok) { setBulletinImages([]); return; }
-        const pages: { id: number }[] = await pageRes.json();
+        const pages: { content: { rendered: string } }[] = await pageRes.json();
         if (!pages.length) { setBulletinImages([]); return; }
 
-        const mediaRes = await fetch(
-          `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${pages[0].id}&per_page=100&mime_type=image&orderby=date&order=asc&_=${ts}`,
-          { cache: "no-store", headers: { "Cache-Control": "no-cache", Pragma: "no-cache" } }
-        );
-        if (!mediaRes.ok) { setBulletinImages([]); return; }
-        const media: { source_url: string; alt_text?: string }[] = await mediaRes.json();
-        setBulletinImages(media.map((m) => ({ url: m.source_url, alt: m.alt_text })));
+        // 페이지 본문 HTML에서 img src 추출
+        const html = pages[0].content.rendered;
+        const images: { url: string }[] = [];
+        const imgRegex = /<img[^>]+src="([^"]+)"/g;
+        let m;
+        while ((m = imgRegex.exec(html)) !== null) {
+          if (!/-\d+x\d+\.(jpg|jpeg|png|webp)/i.test(m[1])) {
+            images.push({ url: m[1] });
+          }
+        }
+        setBulletinImages(images);
       } catch {
         setBulletinImages([]);
       }
