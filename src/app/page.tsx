@@ -289,9 +289,7 @@ export default function MainPage() {
 
               {/* 버튼 */}
               <a
-                href="http://pf.kakao.com/_edDsxb/112788612"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/jubo"
                 className="shrink-0 inline-flex items-center gap-3 px-8 py-5 bg-slate-900 text-white rounded-2xl font-bold text-base hover:bg-slate-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/20 group"
               >
                 <BookOpen size={20} className="shrink-0" />
