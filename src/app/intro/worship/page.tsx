@@ -15,7 +15,7 @@ const SundayRow = ({ name, schedule, place }: WorshipServiceItem) => (
   </div>
 );
 
-// 이미지 카드형 (다음세대용 — 하드코딩)
+// 이미지 카드형 (다음세대용)
 const ServiceCard = ({
   image,
   name,
@@ -23,20 +23,22 @@ const ServiceCard = ({
   schedule,
   place,
 }: {
-  image: string;
+  image?: string;
   name: string;
-  englishName: string;
+  englishName?: string;
   schedule: string;
   place?: string;
 }) => (
   <div>
     <div className="w-full aspect-[4/3] overflow-hidden rounded-sm bg-slate-100 mb-4">
-      <img src={image} alt={name} className="w-full h-full object-cover" />
+      {image && <img src={image} alt={name} className="w-full h-full object-cover" />}
     </div>
     <p className="font-bold text-slate-900 text-base leading-snug">{name}</p>
-    <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mt-1 mb-2">
-      {englishName}
-    </p>
+    {englishName && (
+      <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mt-1 mb-2">
+        {englishName}
+      </p>
+    )}
     <p className="text-sm text-slate-700">{schedule}</p>
     {place && <p className="text-sm text-slate-500 mt-0.5">{place}</p>}
   </div>
@@ -60,8 +62,7 @@ const MembershipRow = ({ name, englishName, schedule, place }: WorshipServiceIte
   </div>
 );
 
-// 다음세대 예배 데이터 (이미지 준비 전까지 하드코딩)
-const NEXT_GEN_SERVICES = [
+const NEXT_GEN_FALLBACK = [
   { name: "영아부 (조이베이비)", englishName: "Infant Ministry", schedule: "주일 오전 9시 30분", place: "NGC 지하예배실 · 36개월 미만 + 부모님", image: "/images/temp01.jpg" },
   { name: "유치부 (조이코너)", englishName: "Kids Corner", schedule: "주일 오후 1시", place: "본당 2층 · 36개월 이상 미취학 + 부모님", image: "/images/temp02.jpg" },
   { name: "초등부 (조이랜드)", englishName: "Joyland", schedule: "화요일 오후 7시", place: "NGC 지하예배실 · 초등학생", image: "/images/temp03.jpg" },
@@ -81,6 +82,7 @@ export default async function WorshipPage() {
     { name: "금요 예배", englishName: "Friday Worship Service", schedule: "금요일 오후 9시", place: "본당 2층 대예배실" },
   ];
   const sundayNote = worshipData?.sundayNote ?? "모든 주일 예배는 자녀들과 함께 드리며, '복음과 구원'에 초점을 맞추어 드려집니다.";
+  const nextGenServices = worshipData?.nextGen ?? NEXT_GEN_FALLBACK;
 
   return (
     <div className="bg-white pb-32 font-sans">
@@ -134,11 +136,11 @@ export default async function WorshipPage() {
           </div>
         </section>
 
-        {/* 다음세대 예배 — 이미지 카드형 (하드코딩) */}
+        {/* 다음세대 예배 — 이미지 카드형 */}
         <section>
           <h3 className="text-xl font-bold text-slate-900 mb-8">다음세대 예배</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {NEXT_GEN_SERVICES.map((s) => (
+            {nextGenServices.map((s) => (
               <ServiceCard key={s.name} {...s} />
             ))}
           </div>

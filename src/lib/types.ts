@@ -108,11 +108,13 @@ export interface WorshipServiceItem {
   englishName?: string;
   schedule: string;
   place?: string;
+  image?: string;
 }
 
 export interface WorshipData {
   sundayNote: string;
   sunday: WorshipServiceItem[];
+  nextGen: WorshipServiceItem[];
   membership: WorshipServiceItem[];
 }
 
