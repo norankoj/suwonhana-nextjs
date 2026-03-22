@@ -5,73 +5,56 @@ import { BookOpen } from "lucide-react";
 const WP_DOMAIN =
   process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 
-interface AcfImage {
-  url?: string;
-  full_url?: string;
-  sizes?: { large?: string; full?: string };
-  alt?: string;
-  width?: number;
-  height?: number;
-}
-
 interface WPPage {
   id: number;
-  acf?: {
-    bulletin_pages?: AcfImage[] | number[];
-    bulletin_date?: string;
-    bulletin_title?: string;
-  } | false;
+  title: { rendered: string };
+  date: string;
+}
+
+interface WPMedia {
+  id: number;
+  source_url: string;
+  alt_text?: string;
+  media_details?: { width: number; height: number };
 }
 
 async function getBulletinImages(): Promise<{
   images: { url: string; alt?: string }[];
-  date?: string;
-  title?: string;
+  pageTitle?: string;
+  pageDate?: string;
 }> {
   try {
-    const res = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id,acf`,
-      { next: { revalidate: 3600 } }   // 1시간 캐시 (매주 갱신)
+    // 1. jubo 슬러그 페이지 ID 가져오기
+    const pageRes = await fetch(
+      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id,title,date`,
+      { next: { revalidate: 3600 } }
     );
-    if (!res.ok) return { images: [] };
+    if (!pageRes.ok) return { images: [] };
 
-    const pages: WPPage[] = await res.json();
-    if (!pages.length || !pages[0].acf) return { images: [] };
+    const pages: WPPage[] = await pageRes.json();
+    if (!pages.length) return { images: [] };
 
-    const acf = pages[0].acf as Exclude<WPPage["acf"], false>;
-    const rawPages = acf.bulletin_pages;
-    const date = acf.bulletin_date;
-    const title = acf.bulletin_title;
+    const page = pages[0];
 
-    if (!rawPages || !rawPages.length) return { images: [], date, title };
+    // 2. 해당 페이지에 첨부된 이미지 목록 가져오기 (업로드 순서대로)
+    const mediaRes = await fetch(
+      `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${page.id}&per_page=100&mime_type=image&orderby=date&order=asc`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!mediaRes.ok) return { images: [], pageTitle: page.title.rendered };
 
-    // ACF 갤러리 응답 형식 처리: 객체 배열 or ID 배열
-    const images: { url: string; alt?: string }[] = [];
+    const mediaList: WPMedia[] = await mediaRes.json();
 
-    for (const item of rawPages) {
-      if (typeof item === "number") {
-        // ID 형식 → media API로 URL 조회
-        const mr = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/media/${item}`, {
-          next: { revalidate: 3600 },
-        }).catch(() => null);
-        if (mr?.ok) {
-          const m = await mr.json();
-          if (m.source_url) images.push({ url: m.source_url, alt: m.alt_text });
-        }
-      } else {
-        // 객체 형식
-        const img = item as AcfImage;
-        const url =
-          img.url ||
-          img.full_url ||
-          img.sizes?.large ||
-          img.sizes?.full ||
-          "";
-        if (url) images.push({ url, alt: img.alt });
-      }
-    }
+    const images = mediaList.map((m) => ({
+      url: m.source_url,
+      alt: m.alt_text || undefined,
+    }));
 
-    return { images, date, title };
+    // 날짜를 한국식으로 포맷
+    const d = new Date(page.date);
+    const pageDate = `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
+
+    return { images, pageTitle: page.title.rendered, pageDate };
   } catch (err) {
     console.error("[주보] fetch 실패:", err);
     return { images: [] };
@@ -79,7 +62,7 @@ async function getBulletinImages(): Promise<{
 }
 
 export default async function JuboPage() {
-  const { images, date, title } = await getBulletinImages();
+  const { images, pageTitle, pageDate } = await getBulletinImages();
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -91,10 +74,10 @@ export default async function JuboPage() {
             Weekly Bulletin
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
-            {title || "온라인 주보"}
+            {pageTitle || "온라인 주보"}
           </h1>
-          {date && (
-            <p className="mt-2 text-slate-400 text-sm">{date}</p>
+          {pageDate && (
+            <p className="mt-2 text-slate-400 text-sm">{pageDate}</p>
           )}
         </div>
       </section>
@@ -105,17 +88,17 @@ export default async function JuboPage() {
           {images.length > 0 ? (
             <BulletinFlipbook images={images} />
           ) : (
-            /* 이미지 없음 안내 */
-            <div className="flex flex-col items-center justify-center py-24 text-center gap-4">
+            <div className="flex flex-col items-center justify-center py-24 text-center gap-5">
               <BookOpen size={48} className="text-slate-200" />
-              <p className="text-slate-400 text-base">
-                아직 업로드된 주보가 없습니다.
-              </p>
-              <p className="text-slate-300 text-sm">
-                워드프레스 관리자에서{" "}
-                <strong className="text-slate-400">jubo</strong> 페이지에
-                이미지를 업로드해 주세요.
-              </p>
+              <div>
+                <p className="text-slate-400 text-base font-medium mb-1">
+                  아직 업로드된 주보가 없습니다.
+                </p>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  워드프레스 관리자 → <strong className="text-slate-400">페이지 &gt; 주보</strong>에서
+                  <br />이미지를 업로드해 주세요.
+                </p>
+              </div>
             </div>
           )}
         </div>
