@@ -33,16 +33,28 @@ async function getBulletinImages(): Promise<{
 
     const page = pages[0];
 
-    // 구텐베르크 페이지 본문 HTML에서 img src 추출
+    // 페이지 본문 HTML에서 이미지 URL 추출
     const html = page.content.rendered;
     const images: { url: string }[] = [];
-    const imgRegex = /<img[^>]+src="([^"]+)"/g;
+    const seen = new Set<string>();
+
+    const addImage = (url: string) => {
+      if (!seen.has(url)) { seen.add(url); images.push({ url }); }
+    };
+
+    // 1순위: 갤러리 <a href="원본이미지"> 링크에서 추출 (썸네일의 원본)
+    const hrefRegex = /href="([^"]+\.(?:jpg|jpeg|png|webp))"/gi;
     let match;
-    while ((match = imgRegex.exec(html)) !== null) {
-      const url = match[1];
-      // 썸네일(-150x150 등) 제외, 원본만 사용
-      if (!/-\d+x\d+\.(jpg|jpeg|png|webp)/i.test(url)) {
-        images.push({ url });
+    while ((match = hrefRegex.exec(html)) !== null) {
+      addImage(match[1]);
+    }
+
+    // 2순위: href에서 못 찾았을 때(직접 삽입 이미지) img src에서 추출
+    if (images.length === 0) {
+      const imgRegex = /<img[^>]+src="([^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/gi;
+      while ((match = imgRegex.exec(html)) !== null) {
+        const url = match[1].split("?")[0]; // 쿼리스트링 제거
+        if (!/-\d+x\d+\./.test(url)) addImage(url); // 썸네일 제외
       }
     }
 

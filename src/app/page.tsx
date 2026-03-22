@@ -163,14 +163,25 @@ export default function MainPage() {
         const pages: { content: { rendered: string } }[] = await pageRes.json();
         if (!pages.length) { setBulletinImages([]); return; }
 
-        // 페이지 본문 HTML에서 img src 추출
+        // 페이지 본문 HTML에서 이미지 URL 추출
         const html = pages[0].content.rendered;
         const images: { url: string }[] = [];
-        const imgRegex = /<img[^>]+src="([^"]+)"/g;
+        const seen = new Set<string>();
+        const addImage = (url: string) => {
+          if (!seen.has(url)) { seen.add(url); images.push({ url }); }
+        };
+
+        // 1순위: 갤러리 <a href="원본"> 에서 추출
+        const hrefRegex = /href="([^"]+\.(?:jpg|jpeg|png|webp))"/gi;
         let m;
-        while ((m = imgRegex.exec(html)) !== null) {
-          if (!/-\d+x\d+\.(jpg|jpeg|png|webp)/i.test(m[1])) {
-            images.push({ url: m[1] });
+        while ((m = hrefRegex.exec(html)) !== null) addImage(m[1]);
+
+        // 2순위: 직접 삽입 이미지 img src
+        if (images.length === 0) {
+          const imgRegex = /<img[^>]+src="([^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/gi;
+          while ((m = imgRegex.exec(html)) !== null) {
+            const url = m[1].split("?")[0];
+            if (!/-\d+x\d+\./.test(url)) addImage(url);
           }
         }
         setBulletinImages(images);
