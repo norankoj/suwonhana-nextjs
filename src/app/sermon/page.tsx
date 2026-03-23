@@ -298,6 +298,7 @@ function SermonPageInner() {
 
   const [categoryMap, setCategoryMap] = useState<Record<string, number[]>>({});
   const [tagMap, setTagMap] = useState<Record<string, number>>({});
+  const [taxonomiesLoaded, setTaxonomiesLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -345,6 +346,8 @@ function SermonPageInner() {
         setTagMap(tMap);
       } catch (e) {
         console.error("데이터 로딩 실패", e);
+      } finally {
+        setTaxonomiesLoaded(true);
       }
     };
     fetchAllTaxonomies();
@@ -359,9 +362,10 @@ function SermonPageInner() {
   }, [searchTerm]);
 
   useEffect(() => {
+    if (!taxonomiesLoaded) return;
     setCurrentPage(1);
     fetchSermons(1);
-  }, [activeTab, selectedBooks, selectedTopics, selectedYear, searchTrigger, debouncedSearch]);
+  }, [activeTab, selectedBooks, selectedTopics, selectedYear, searchTrigger, debouncedSearch, taxonomiesLoaded]);
 
   useEffect(() => {
     fetchSermons(currentPage);
