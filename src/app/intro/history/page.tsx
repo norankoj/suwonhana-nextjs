@@ -47,7 +47,7 @@ export default async function HistoryPage() {
 
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 lg:py-32 flex flex-col lg:flex-row gap-16 lg:gap-24">
         {/* [좌측] 타이틀 영역 */}
-        <div className="lg:w-1/3 lg:sticky lg:top-32 h-fit relative z-10">
+        <div className="lg:w-1/3 h-fit relative z-10">
           <p className="text-xs md:text-sm font-bold text-white/80 uppercase tracking-widest md:tracking-[0.2em] mb-8 whitespace-nowrap">
             SUWON HANA BAPTIST CHURCH
           </p>
@@ -71,35 +71,8 @@ export default async function HistoryPage() {
         </div>
 
         {/* [우측] 타임라인 리스트 */}
-        <div className="lg:w-2/3 relative z-10 flex gap-4 md:gap-8 lg:gap-12">
-          {/* 별 장식 레이어 */}
-          <div className="relative w-16 md:w-20 lg:w-24 shrink-0 flex justify-center">
-            <div className="flex flex-col items-center w-full z-0 font-serif italic text-base md:text-xl text-white/60 pt-2">
-              <div className="flex items-center gap-1 pointer-events-none">
-                in him <span className="text-xl">✶</span>
-              </div>
-              <div className="w-px h-24 bg-white/20 my-6 pointer-events-none"></div>
-              <div className="flex items-center gap-1 pointer-events-none">
-                <span className="text-xl">✶</span> You too are
-              </div>
-              <div className="w-px h-24 bg-white/20 my-6 pointer-events-none"></div>
-              <div className="flex items-center gap-1 pointer-events-none">
-                <span className="text-xl">✶</span> being{" "}
-                <span className="text-xl">✶</span>
-              </div>
-              <div className="w-px h-24 bg-white/20 my-6 pointer-events-none"></div>
-              <div className="flex items-center gap-1 pointer-events-none">
-                built <span className="text-xl">✶</span>
-              </div>
-              <div className="w-px h-24 bg-white/20 my-6 pointer-events-none"></div>
-              <div className="flex items-center gap-1 pointer-events-none">
-                <span className="text-xl">✶</span> together
-              </div>
-              <div className="w-px flex-1 bg-gradient-to-b from-white/20 to-transparent mt-6 min-h-[200px] pointer-events-none"></div>
-            </div>
-          </div>
-
-          <div className="flex-1 border-t border-white/20 pt-4">
+        <div className="lg:w-2/3 relative z-10">
+          <div className="border-t border-white/20 pt-4">
             {parsedHistoryData.length > 0 ? (
               parsedHistoryData.map((item, idx) => (
                 <ScrollReveal key={item.year} index={idx}>
