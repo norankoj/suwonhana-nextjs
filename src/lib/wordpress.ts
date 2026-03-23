@@ -29,7 +29,9 @@ const WP_GRAPHQL_URL =
 
 async function wpRestGet<T>(path: string): Promise<T | null> {
   try {
-    const res = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/${path}`);
+    const res = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/${path}`, {
+      next: { revalidate: 60 },
+    });
     if (!res.ok) return null;
     return res.json();
   } catch (error) {
@@ -47,7 +49,9 @@ async function wpRestGetList<T>(
   path: string,
 ): Promise<WPRestListResult<T>> {
   try {
-    const res = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/${path}`);
+    const res = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/${path}`, {
+      next: { revalidate: 60 },
+    });
     if (!res.ok) return { data: [], totalPages: 0 };
     const totalPages = parseInt(res.headers.get("X-WP-TotalPages") || "0");
     const data = await res.json();
@@ -66,6 +70,7 @@ async function wpRestGetAll<T>(endpoint: string): Promise<T[]> {
   while (hasMore) {
     const res = await fetch(
       `${WP_DOMAIN}/wp-json/wp/v2/${endpoint}?per_page=100&page=${page}`,
+      { next: { revalidate: 60 } },
     );
     if (!res.ok) break;
     const data: T[] = await res.json();
@@ -237,6 +242,7 @@ export async function fetchCoreValuesData() {
   const query = `
     query GetCoreValuesPage {
       page(id: "핵심가치", idType: URI) {
+        featuredImage { node { sourceUrl } }
         coreValueFields {
           valueStatement
           mainTitle
@@ -260,9 +266,13 @@ export async function fetchCoreValuesData() {
     }
   `;
   const data = await wpGraphQL<{
-    page: { coreValueFields: CoreValueFields };
+    page: { featuredImage?: { node: { sourceUrl: string } }; coreValueFields: CoreValueFields };
   }>(query);
-  return data?.page ?? null;
+  if (!data?.page) return null;
+  return {
+    ...data.page,
+    heroImageUrl: data.page.featuredImage?.node?.sourceUrl ?? null,
+  };
 }
 
 // ==========================================
@@ -346,12 +356,6 @@ interface WPPageRaw {
   };
 }
 
-interface WPMediaRaw {
-  id: number;
-  source_url: string;
-  status?: string;
-  media_details?: { sizes?: { large?: { source_url: string } } };
-}
 
 export async function fetchCommunityPage(
   slug: string,
@@ -368,20 +372,49 @@ export async function fetchCommunityPage(
     const page = pages[0];
     if (!page) return null;
 
-    // 첨부 미디어 조회 — status=inherit 로 trash 제외
-    const mediaRes = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/media?parent=${page.id}&per_page=20&status=inherit`,
-      { next: { revalidate: 300 } },
-    );
-    const rawMedia: WPMediaRaw[] = mediaRes.ok ? await mediaRes.json() : [];
-
     const featuredImageUrl =
       page._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? null;
 
-    // 갤러리: 첨부 미디어만 사용 (content 파싱 제거 → 삭제된 이미지 표시 방지)
-    const galleryImages = rawMedia.map(
-      (m) => m.media_details?.sizes?.large?.source_url ?? m.source_url,
-    );
+    // 갤러리: wp-image-{id} 클래스로 첨부 ID 추출 → 원본 URL 조회
+    const idRegex = /wp-image-(\d+)/g;
+    const attachmentIds: number[] = [];
+    let idMatch: RegExpExecArray | null;
+    while ((idMatch = idRegex.exec(page.content.rendered)) !== null) {
+      const id = parseInt(idMatch[1]);
+      if (!attachmentIds.includes(id)) attachmentIds.push(id);
+    }
+
+    let galleryImages: string[] = [];
+
+    if (attachmentIds.length > 0) {
+      // ID로 원본 full-size URL 일괄 조회
+      try {
+        const mediaRes = await fetch(
+          `${WP_DOMAIN}/wp-json/wp/v2/media?include=${attachmentIds.join(",")}&per_page=100&_fields=id,source_url`,
+          { next: { revalidate: 300 } },
+        );
+        if (mediaRes.ok) {
+          const mediaItems: { id: number; source_url: string }[] = await mediaRes.json();
+          galleryImages = attachmentIds
+            .map((id) => mediaItems.find((m) => m.id === id)?.source_url ?? "")
+            .filter(Boolean);
+        }
+      } catch { /* ignore */ }
+    }
+
+    // fallback: wp-image 클래스 없을 때 src 직접 파싱
+    if (galleryImages.length === 0) {
+      const imgTagRegex = /<img[^>]+>/gi;
+      let tagMatch: RegExpExecArray | null;
+      while ((tagMatch = imgTagRegex.exec(page.content.rendered)) !== null) {
+        const tag = tagMatch[0];
+        const srcRaw = (/(?:data-src|src)="([^"]+)"/.exec(tag) || [])[1] ?? "";
+        if (srcRaw) {
+          const url = srcRaw.replace(/-\d+x\d+(\.[^.?#"]+)$/, "$1");
+          if (!galleryImages.includes(url)) galleryImages.push(url);
+        }
+      }
+    }
 
     // ACF 필드 (WP REST API가 `acf` 키로 자동 노출)
     const acf = page.acf || {};
