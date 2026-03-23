@@ -105,7 +105,7 @@ const SermonCard = ({
     return (
       <div
         onClick={() => onClick(item)}
-        className="group bg-white overflow-hidden shadow-sm hover:shadow-md border border-slate-100 cursor-pointer flex flex-col sm:flex-row gap-0 sm:gap-6 transition-all duration-300 hover:bg-slate-50/50"
+        className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-slate-100 cursor-pointer flex flex-col sm:flex-row gap-0 sm:gap-6 transition-all duration-300 hover:bg-slate-50/50"
       >
         <div className="w-full sm:w-64 shrink-0 relative aspect-video bg-slate-200 overflow-hidden">
           {imgSrc ? (
@@ -167,7 +167,7 @@ const SermonCard = ({
   return (
     <div
       onClick={() => onClick(item)}
-      className="group bg-white overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer h-full flex flex-col"
+      className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer h-full flex flex-col"
     >
       <div className="relative aspect-video bg-slate-200 overflow-hidden">
         {imgSrc ? (
@@ -562,7 +562,7 @@ export default function SermonClient({
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           <aside className={getAsideClassName()}>
             {selectedSermon ? (
-              <div className="bg-white border border-slate-200 p-6 shadow-sm flex flex-col gap-4 animate-fade-in">
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col gap-4 animate-fade-in">
                 <button
                   onClick={() => {
                     setSelectedSermon(null);
@@ -635,7 +635,7 @@ export default function SermonClient({
                       size={16}
                     />
                   </form>
-                  <div className="bg-white border border-slate-200 px-5 py-1 shadow-sm">
+                  <div className="bg-white rounded-2xl border border-slate-200 px-5 py-1 shadow-sm">
                     <Accordion title="예배" defaultOpen={true}>
                       <div className="flex flex-col gap-2">
                         {SERVICE_TAGS.map((tag) => (
@@ -708,7 +708,7 @@ export default function SermonClient({
 
           <div className="flex-1 min-w-0">
             {selectedSermon ? (
-              <div className="bg-white overflow-hidden shadow-xl border border-slate-100 animate-fade-in">
+              <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-slate-100 animate-fade-in">
                 <div className="lg:hidden p-4 border-b border-slate-100">
                   <button
                     onClick={() => {
@@ -797,7 +797,7 @@ export default function SermonClient({
                             download
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="ml-auto inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded text-xs font-bold transition-colors shrink-0"
+                            className="ml-auto inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-900 hover:text-white hover:border-slate-900 text-slate-600 border border-slate-200 rounded text-xs font-bold transition-colors shrink-0"
                           >
                             <Headphones size={14} />
                             MP3
@@ -857,7 +857,7 @@ export default function SermonClient({
                 {(selectedBooks.length > 0 ||
                   selectedTopics.length > 0 ||
                   selectedYear) && (
-                  <div className="flex flex-wrap gap-2 mb-6 p-4 bg-slate-50 border border-slate-100">
+                  <div className="flex flex-wrap gap-2 mb-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
                     {selectedBooks.map((book) => (
                       <span
                         key={book}
