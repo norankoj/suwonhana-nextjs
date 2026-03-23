@@ -29,20 +29,20 @@ const JOURNEY = [
 ];
 
 const BOOKS = [
-  { title: "창조주를\n소개합니다!", subtitle: "초신자 과정" },
-  { title: "성경적\n세계관", subtitle: "기초 과정" },
-  { title: "말씀의 삶\n구약", subtitle: "삶 시리즈" },
-  { title: "말씀의 삶\n신약", subtitle: "삶 시리즈" },
-  { title: "증인의 삶", subtitle: "삶 시리즈" },
-  { title: "목자의 삶", subtitle: "삶 시리즈" },
-  { title: "변화의 삶", subtitle: "삶 시리즈" },
-  { title: "하나님을\n경험하는 삶", subtitle: "삶 시리즈" },
+  { title: "창조주를\n소개합니다!", label: "초신자 과정" },
+  { title: "성경적\n세계관", label: null },
+  { title: "말씀의 삶\n구약", label: null },
+  { title: "말씀의 삶\n신약", label: null },
+  { title: "증인의 삶", label: null },
+  { title: "목자의 삶", label: null },
+  { title: "변화의 삶", label: null },
+  { title: "하나님을\n경험하는 삶", label: null },
 ];
 
 /* ─────────────────────────────
    Book 컴포넌트 (저서 스타일)
 ───────────────────────────── */
-function BookCard({ title, subtitle }: { title: string; subtitle: string }) {
+function BookCard({ title, label }: { title: string; label: string | null }) {
   return (
     <div className="flex flex-col group cursor-default">
       <div className="relative aspect-[1/1.45] w-full overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-4 flex flex-col justify-between bg-slate-900 p-4">
@@ -51,13 +51,14 @@ function BookCard({ title, subtitle }: { title: string; subtitle: string }) {
         <p className="text-white font-bold text-[13px] sm:text-[14px] leading-snug whitespace-pre-line tracking-tight">
           {title}
         </p>
-        <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest">
-          {subtitle}
-        </p>
+        <div className="h-3" />
       </div>
       <p className="text-[14px] font-bold text-slate-900 leading-snug whitespace-pre-line px-0.5">
         {title}
       </p>
+      {label && (
+        <p className="text-[11px] text-slate-400 mt-1 px-0.5">{label}</p>
+      )}
     </div>
   );
 }
@@ -175,7 +176,7 @@ export default async function DiscipleshipPage() {
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-5 gap-y-10">
             {BOOKS.map((book) => (
-              <BookCard key={book.title} title={book.title} subtitle={book.subtitle} />
+              <BookCard key={book.title} title={book.title} label={book.label} />
             ))}
           </div>
         </section>

@@ -241,7 +241,7 @@ export async function fetchPastorAndStaffData() {
 export async function fetchTrainingData() {
   const query = `
     query GetTrainingPage {
-      page(id: "훈련", idType: URI) {
+      page(id: "13252", idType: DATABASE_ID) {
         featuredImage { node { sourceUrl } }
       }
     }
