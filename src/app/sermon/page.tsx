@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
@@ -19,6 +20,8 @@ import {
   Tag,
   LayoutGrid,
   AlignJustify,
+  Download,
+  Headphones,
 } from "lucide-react";
 import { HeroSub } from "@/components/Common";
 import type { WPSermon, WPTaxonomyItem } from "@/lib/types";
@@ -275,7 +278,9 @@ function Accordion({
   );
 }
 
-export default function SermonPage() {
+function SermonPageInner() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [selectedSermon, setSelectedSermon] = useState<WPSermon | null>(null);
   const [sermons, setSermons] = useState<WPSermon[]>([]);
 
@@ -448,14 +453,71 @@ export default function SermonPage() {
 
   const handleTagClick = (tag: string) => {
     resetFilters();
-    setSearchTerm(tag);
+    if (SERVICE_TAGS.includes(tag) && tag !== "전체") {
+      setActiveTab(tag);
+    } else {
+      setSearchTerm(tag);
+      setSearchTrigger((prev) => prev + 1);
+    }
     setSelectedSermon(null);
-    setSearchTrigger((prev) => prev + 1);
+    router.push("/sermon", { scroll: false });
   };
+
+  // URL ?id= 파라미터로 상세 sermon 로드 (새로고침 복원)
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (!id) return;
+    // 이미 선택된 경우 중복 fetch 방지
+    if (selectedSermon && selectedSermon.id === Number(id)) return;
+    fetch(`${WP_DOMAIN}/wp-json/wp/v2/risen_multimedia/${id}?_embed`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data && data.id) setSelectedSermon(data);
+      })
+      .catch(() => {});
+  }, [searchParams]);
 
   const getEmbedUrl = (url?: string) => {
     const id = getYouTubeId(url);
     return id ? `https://www.youtube.com/embed/${id}` : url;
+  };
+
+  // content.rendered에서 오디오 URL 추출 (sermon_meta.audio_url 없을 때 fallback)
+  const extractAudioUrl = (html: string): string => {
+    const srcMatch = html.match(/<audio[^>]*src=["']([^"']+)["']/i);
+    if (srcMatch) return srcMatch[1];
+    const sourceMatch = html.match(/<source[^>]*src=["']([^"']+\.mp3[^"']*)["']/i);
+    if (sourceMatch) return sourceMatch[1];
+    const hrefMatch = html.match(/href=["']([^"']+\.mp3[^"']*)["']/i);
+    if (hrefMatch) return hrefMatch[1];
+    return "";
+  };
+
+  // 본문 content에서 YouTube 임베드 + 오디오 플레이어 + MP3 링크 제거
+  const cleanContent = (html: string, hasVideo: boolean): string => {
+    let cleaned = html;
+    if (hasVideo) {
+      cleaned = cleaned
+        .replace(/<figure[^>]*class="[^"]*wp-block-embed[^"]*"[^>]*>[\s\S]*?<\/figure>/gi, "")
+        .replace(/<iframe[^>]*(youtube\.com|youtu\.be)[^>]*>[\s\S]*?<\/iframe>/gi, "")
+        .replace(/<iframe[^>]*(youtube\.com|youtu\.be)[^>]*\/>/gi, "");
+    }
+    // 오디오 플레이어 섹션 제거 (말씀Audio 제목 + audio 태그 + MP3 download 링크)
+    cleaned = cleaned
+      // wp-block-audio figure 전체 제거 (가장 먼저)
+      .replace(/<figure[^>]*class="[^"]*wp-block-audio[^"]*"[^>]*>[\s\S]*?<\/figure>/gi, "")
+      // audio 태그 직접 제거
+      .replace(/<audio[^>]*>[\s\S]*?<\/audio>/gi, "")
+      // "말씀Audio" / "Audio" / "오디오" 텍스트만 있는 블록 태그 제거 (중첩 태그 포함)
+      .replace(/<(?:p|h[1-6]|div)[^>]*>(?:<(?:strong|b|em|span)[^>]*>)?\s*(?:말씀\s*)?(?:Audio|오디오)\s*(?:<\/(?:strong|b|em|span)>)?<\/(?:p|h[1-6]|div)>/gi, "")
+      // MP3 download 링크 단락 제거
+      .replace(/<p[^>]*>\s*<a[^>]+\.mp3[^>]*>[^<]*<\/a>\s*<\/p>/gi, "")
+      .replace(/<p[^>]*>\s*MP3\s*[Dd]ownload[^<]*<\/p>/gi, "")
+      // MP3 링크 a태그 제거 (단독)
+      .replace(/<a[^>]+href=["'][^"']*\.mp3[^"']*["'][^>]*>[^<]*<\/a>/gi, "")
+      .replace(/^\s*[\r\n]/gm, "")
+      .trim();
+    return cleaned;
   };
 
   const getPageNumbers = () => {
@@ -512,7 +574,7 @@ export default function SermonPage() {
             {selectedSermon ? (
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col gap-4 animate-fade-in">
                 <button
-                  onClick={() => setSelectedSermon(null)}
+                  onClick={() => { setSelectedSermon(null); router.push("/sermon", { scroll: false }); }}
                   className="w-full py-3 bg-white border border-slate-300 text-slate-700 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-sm"
                 >
                   <List size={18} /> 목록으로 돌아가기
@@ -656,7 +718,7 @@ export default function SermonPage() {
               <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-slate-100 animate-fade-in">
                 <div className="lg:hidden p-4 border-b border-slate-100">
                   <button
-                    onClick={() => setSelectedSermon(null)}
+                    onClick={() => { setSelectedSermon(null); router.push("/sermon", { scroll: false }); }}
                     className="flex items-center text-sm font-bold text-slate-500 hover:text-blue-600"
                   >
                     <ChevronLeft size={16} /> 목록으로 돌아가기
@@ -688,35 +750,59 @@ export default function SermonPage() {
                         getCleanTitle(selectedSermon.title.rendered),
                     }}
                   />
-                  <div className="flex flex-wrap items-center gap-6 py-6 border-t border-b border-slate-100 text-sm md:text-base text-slate-600">
-                    <div className="flex items-center gap-2">
-                      <Users size={18} className="text-slate-400" />
-                      <span className="font-bold">
-                        {selectedSermon.sermon_meta?.speaker || "담임목사"}
-                      </span>
-                    </div>
-
-                    {selectedSermon.sermon_meta?.scripture && (
-                      <div className="flex items-center gap-2">
-                        <BookOpen size={18} className="text-slate-400" />
-                        <span>{selectedSermon.sermon_meta?.scripture}</span>
+                  {/* 정보 바 + MP3 버튼 우측 배치 */}
+                  {(() => {
+                    const rawHtml = selectedSermon.content.rendered || "";
+                    const audioUrl =
+                      selectedSermon.sermon_meta?.audio_url ||
+                      extractAudioUrl(rawHtml);
+                    return (
+                      <div className="flex flex-wrap items-center gap-4 py-6 border-t border-b border-slate-100 text-sm md:text-base text-slate-600">
+                        <div className="flex items-center gap-2">
+                          <Users size={18} className="text-slate-400" />
+                          <span className="font-bold">
+                            {selectedSermon.sermon_meta?.speaker || "담임목사"}
+                          </span>
+                        </div>
+                        {selectedSermon.sermon_meta?.scripture && (
+                          <div className="flex items-center gap-2">
+                            <BookOpen size={18} className="text-slate-400" />
+                            <span>{selectedSermon.sermon_meta?.scripture}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2">
+                          <Calendar size={18} className="text-slate-400" />
+                          <span>{formatDate(selectedSermon.date)}</span>
+                        </div>
+                        {audioUrl && (
+                          <a
+                            href={audioUrl}
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="ml-auto inline-flex items-center gap-2 px-4 py-2 bg-slate-400 hover:bg-slate-500 text-white rounded-full text-xs font-bold transition-colors shadow-sm shrink-0"
+                          >
+                            <Headphones size={14} />
+                            MP3
+                            <Download size={12} className="opacity-70" />
+                          </a>
+                        )}
                       </div>
-                    )}
-                    <div className="flex items-center gap-2">
-                      <Calendar size={18} className="text-slate-400" />
-                      <span>{formatDate(selectedSermon.date)}</span>
-                    </div>
-                  </div>
+                    );
+                  })()}
 
-                  <div className="mt-8 prose prose-lg max-w-none text-slate-700 leading-loose">
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          selectedSermon.content.rendered ||
-                          "설교 본문 내용이 없습니다.",
-                      }}
-                    />
-                  </div>
+                  {/* 본문 — YouTube 임베드 + 오디오 섹션 제거 후 표시 */}
+                  {(() => {
+                    const rawHtml = selectedSermon.content.rendered || "";
+                    const hasVideo = !!selectedSermon.sermon_meta?.video_url;
+                    const cleanedHtml = cleanContent(rawHtml, hasVideo);
+                    if (!cleanedHtml.trim()) return null;
+                    return (
+                      <div className="mt-8 prose prose-lg max-w-none text-slate-700 leading-loose">
+                        <div dangerouslySetInnerHTML={{ __html: cleanedHtml }} />
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             ) : (
@@ -833,7 +919,10 @@ export default function SermonPage() {
                           key={item.id}
                           item={item}
                           viewMode={viewMode}
-                          onClick={setSelectedSermon}
+                          onClick={(s) => {
+                            setSelectedSermon(s);
+                            router.push(`/sermon?id=${s.id}`, { scroll: false });
+                          }}
                         />
                       ))}
                     </div>
@@ -901,5 +990,13 @@ export default function SermonPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+export default function SermonPage() {
+  return (
+    <Suspense>
+      <SermonPageInner />
+    </Suspense>
   );
 }
