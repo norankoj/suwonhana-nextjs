@@ -33,8 +33,7 @@ const BOOKS: { title: string; label: string | null; imageUrl: string | null }[] 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-8">
-      <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">{children}</h2>
-      <div className="w-12 h-[2px] bg-slate-300" />
+      <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">{children}</h2>
     </div>
   );
 }
@@ -79,7 +78,7 @@ export default async function DiscipleshipPage() {
     <div className="bg-white pb-32 font-sans">
 
       {/* ── 히어로 ── */}
-      <div className="relative w-full h-screen md:h-[90vh] min-h-[500px] flex items-end overflow-hidden">
+      <div className="relative w-full h-[60vh] min-h-[400px] flex items-end overflow-hidden">
         {finalHeroImage ? (
           <img
             src={finalHeroImage}

@@ -1,11 +1,31 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import LiteYouTubeEmbed from "react-lite-youtube-embed";
+import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
+
+const WP = process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 
 export default function TrainingContentPage() {
   const params = useParams();
   const tab = params.tab as string;
+
+  const [dsmHeroImage, setDsmHeroImage] = useState<string>("");
+
+  useEffect(() => {
+    if (tab !== "dsm") return;
+    fetch(
+      `${WP}/wp-json/wp/v2/pages?slug=dsm&_fields=_links&_embed=wp:featuredmedia`,
+      { cache: "no-store" }
+    )
+      .then((r) => (r.ok ? r.json() : []))
+      .then((pages) => {
+        const url = pages[0]?._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+        if (url) setDsmHeroImage(url);
+      })
+      .catch(() => {});
+  }, [tab]);
 
   return (
     <>
@@ -15,34 +35,23 @@ export default function TrainingContentPage() {
       {tab === "dsm" && (
         <div className="bg-white pb-32 font-sans animate-fade-in">
 
-          {/* ── 히어로: YouTube 자동재생 배경 ── */}
-          <div className="relative w-full h-screen md:h-[90vh] min-h-[500px] overflow-hidden bg-slate-900">
-            {/* YouTube iframe — cover 방식 */}
-            <iframe
-              src="https://www.youtube.com/embed/6N7V4WF6dqA?autoplay=1&mute=1&loop=1&playlist=6N7V4WF6dqA&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              className="absolute pointer-events-none"
-              style={{
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: "100vw",
-                height: "56.25vw",   /* 16:9 — 가로 기준 */
-                minHeight: "100%",
-                minWidth: "177.78vh", /* 16:9 — 세로 기준 */
-              }}
-            />
-            {/* 그라디언트 오버레이 */}
+          {/* ── 히어로 (하나상담실 동일 패턴) ── */}
+          <div className="relative w-full h-[60vh] min-h-[400px] flex items-end overflow-hidden">
+            {dsmHeroImage ? (
+              <img
+                src={dsmHeroImage}
+                alt="DSM"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-slate-800" />
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
-
-            {/* 텍스트 좌하단 */}
-            <div className="absolute bottom-0 left-0 right-0 px-8 sm:px-12 lg:px-20 pb-14 md:pb-20 max-w-content">
-              <p className="text-[11px] md:text-xs font-bold tracking-[0.35em] text-white/60 uppercase mb-4">
+            <div className="relative z-10 w-full max-w-content mx-auto px-6 pb-14 md:pb-20">
+              <p className="text-white/60 text-sm font-medium tracking-[0.2em] uppercase mb-3">
                 Daniel School of Ministry
               </p>
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+              <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
                 DSM
               </h1>
             </div>
@@ -50,6 +59,17 @@ export default function TrainingContentPage() {
 
           {/* ── 본문 ── */}
           <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 space-y-16">
+
+            {/* YouTube 영상 박스 */}
+            <div className="w-full overflow-hidden rounded-lg shadow-lg bg-slate-900">
+              <LiteYouTubeEmbed
+                id="6N7V4WF6dqA"
+                title="DSM — Daniel School of Ministry"
+                wrapperClass="yt-lite w-full aspect-video"
+                iframeClass="w-full h-full"
+                playerClass="lty-playbtn"
+              />
+            </div>
 
             {/* 소개 */}
             <div>
@@ -59,18 +79,18 @@ export default function TrainingContentPage() {
               </p>
             </div>
 
-            {/* 안내 정보 */}
+            {/* 훈련 안내 */}
             <section className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">훈련 안내</h3>
+                <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">훈련 안내</h3>
                 <div className="border-t border-slate-200">
                   {[
                     { label: "훈련기간", value: "매년 6월말 — 8월말 (2개월)" },
                     { label: "대상", value: "셀에 소속된 공동체 회원으로 셀리더가 추천하는 분 (제자의 삶을 성실하게 수료한 분)" },
                   ].map(({ label, value }) => (
-                    <div key={label} className="flex items-start justify-between py-4 border-b border-slate-100 gap-6">
-                      <p className="font-bold text-slate-900 text-base shrink-0">{label}</p>
-                      <p className="text-slate-600 text-sm text-right break-keep">{value}</p>
+                    <div key={label} className="flex items-start justify-between py-5 border-b border-slate-100 gap-8">
+                      <p className="font-bold text-slate-900 text-lg shrink-0">{label}</p>
+                      <p className="text-slate-600 text-base text-right break-keep">{value}</p>
                     </div>
                   ))}
                 </div>
