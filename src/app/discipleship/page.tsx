@@ -11,29 +11,32 @@ export const metadata: Metadata = {
    데이터
 ───────────────────────────── */
 const JOURNEY = [
-  { name: "새로운 삶", en: "New Life", desc: "새가족을 위한 첫 번째 과정. 신앙의 기초와 교회 공동체를 소개합니다." },
-  { name: "제자의 삶", en: "Discipleship", desc: "말씀과 기도, 전도와 교제를 통해 예수님의 제자로 세워지는 과정입니다." },
-  { name: "수요 훈련", en: "Wednesday Training", desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다." },
+  { name: "새로운 삶", desc: "새가족을 위한 첫 번째 과정. 신앙의 기초와 교회 공동체를 소개합니다." },
+  { name: "제자의 삶", desc: "말씀과 기도, 전도와 교제를 통해 예수님의 제자로 세워지는 과정입니다." },
+  { name: "수요 훈련", desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다." },
 ];
 
 const BOOKS = [
-  { title: "창조주를\n소개합니다!", label: "초신자 과정" },
-  { title: "성경적\n세계관", label: null },
-  { title: "말씀의 삶\n구약", label: null },
-  { title: "말씀의 삶\n신약", label: null },
-  { title: "증인의 삶", label: null },
-  { title: "목자의 삶", label: null },
-  { title: "변화의 삶", label: null },
-  { title: "하나님을\n경험하는 삶", label: null },
+  { title: "창조주를\n소개합니다!", label: "초신자 과정", bg: "#3D2B1F" },
+  { title: "성경적\n세계관",          label: null,         bg: "#1E293B" },
+  { title: "말씀의 삶\n구약",         label: null,         bg: "#27272A" },
+  { title: "말씀의 삶\n신약",         label: null,         bg: "#1C2E3F" },
+  { title: "증인의 삶",               label: null,         bg: "#292524" },
+  { title: "목자의 삶",               label: null,         bg: "#1A2E25" },
+  { title: "변화의 삶",               label: null,         bg: "#2D1F2E" },
+  { title: "하나님을\n경험하는 삶",   label: null,         bg: "#2C2410" },
 ];
 
 /* ─────────────────────────────
    Book 컴포넌트 (저서 스타일)
 ───────────────────────────── */
-function BookCard({ title, label }: { title: string; label: string | null }) {
+function BookCard({ title, label, bg }: { title: string; label: string | null; bg: string }) {
   return (
     <div className="flex flex-col group cursor-default">
-      <div className="relative aspect-[1/1.45] w-full overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-4 flex flex-col justify-between bg-slate-900 p-4">
+      <div
+        className="relative aspect-[1/1.45] w-full overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-4 flex flex-col justify-between p-4"
+        style={{ backgroundColor: bg }}
+      >
         <div className="absolute left-0 top-0 bottom-0 w-[6px] bg-white/10" />
         <div className="w-6 h-[2px] bg-white/30" />
         <p className="text-white font-bold text-[13px] sm:text-[14px] leading-snug whitespace-pre-line tracking-tight">
@@ -91,7 +94,6 @@ export default async function DiscipleshipPage() {
             {JOURNEY.map((item, i) => (
               <React.Fragment key={item.name}>
                 <div className="flex-1 py-8 md:py-0 md:px-8 first:md:pl-0 last:md:pr-0">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">{item.en}</p>
                   <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">{item.name}</h3>
                   <p className="text-sm text-slate-500 leading-relaxed break-keep">{item.desc}</p>
                 </div>
@@ -152,7 +154,7 @@ export default async function DiscipleshipPage() {
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-5 gap-y-10">
             {BOOKS.map((book) => (
-              <BookCard key={book.title} title={book.title} label={book.label} />
+              <BookCard key={book.title} title={book.title} label={book.label} bg={book.bg} />
             ))}
           </div>
         </section>
