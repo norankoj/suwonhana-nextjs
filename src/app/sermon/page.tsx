@@ -283,6 +283,8 @@ function SermonPageInner() {
   const router = useRouter();
   const [selectedSermon, setSelectedSermon] = useState<WPSermon | null>(null);
   const [sermons, setSermons] = useState<WPSermon[]>([]);
+  // 필터 변경 시 페이지 effect 중복 fetch 방지용 ref
+  const skipNextPageEffect = React.useRef(false);
 
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -361,13 +363,22 @@ function SermonPageInner() {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  // 필터 변경 시 → 페이지 1로 초기화 후 fetch (taxonomy 로드 포함 최초 1회도 여기서 처리)
   useEffect(() => {
     if (!taxonomiesLoaded) return;
+    // 현재 페이지가 1이 아닐 경우 setCurrentPage(1)이 page effect를 트리거하므로 skip 플래그 세팅
+    if (currentPage !== 1) skipNextPageEffect.current = true;
     setCurrentPage(1);
     fetchSermons(1);
   }, [activeTab, selectedBooks, selectedTopics, selectedYear, searchTrigger, debouncedSearch, taxonomiesLoaded]);
 
+  // 페이지네이션 전용 effect (필터 변경으로 인한 중복 fetch 방지)
   useEffect(() => {
+    if (!taxonomiesLoaded) return; // taxonomy 로드 전 실행 금지
+    if (skipNextPageEffect.current) {
+      skipNextPageEffect.current = false;
+      return;
+    }
     fetchSermons(currentPage);
     if (window.innerWidth < 1024) {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -822,7 +833,7 @@ function SermonPageInner() {
                   </button>
                 </div>
 
-                <div className="flex items-center justify-end mb-4 gap-2">
+                <div className="hidden sm:flex items-center justify-end mb-4 gap-2">
                   <div className="bg-white p-1 rounded-lg border border-slate-200 flex items-center">
                     <button
                       onClick={() => setViewMode("grid")}
