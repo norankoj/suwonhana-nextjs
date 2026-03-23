@@ -16,53 +16,35 @@ const JOURNEY = [
   { name: "수요 훈련", desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다." },
 ];
 
-const BOOKS: { title: string; label: string | null; imageUrl: string | null }[] = [
-  { title: "창조주를\n소개합니다!", label: "초신자 과정", imageUrl: null },
-  { title: "성경적\n세계관",          label: null,          imageUrl: null },
-  { title: "말씀의 삶\n구약",         label: null,          imageUrl: null },
-  { title: "말씀의 삶\n신약",         label: null,          imageUrl: null },
-  { title: "증인의 삶",               label: null,          imageUrl: null },
-  { title: "목자의 삶",               label: null,          imageUrl: null },
-  { title: "변화의 삶",               label: null,          imageUrl: null },
-  { title: "하나님을\n경험하는 삶",   label: null,          imageUrl: null },
+const COURSES: { title: string; label: string | null }[] = [
+  { title: "창조주를 소개합니다!", label: "초신자 과정" },
+  { title: "성경적 세계관",       label: null },
+  { title: "말씀의 삶 — 구약",    label: null },
+  { title: "말씀의 삶 — 신약",    label: null },
+  { title: "증인의 삶",           label: null },
+  { title: "목자의 삶",           label: null },
+  { title: "변화의 삶",           label: null },
+  { title: "하나님을 경험하는 삶", label: null },
 ];
 
 /* ─────────────────────────────
-   섹션 타이틀 컴포넌트
+   타이틀 컴포넌트
 ───────────────────────────── */
-function SectionTitle({ children }: { children: React.ReactNode }) {
+/** 훈련 과정 / 훈련 과목 — 큰 타이틀, 가운데 정렬, 짧은 선 */
+function BigSectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mb-8">
-      <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">{children}</h2>
+    <div className="mb-12 text-center">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">{children}</h2>
+      <div className="w-12 h-[2px] bg-slate-300 mx-auto" />
     </div>
   );
 }
 
-/* ─────────────────────────────
-   Book 컴포넌트 (저서 스타일 — WP 이미지 기반)
-───────────────────────────── */
-function BookCard({ title, label, imageUrl }: { title: string; label: string | null; imageUrl: string | null }) {
+/** 수요 훈련 / 일정 안내 — 작은 타이틀, 좌측 정렬 */
+function SmallSectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col group cursor-default">
-      <div className="relative aspect-[1/1.45] w-full rounded-lg overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-4 border border-slate-200/50">
-        {imageUrl ? (
-          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
-        ) : (
-          /* WP 이미지 미등록 시 다크 플레이스홀더 */
-          <div className="w-full h-full bg-slate-800 flex flex-col justify-end p-4">
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/10" />
-            <p className="text-white font-bold text-[13px] leading-snug whitespace-pre-line tracking-tight">
-              {title}
-            </p>
-          </div>
-        )}
-      </div>
-      <p className="text-[14px] font-bold text-slate-900 leading-snug whitespace-pre-line">
-        {title}
-      </p>
-      {label && (
-        <p className="text-[11px] text-slate-400 mt-1">{label}</p>
-      )}
+    <div className="mb-4">
+      <h2 className="text-xl font-extrabold text-slate-900 mb-1">{children}</h2>
     </div>
   );
 }
@@ -103,10 +85,7 @@ export default async function DiscipleshipPage() {
 
         {/* ── 훈련 과정 ── */}
         <section>
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">훈련 과정</h2>
-            <div className="w-12 h-[2px] bg-slate-300 mx-auto" />
-          </div>
+          <BigSectionTitle>훈련 과정</BigSectionTitle>
           <div className="flex flex-col md:flex-row">
             {JOURNEY.map((item, i) => (
               <React.Fragment key={item.name}>
@@ -134,31 +113,31 @@ export default async function DiscipleshipPage() {
         {/* ── 수요 훈련 안내 ── */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
           <div>
-            <SectionTitle>수요 훈련</SectionTitle>
+            <SmallSectionTitle>수요 훈련</SmallSectionTitle>
             <div className="border-t border-slate-200">
               {[
-                { label: "봄학기", value: "3월 — 5월" },
+                { label: "봄학기",   value: "3월 — 5월" },
                 { label: "가을학기", value: "9월 — 12월" },
               ].map(({ label, value }) => (
-                <div key={label} className="flex items-center justify-between py-5 border-b border-slate-100">
-                  <p className="font-bold text-slate-900 text-lg">{label}</p>
-                  <p className="text-slate-600 text-lg tabular-nums">{value}</p>
+                <div key={label} className="flex items-center justify-between py-3 border-b border-slate-100">
+                  <p className="font-bold text-slate-900 text-base">{label}</p>
+                  <p className="text-slate-600 text-base tabular-nums">{value}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div>
-            <SectionTitle>일정 안내</SectionTitle>
+            <SmallSectionTitle>일정 안내</SmallSectionTitle>
             <div className="border-t border-slate-200">
               {[
                 { label: "일시", value: "매주 수요일 저녁 8시" },
                 { label: "장소", value: "2층 본당, 중예배실 및 소그룹실" },
                 { label: "대상", value: "제자의 삶을 수료하고 훈련을 듣기 희망하는 수원하나교회 성도" },
               ].map(({ label, value }) => (
-                <div key={label} className="flex items-start justify-between py-5 border-b border-slate-100 gap-8">
-                  <p className="font-bold text-slate-900 text-lg shrink-0">{label}</p>
-                  <p className="text-slate-600 text-base text-right break-keep">{value}</p>
+                <div key={label} className="flex items-start justify-between py-3 border-b border-slate-100 gap-8">
+                  <p className="font-bold text-slate-900 text-base shrink-0">{label}</p>
+                  <p className="text-slate-600 text-sm text-right break-keep">{value}</p>
                 </div>
               ))}
             </div>
@@ -167,13 +146,24 @@ export default async function DiscipleshipPage() {
 
         {/* ── 훈련 과목 ── */}
         <section>
-          <SectionTitle>훈련 과목</SectionTitle>
-          <p className="text-base text-slate-500 -mt-2 mb-10">
+          <BigSectionTitle>훈련 과목</BigSectionTitle>
+          <p className="text-sm text-slate-400 text-center -mt-6 mb-10">
             매 학기 개설 과목은 교회 공지를 통해 안내됩니다.
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-5 gap-y-10">
-            {BOOKS.map((book) => (
-              <BookCard key={book.title} title={book.title} label={book.label} imageUrl={book.imageUrl} />
+          {/* 번호 리스트 */}
+          <div className="max-w-2xl mx-auto divide-y divide-slate-100">
+            {COURSES.map((course, i) => (
+              <div key={course.title} className="flex items-baseline gap-6 py-5 group hover:bg-slate-50/50 -mx-4 px-4 rounded transition-colors cursor-default">
+                <span className="text-2xl font-bold text-slate-200 tabular-nums w-9 shrink-0 leading-none select-none">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <p className="text-lg font-bold text-slate-900 leading-snug">{course.title}</p>
+                  {course.label && (
+                    <p className="text-xs text-slate-400 mt-0.5">{course.label}</p>
+                  )}
+                </div>
+              </div>
             ))}
           </div>
         </section>

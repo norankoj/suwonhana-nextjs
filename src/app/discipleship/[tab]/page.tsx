@@ -68,9 +68,10 @@ export default function TrainingContentPage() {
               />
             </div>
 
-            {/* 소개 */}
-            <div>
-              <p className="text-lg md:text-xl text-slate-600 leading-loose">
+            {/* 소개 — 가운데 정렬 */}
+            <div className="text-center">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-5">DSM</h2>
+              <p className="text-base md:text-lg text-slate-600 leading-loose">
                 세상이 격변하는 이 때 &lsquo;다니엘&rsquo;과 같은 사람들이 일어나야 할 때라고 믿습니다. 이를 돕기 위하여 DSM 훈련이 진행됩니다.
               </p>
             </div>
