@@ -1,3 +1,4 @@
+import React from "react";
 import type { Metadata } from "next";
 import { fetchTrainingData } from "@/lib/wordpress";
 
@@ -9,6 +10,12 @@ export const metadata: Metadata = {
 /* ─────────────────────────────
    데이터
 ───────────────────────────── */
+const JOURNEY = [
+  { name: "새로운 삶", en: "New Life", desc: "새가족을 위한 첫 번째 과정. 신앙의 기초와 교회 공동체를 소개합니다." },
+  { name: "제자의 삶", en: "Discipleship", desc: "말씀과 기도, 전도와 교제를 통해 예수님의 제자로 세워지는 과정입니다." },
+  { name: "수요 훈련", en: "Wednesday Training", desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다." },
+];
+
 const BOOKS = [
   { title: "창조주를\n소개합니다!", label: "초신자 과정" },
   { title: "성경적\n세계관", label: null },
@@ -77,6 +84,31 @@ export default async function DiscipleshipPage() {
       </div>
 
       <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 space-y-20 pt-20 md:pt-28">
+
+        {/* ── 훈련 여정 (타이틀 없음, 화살표 중앙) ── */}
+        <section>
+          <div className="flex flex-col md:flex-row">
+            {JOURNEY.map((item, i) => (
+              <React.Fragment key={item.name}>
+                <div className="flex-1 py-8 md:py-0 md:px-8 first:md:pl-0 last:md:pr-0">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">{item.en}</p>
+                  <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">{item.name}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed break-keep">{item.desc}</p>
+                </div>
+                {i < JOURNEY.length - 1 && (
+                  <div className="flex md:flex-col items-center justify-center md:py-0 py-2 md:px-2 shrink-0">
+                    <svg className="block md:hidden w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    <svg className="hidden md:block w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </section>
 
         {/* ── 수요 훈련 안내 ── */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
