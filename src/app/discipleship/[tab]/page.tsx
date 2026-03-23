@@ -58,13 +58,13 @@ export default function TrainingContentPage() {
           {/* ── 본문 ── */}
           <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 space-y-16">
 
-            {/* YouTube 영상 박스 — 자동재생(음소거) */}
-            <div className="w-full overflow-hidden rounded-lg shadow-lg bg-slate-900 aspect-video relative">
+            {/* YouTube 영상 박스 — 자동재생(음소거), 컨트롤 완전 숨김 */}
+            <div className="w-full aspect-video relative overflow-hidden">
               <iframe
-                src="https://www.youtube.com/embed/6N7V4WF6dqA?autoplay=1&mute=1&loop=1&playlist=6N7V4WF6dqA&controls=0&rel=0&modestbranding=1&showinfo=0"
+                src="https://www.youtube.com/embed/6N7V4WF6dqA?autoplay=1&mute=1&loop=1&playlist=6N7V4WF6dqA&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0"
                 allow="autoplay; encrypted-media"
-                allowFullScreen
                 className="absolute inset-0 w-full h-full"
+                style={{ border: "none" }}
               />
             </div>
 

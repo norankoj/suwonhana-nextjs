@@ -151,33 +151,36 @@ export default async function DiscipleshipPage() {
             매 학기 개설 과목은 교회 공지를 통해 안내됩니다.
           </p>
           {/* 책 표지 그리드 — 4열 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {COURSES.map((course) => (
               <div
                 key={course.title}
-                className={`relative aspect-[1/1.45] flex flex-col justify-end overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-default ${
-                  course.group === "foundation"
-                    ? "bg-amber-800"
-                    : "bg-slate-800"
-                }`}
+                className="flex flex-col cursor-default group"
               >
-                {/* 책 등(spine) 강조선 */}
-                <div className={`absolute top-0 left-0 w-[6px] h-full ${
-                  course.group === "foundation" ? "bg-amber-600" : "bg-slate-600"
-                }`} />
-                {/* 상단 장식선 */}
-                <div className={`absolute top-5 left-5 right-5 h-px ${
-                  course.group === "foundation" ? "bg-amber-600/60" : "bg-slate-500/60"
-                }`} />
-                {/* 타이틀 영역 */}
-                <div className="px-5 pb-5 pt-3">
-                  <p className="text-white font-extrabold text-base md:text-lg leading-snug break-keep whitespace-pre-line">
+                {/* 표지 */}
+                <div className={`relative aspect-[2/3] overflow-hidden flex flex-col justify-between p-5 group-hover:-translate-y-1 transition-transform duration-200 shadow-sm group-hover:shadow-lg ${
+                  course.group === "foundation" ? "bg-amber-800" : "bg-slate-800"
+                }`}>
+                  {/* 책 등 */}
+                  <div className={`absolute top-0 left-0 w-1.5 h-full ${
+                    course.group === "foundation" ? "bg-amber-500" : "bg-slate-500"
+                  }`} />
+                  {/* 상단 장식선 */}
+                  <div className={`h-px w-full ${
+                    course.group === "foundation" ? "bg-amber-400/50" : "bg-slate-500/50"
+                  }`} />
+                  {/* 제목 */}
+                  <p className="text-white font-extrabold text-lg md:text-xl leading-tight break-keep whitespace-pre-line">
                     {course.title}
                   </p>
+                </div>
+                {/* 표지 아래 텍스트 */}
+                <div className="pt-3 px-0.5">
+                  <p className="font-bold text-slate-900 text-sm leading-snug break-keep">
+                    {course.title.replaceAll("\n", " ")}
+                  </p>
                   {course.label && (
-                    <p className={`text-xs mt-1.5 ${
-                      course.group === "foundation" ? "text-amber-300/80" : "text-slate-400"
-                    }`}>{course.label}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">{course.label}</p>
                   )}
                 </div>
               </div>
