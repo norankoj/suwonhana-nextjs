@@ -761,7 +761,7 @@ function SermonPageInner() {
                       selectedSermon.sermon_meta?.audio_url ||
                       extractAudioUrl(rawHtml);
                     return (
-                      <div className="flex flex-wrap items-center gap-4 py-6 border-t border-b border-slate-100 text-sm md:text-base text-slate-600">
+                      <div className="flex flex-wrap items-center gap-4 py-4 border-t border-b border-slate-100 text-sm md:text-base text-slate-600">
                         <div className="flex items-center gap-2">
                           <Users size={18} className="text-slate-400" />
                           <span className="font-bold">
@@ -802,7 +802,7 @@ function SermonPageInner() {
                     const cleanedHtml = cleanContent(rawHtml, hasVideo);
                     if (!cleanedHtml.trim()) return null;
                     return (
-                      <div className="mt-8 prose prose-lg max-w-none text-slate-700 leading-loose">
+                      <div className="mt-4 prose prose-lg max-w-none text-slate-700 leading-loose">
                         <div dangerouslySetInnerHTML={{ __html: cleanedHtml }} />
                       </div>
                     );
