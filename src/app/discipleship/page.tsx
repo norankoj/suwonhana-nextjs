@@ -17,29 +17,29 @@ const JOURNEY = [
 ];
 
 const BOOKS = [
-  { title: "창조주를\n소개합니다!", label: "초신자 과정", bg: "#3D2B1F" },
-  { title: "성경적\n세계관",          label: null,         bg: "#1E293B" },
-  { title: "말씀의 삶\n구약",         label: null,         bg: "#27272A" },
-  { title: "말씀의 삶\n신약",         label: null,         bg: "#1C2E3F" },
-  { title: "증인의 삶",               label: null,         bg: "#292524" },
-  { title: "목자의 삶",               label: null,         bg: "#1A2E25" },
-  { title: "변화의 삶",               label: null,         bg: "#2D1F2E" },
-  { title: "하나님을\n경험하는 삶",   label: null,         bg: "#2C2410" },
+  { title: "창조주를\n소개합니다!", label: "초신자 과정", bg: "#FDE8D0", text: "#7C3A10" },
+  { title: "성경적\n세계관",          label: null,         bg: "#DBEAFE", text: "#1E3A6E" },
+  { title: "말씀의 삶\n구약",         label: null,         bg: "#E0E7FF", text: "#3730A3" },
+  { title: "말씀의 삶\n신약",         label: null,         bg: "#D1FAE5", text: "#065F46" },
+  { title: "증인의 삶",               label: null,         bg: "#FCE7F3", text: "#831843" },
+  { title: "목자의 삶",               label: null,         bg: "#D1FAE5", text: "#064E3B" },
+  { title: "변화의 삶",               label: null,         bg: "#EDE9FE", text: "#4C1D95" },
+  { title: "하나님을\n경험하는 삶",   label: null,         bg: "#FEF9C3", text: "#78350F" },
 ];
 
 /* ─────────────────────────────
    Book 컴포넌트 (저서 스타일)
 ───────────────────────────── */
-function BookCard({ title, label, bg }: { title: string; label: string | null; bg: string }) {
+function BookCard({ title, label, bg, text }: { title: string; label: string | null; bg: string; text: string }) {
   return (
     <div className="flex flex-col group cursor-default">
       <div
-        className="relative aspect-[1/1.45] w-full overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-4 flex flex-col justify-between p-4"
+        className="relative aspect-[1/1.45] w-full rounded-lg overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-4 flex flex-col justify-between p-4"
         style={{ backgroundColor: bg }}
       >
-        <div className="absolute left-0 top-0 bottom-0 w-[6px] bg-white/10" />
-        <div className="w-6 h-[2px] bg-white/30" />
-        <p className="text-white font-bold text-[13px] sm:text-[14px] leading-snug whitespace-pre-line tracking-tight">
+        <div className="absolute left-0 top-0 bottom-0 w-[5px] rounded-l-lg" style={{ backgroundColor: text, opacity: 0.25 }} />
+        <div className="w-5 h-[2px] rounded-full" style={{ backgroundColor: text, opacity: 0.3 }} />
+        <p className="font-bold text-[13px] sm:text-[14px] leading-snug whitespace-pre-line tracking-tight" style={{ color: text }}>
           {title}
         </p>
         <div className="h-3" />
@@ -154,7 +154,7 @@ export default async function DiscipleshipPage() {
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-5 gap-y-10">
             {BOOKS.map((book) => (
-              <BookCard key={book.title} title={book.title} label={book.label} bg={book.bg} />
+              <BookCard key={book.title} title={book.title} label={book.label} bg={book.bg} text={book.text} />
             ))}
           </div>
         </section>
