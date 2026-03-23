@@ -15,8 +15,8 @@ export default function TrainingContentPage() {
       {tab === "dsm" && (
         <div className="bg-white pb-32 font-sans animate-fade-in">
 
-          {/* ── 히어로: YouTube 풀스크린 자동재생 배경 ── */}
-          <div className="relative w-full h-screen overflow-hidden bg-slate-900">
+          {/* ── 히어로: YouTube 자동재생 배경 ── */}
+          <div className="relative w-full h-screen md:h-[90vh] min-h-[500px] overflow-hidden bg-slate-900">
             {/* YouTube iframe — cover 방식 */}
             <iframe
               src="https://www.youtube.com/embed/6N7V4WF6dqA?autoplay=1&mute=1&loop=1&playlist=6N7V4WF6dqA&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"

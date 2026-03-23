@@ -88,8 +88,13 @@ export default async function DiscipleshipPage() {
 
       <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 space-y-20 pt-20 md:pt-28">
 
-        {/* ── 훈련 여정 (타이틀 없음, 화살표 중앙) ── */}
+        {/* ── 훈련 과정 ── */}
         <section>
+          <div className="mb-8">
+            <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase pb-4 border-b border-slate-200">
+              훈련과정
+            </h2>
+          </div>
           <div className="flex flex-col md:flex-row">
             {JOURNEY.map((item, i) => (
               <React.Fragment key={item.name}>
