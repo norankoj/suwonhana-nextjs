@@ -14,7 +14,7 @@ export default function TrainingContentPage() {
   useEffect(() => {
     if (tab !== "dsm") return;
     fetch(
-      `${WP}/wp-json/wp/v2/pages?slug=dsm&_fields=_links&_embed=wp:featuredmedia`,
+      `${WP}/wp-json/wp/v2/pages?slug=discipleship-dsm&_fields=_links&_embed=wp:featuredmedia`,
       { cache: "no-store" }
     )
       .then((r) => (r.ok ? r.json() : []))

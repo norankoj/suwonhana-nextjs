@@ -150,19 +150,17 @@ export default async function DiscipleshipPage() {
           <p className="text-sm text-slate-400 text-center -mt-6 mb-10">
             매 학기 개설 과목은 교회 공지를 통해 안내됩니다.
           </p>
-          {/* 번호 리스트 */}
-          <div className="max-w-2xl mx-auto divide-y divide-slate-100">
-            {COURSES.map((course, i) => (
-              <div key={course.title} className="flex items-baseline gap-6 py-5 group hover:bg-slate-50/50 -mx-4 px-4 rounded transition-colors cursor-default">
-                <span className="text-2xl font-bold text-slate-200 tabular-nums w-9 shrink-0 leading-none select-none">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <p className="text-lg font-bold text-slate-900 leading-snug">{course.title}</p>
-                  {course.label && (
-                    <p className="text-xs text-slate-400 mt-0.5">{course.label}</p>
-                  )}
-                </div>
+          {/* 카드 그리드 — 4열 */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {COURSES.map((course) => (
+              <div
+                key={course.title}
+                className="border border-slate-200 rounded-2xl px-5 py-6 hover:border-slate-400 hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-default flex flex-col gap-1"
+              >
+                <p className="text-base md:text-lg font-extrabold text-slate-900 leading-snug break-keep">{course.title}</p>
+                {course.label && (
+                  <p className="text-xs text-slate-400">{course.label}</p>
+                )}
               </div>
             ))}
           </div>
