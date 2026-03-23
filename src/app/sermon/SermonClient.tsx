@@ -268,6 +268,13 @@ export default function SermonClient({
   const searchParams = useSearchParams();
   const router = useRouter();
   const [selectedSermon, setSelectedSermon] = useState<WPSermon | null>(null);
+  // URL에 ?id= 있으면 fetch 완료 전까지 목록 대신 로딩 표시 (새로고침 깜빡임 방지)
+  const [isLoadingDetail, setIsLoadingDetail] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return new URLSearchParams(window.location.search).has("id");
+    }
+    return false;
+  });
   const [sermons, setSermons] = useState<WPSermon[]>(initialSermons);
   // 필터 변경 시 페이지 effect 중복 fetch 방지용 ref
   const skipNextPageEffect = React.useRef(false);
@@ -440,8 +447,15 @@ export default function SermonClient({
   useEffect(() => {
     const controller = new AbortController();
     const id = searchParams.get("id");
-    if (!id) return;
-    if (selectedSermon && selectedSermon.id === Number(id)) return;
+    if (!id) {
+      setIsLoadingDetail(false);
+      return;
+    }
+    if (selectedSermon && selectedSermon.id === Number(id)) {
+      setIsLoadingDetail(false);
+      return;
+    }
+    setIsLoadingDetail(true);
     fetch(`/api/sermons/${id}`, { signal: controller.signal })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
@@ -449,6 +463,9 @@ export default function SermonClient({
       })
       .catch((e) => {
         if (e.name !== "AbortError") console.error(e);
+      })
+      .finally(() => {
+        setIsLoadingDetail(false);
       });
     return () => controller.abort();
   }, [searchParams]);
@@ -707,7 +724,17 @@ export default function SermonClient({
           </aside>
 
           <div className="flex-1 min-w-0">
-            {selectedSermon ? (
+            {isLoadingDetail ? (
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-xl overflow-hidden animate-pulse">
+                <div className="aspect-video bg-slate-200 w-full" />
+                <div className="p-6 md:p-10 space-y-4">
+                  <div className="h-8 bg-slate-200 rounded w-3/4" />
+                  <div className="h-4 bg-slate-100 rounded w-1/2" />
+                  <div className="h-4 bg-slate-100 rounded w-full" />
+                  <div className="h-4 bg-slate-100 rounded w-5/6" />
+                </div>
+              </div>
+            ) : selectedSermon ? (
               <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-slate-100 animate-fade-in">
                 <div className="lg:hidden p-4 border-b border-slate-100">
                   <button
