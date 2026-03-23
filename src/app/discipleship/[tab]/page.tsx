@@ -61,7 +61,7 @@ export default function TrainingContentPage() {
             {/* YouTube 영상 박스 — 자동재생(음소거) */}
             <div className="w-full overflow-hidden rounded-lg shadow-lg bg-slate-900 aspect-video relative">
               <iframe
-                src="https://www.youtube.com/embed/6N7V4WF6dqA?autoplay=1&mute=1&loop=1&playlist=6N7V4WF6dqA&rel=0&modestbranding=1"
+                src="https://www.youtube.com/embed/6N7V4WF6dqA?autoplay=1&mute=1&loop=1&playlist=6N7V4WF6dqA&controls=0&rel=0&modestbranding=1&showinfo=0"
                 allow="autoplay; encrypted-media"
                 allowFullScreen
                 className="absolute inset-0 w-full h-full"

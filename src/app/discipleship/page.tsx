@@ -16,15 +16,15 @@ const JOURNEY = [
   { name: "수요 훈련", desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다." },
 ];
 
-const COURSES: { title: string; label: string | null }[] = [
-  { title: "창조주를 소개합니다!", label: "초신자 과정" },
-  { title: "성경적 세계관",       label: null },
-  { title: "말씀의 삶 — 구약",    label: null },
-  { title: "말씀의 삶 — 신약",    label: null },
-  { title: "증인의 삶",           label: null },
-  { title: "목자의 삶",           label: null },
-  { title: "변화의 삶",           label: null },
-  { title: "하나님을 경험하는 삶", label: null },
+const COURSES: { title: string; label: string | null; group: "foundation" | "life" }[] = [
+  { title: "창조주를\n소개합니다!", label: "초신자 과정", group: "foundation" },
+  { title: "성경적\n세계관",        label: null,          group: "foundation" },
+  { title: "말씀의삶\n(구약)",      label: null,          group: "life" },
+  { title: "말씀의삶\n(신약)",      label: null,          group: "life" },
+  { title: "증인의 삶",             label: null,          group: "life" },
+  { title: "목자의 삶",             label: null,          group: "life" },
+  { title: "변화의 삶",             label: null,          group: "life" },
+  { title: "하나님을\n경험하는 삶", label: null,          group: "life" },
 ];
 
 /* ─────────────────────────────
@@ -150,17 +150,36 @@ export default async function DiscipleshipPage() {
           <p className="text-sm text-slate-400 text-center -mt-6 mb-10">
             매 학기 개설 과목은 교회 공지를 통해 안내됩니다.
           </p>
-          {/* 카드 그리드 — 4열 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* 책 표지 그리드 — 4열 */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
             {COURSES.map((course) => (
               <div
                 key={course.title}
-                className="border border-slate-200 rounded-2xl px-5 py-6 hover:border-slate-400 hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-default flex flex-col gap-1"
+                className={`relative aspect-[1/1.45] flex flex-col justify-end overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-default ${
+                  course.group === "foundation"
+                    ? "bg-amber-800"
+                    : "bg-slate-800"
+                }`}
               >
-                <p className="text-base md:text-lg font-extrabold text-slate-900 leading-snug break-keep">{course.title}</p>
-                {course.label && (
-                  <p className="text-xs text-slate-400">{course.label}</p>
-                )}
+                {/* 책 등(spine) 강조선 */}
+                <div className={`absolute top-0 left-0 w-[6px] h-full ${
+                  course.group === "foundation" ? "bg-amber-600" : "bg-slate-600"
+                }`} />
+                {/* 상단 장식선 */}
+                <div className={`absolute top-5 left-5 right-5 h-px ${
+                  course.group === "foundation" ? "bg-amber-600/60" : "bg-slate-500/60"
+                }`} />
+                {/* 타이틀 영역 */}
+                <div className="px-5 pb-5 pt-3">
+                  <p className="text-white font-extrabold text-base md:text-lg leading-snug break-keep whitespace-pre-line">
+                    {course.title}
+                  </p>
+                  {course.label && (
+                    <p className={`text-xs mt-1.5 ${
+                      course.group === "foundation" ? "text-amber-300/80" : "text-slate-400"
+                    }`}>{course.label}</p>
+                  )}
+                </div>
               </div>
             ))}
           </div>
