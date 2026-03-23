@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import LiteYouTubeEmbed from "react-lite-youtube-embed";
+import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   ChevronLeft,
@@ -83,8 +85,9 @@ const SermonCard = ({
   const youtubeId = getYouTubeId(item.sermon_meta?.video_url);
 
   // 이미지 URL은 순수 계산 (불필요한 useState/useEffect 제거)
+  // maxresdefault(1280px) 우선, 없으면 hqdefault(480px) 폴백
   const primaryImg = youtubeId
-    ? `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`
+    ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
     : item._embedded?.["wp:featuredmedia"]?.[0]?.source_url || "";
 
   const [imgSrc, setImgSrc] = useState(primaryImg);
@@ -717,22 +720,41 @@ export default function SermonClient({
                     <ChevronLeft size={16} /> 목록으로 돌아가기
                   </button>
                 </div>
-                <div className="aspect-video w-full bg-black">
-                  {getEmbedUrl(selectedSermon.sermon_meta?.video_url) ? (
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src={getEmbedUrl(selectedSermon.sermon_meta?.video_url)}
-                      title={selectedSermon.title.rendered}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white">
-                      동영상 링크가 없습니다.
-                    </div>
-                  )}
+                <div className="w-full bg-black">
+                  {(() => {
+                    const youtubeId = getYouTubeId(selectedSermon.sermon_meta?.video_url);
+                    const embedUrl = getEmbedUrl(selectedSermon.sermon_meta?.video_url);
+                    if (youtubeId) {
+                      return (
+                        <LiteYouTubeEmbed
+                          id={youtubeId}
+                          title={selectedSermon.title.rendered}
+                          poster="maxresdefault"
+                          noCookie={true}
+                        />
+                      );
+                    }
+                    if (embedUrl) {
+                      return (
+                        <div className="aspect-video">
+                          <iframe
+                            width="100%"
+                            height="100%"
+                            src={embedUrl}
+                            title={selectedSermon.title.rendered}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="aspect-video flex items-center justify-center text-white text-sm">
+                        동영상 링크가 없습니다.
+                      </div>
+                    );
+                  })()}
                 </div>
                 <div className="p-8 md:p-12">
                   <h2
