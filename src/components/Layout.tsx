@@ -32,9 +32,17 @@ const navItems = [
       { name: "1진 청년2부", path: "/community?id=1jin_2" },
       { name: "2진", path: "/community?id=2jin" },
       { name: "3진", path: "/community?id=3jin" },
+      { name: "English Ministry", path: "/community?id=em" },
     ],
   },
-  { name: "훈련", path: "/discipleship", sub: [] },
+  {
+    name: "훈련",
+    path: "/discipleship",
+    sub: [
+      { name: "훈련", path: "/discipleship" },
+      { name: "DSM", path: "/discipleship/dsm" },
+    ],
+  },
   {
     name: "교회소식",
     path: "/news",
@@ -72,12 +80,14 @@ export const Header = () => {
   }, []);
 
   // 메인 페이지에서 스크롤 전이면 투명 헤더
-  const isTransparent = isHome && !isScrolled && !isMobileMenuOpen;
+  const isVision = pathname === "/intro/vision";
+  const isCoreValues = pathname === "/intro/core-values";
+  const isTransparent = (isHome || isVision || isCoreValues) && !isScrolled && !isMobileMenuOpen;
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 h-16 md:h-20 flex items-center transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 h-[4.5rem] md:h-[5rem] flex items-center transition-all duration-500 ${
           isTransparent
             ? "bg-transparent border-transparent"
             : "bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm"
@@ -90,7 +100,7 @@ export const Header = () => {
           >
             <img
               src="/images/mainlogo-removebg-preview.png"
-              className={`h-9 md:h-11 w-auto object-contain transition-all duration-500 ${
+              className={`h-11 md:h-14 w-auto object-contain transition-all duration-500 ${
                 isTransparent
                   ? "brightness-0 invert opacity-95"
                   : "hover:opacity-80"
@@ -100,7 +110,7 @@ export const Header = () => {
           </Link>
 
           {/* 데스크탑 메뉴 */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8 h-full">
+          <nav className="hidden md:flex items-center gap-7 lg:gap-10 h-full">
             {navItems.map((item) => (
               <div
                 key={item.name}
@@ -108,7 +118,7 @@ export const Header = () => {
               >
                 <Link
                   href={item.path}
-                  className={`flex items-center px-2 transition-all duration-200 text-sm font-semibold ${
+                  className={`flex items-center px-2 transition-all duration-200 text-[15px] font-semibold ${
                     pathname.startsWith(item.path)
                       ? isTransparent
                         ? "text-white"
@@ -177,7 +187,7 @@ export const Header = () => {
             isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <div className="flex items-center justify-between h-16 px-5 border-b border-slate-100">
+          <div className="flex items-center justify-between h-[4.5rem] px-5 border-b border-slate-100">
             <span className="text-sm font-bold text-slate-900 tracking-wide">
               메뉴
             </span>
