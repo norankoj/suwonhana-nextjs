@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   ChevronLeft,
@@ -105,11 +106,14 @@ const SermonCard = ({
       >
         <div className="w-full sm:w-64 shrink-0 relative aspect-video bg-slate-200 overflow-hidden">
           {imgSrc ? (
-            <img
+            <Image
               src={imgSrc}
               alt=""
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              loading="lazy"
               onError={handleImgError}
-              className="w-full h-full object-cover transform scale-[1.01] group-hover:scale-105 transition-transform duration-700 ease-out"
+              className="object-cover transform scale-[1.01] group-hover:scale-105 transition-transform duration-700 ease-out"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-slate-100 text-slate-300">
@@ -164,11 +168,14 @@ const SermonCard = ({
     >
       <div className="relative aspect-video bg-slate-200 overflow-hidden">
         {imgSrc ? (
-          <img
+          <Image
             src={imgSrc}
             alt=""
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading="lazy"
             onError={handleImgError}
-            className="w-full h-full object-cover transform scale-[1.01] group-hover:scale-105 transition-transform duration-700 ease-out"
+            className="object-cover transform scale-[1.01] group-hover:scale-105 transition-transform duration-700 ease-out"
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-300">
@@ -304,9 +311,11 @@ export default function SermonClient({
       setTotalPages(initialTotalPages);
       return;
     }
+    const controller = new AbortController();
     if (currentPage !== 1) skipNextPageEffect.current = true;
     setCurrentPage(1);
-    fetchSermons(1);
+    fetchSermons(1, controller.signal);
+    return () => controller.abort();
   }, [activeTab, selectedBooks, selectedTopics, selectedYear, searchTrigger, debouncedSearch]);
 
   // 페이지네이션 전용 effect
@@ -318,14 +327,16 @@ export default function SermonClient({
     // 초기 로드 시 서버 데이터가 있으면 skip
     if (currentPage === 1 && sermons.length > 0 && isDefaultFilter) return;
     if (currentPage === 1) return; // 필터 effect에서 이미 처리
-    fetchSermons(currentPage);
+    const controller = new AbortController();
+    fetchSermons(currentPage, controller.signal);
     if (window.innerWidth < 1024) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+    return () => controller.abort();
   }, [currentPage]);
 
   // API 프록시를 통한 설교 목록 fetch (WP 직접 호출 X)
-  const fetchSermons = async (page = 1) => {
+  const fetchSermons = async (page = 1, signal?: AbortSignal) => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
@@ -363,7 +374,7 @@ export default function SermonClient({
       }
 
       // API 프록시 호출 (WP가 아닌 /api/sermons)
-      const res = await fetch(`/api/sermons?${params.toString()}`);
+      const res = await fetch(`/api/sermons?${params.toString()}`, { signal });
       if (!res.ok) {
         setSermons([]);
         setTotalPages(0);
@@ -373,6 +384,7 @@ export default function SermonClient({
       setSermons(result.data || []);
       setTotalPages(result.totalPages || 0);
     } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
       console.error("설교 로딩 실패:", error);
       setSermons([]);
     } finally {
@@ -423,15 +435,19 @@ export default function SermonClient({
 
   // URL ?id= 파라미터로 상세 sermon 로드 (새로고침 복원) — API 프록시 사용
   useEffect(() => {
+    const controller = new AbortController();
     const id = searchParams.get("id");
     if (!id) return;
     if (selectedSermon && selectedSermon.id === Number(id)) return;
-    fetch(`/api/sermons/${id}`)
+    fetch(`/api/sermons/${id}`, { signal: controller.signal })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data && data.id) setSelectedSermon(data);
       })
-      .catch(() => {});
+      .catch((e) => {
+        if (e.name !== "AbortError") console.error(e);
+      });
+    return () => controller.abort();
   }, [searchParams]);
 
   const getEmbedUrl = (url?: string) => {
