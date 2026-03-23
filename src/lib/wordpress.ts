@@ -235,6 +235,26 @@ export async function fetchPastorAndStaffData() {
 }
 
 // ==========================================
+// 훈련 페이지 (GraphQL) — 대표 이미지만 사용
+// ==========================================
+
+export async function fetchTrainingData() {
+  const query = `
+    query GetTrainingPage {
+      page(id: "훈련", idType: URI) {
+        featuredImage { node { sourceUrl } }
+      }
+    }
+  `;
+  const data = await wpGraphQL<{
+    page: { featuredImage?: { node: { sourceUrl: string } } };
+  }>(query);
+  return {
+    heroImageUrl: data?.page?.featuredImage?.node?.sourceUrl ?? null,
+  };
+}
+
+// ==========================================
 // 핵심가치 페이지 (GraphQL)
 // ==========================================
 

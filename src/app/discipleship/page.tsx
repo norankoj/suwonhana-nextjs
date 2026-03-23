@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import IntroPageHeader from "@/components/IntroPageHeader";
+import { fetchTrainingData } from "@/lib/wordpress";
 
 export const metadata: Metadata = {
   title: "훈련",
@@ -11,9 +11,21 @@ export const metadata: Metadata = {
    데이터
 ───────────────────────────── */
 const JOURNEY = [
-  { step: "1", name: "새로운 삶", desc: "새가족을 위한 첫 번째 과정. 신앙의 기초와 교회 공동체를 소개합니다." },
-  { step: "2", name: "제자의 삶", desc: "말씀과 기도, 전도와 교제를 통해 예수님의 제자로 세워지는 과정입니다." },
-  { step: "3", name: "수요 훈련", desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다." },
+  {
+    name: "새로운 삶",
+    en: "New Life",
+    desc: "새가족을 위한 첫 번째 과정. 신앙의 기초와 교회 공동체를 소개합니다.",
+  },
+  {
+    name: "제자의 삶",
+    en: "Discipleship",
+    desc: "말씀과 기도, 전도와 교제를 통해 예수님의 제자로 세워지는 과정입니다.",
+  },
+  {
+    name: "수요 훈련",
+    en: "Wednesday Training",
+    desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다.",
+  },
 ];
 
 const BOOKS = [
@@ -33,22 +45,16 @@ const BOOKS = [
 function BookCard({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <div className="flex flex-col group cursor-default">
-      {/* 책 표지 — 저서와 동일한 aspect-[1/1.45] */}
       <div className="relative aspect-[1/1.45] w-full overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-4 flex flex-col justify-between bg-slate-900 p-4">
-        {/* 등(spine) 세로선 */}
         <div className="absolute left-0 top-0 bottom-0 w-[6px] bg-white/10" />
-        {/* 상단 장식 선 */}
         <div className="w-6 h-[2px] bg-white/30" />
-        {/* 제목 */}
         <p className="text-white font-bold text-[13px] sm:text-[14px] leading-snug whitespace-pre-line tracking-tight">
           {title}
         </p>
-        {/* 하단 */}
         <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest">
           {subtitle}
         </p>
       </div>
-      {/* 제목 (표지 하단) */}
       <p className="text-[14px] font-bold text-slate-900 leading-snug whitespace-pre-line px-0.5">
         {title}
       </p>
@@ -59,30 +65,70 @@ function BookCard({ title, subtitle }: { title: string; subtitle: string }) {
 /* ─────────────────────────────
    Page
 ───────────────────────────── */
-export default function DiscipleshipPage() {
+export default async function DiscipleshipPage() {
+  const { heroImageUrl } = await fetchTrainingData();
+  const finalHeroImage = heroImageUrl ?? "/images/pastor_ko2.jpg";
+
   return (
     <div className="bg-white pb-32 font-sans">
-      <IntroPageHeader label="Discipleship Training" title="훈련" />
 
-      <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      {/* ── 히어로 (비전 페이지 동일 패턴) ── */}
+      <section className="relative w-full h-screen md:h-[90vh] min-h-[500px] overflow-hidden bg-slate-900">
+        <img
+          src={finalHeroImage}
+          alt="수원하나교회 훈련"
+          className="w-full h-full object-cover object-center opacity-70"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 px-8 sm:px-12 lg:px-20 pb-14 md:pb-20 max-w-content">
+          <p className="text-[11px] md:text-xs font-bold tracking-[0.35em] text-white/60 uppercase mb-4">
+            Discipleship Training
+          </p>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight break-keep">
+            예수님의 제자로<br />자라가는 여정
+          </h1>
+          <p className="mt-5 text-sm md:text-base text-white/70 font-medium max-w-xl leading-relaxed break-keep">
+            말씀과 훈련을 통해 성숙한 제자로 세워지는<br />
+            수원하나교회의 훈련 과정입니다.
+          </p>
+        </div>
+      </section>
 
-        {/* ── 훈련 여정 ── */}
+      <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 space-y-20 pt-20 md:pt-28">
+
+        {/* ── 훈련 여정 (화살표 연결) ── */}
         <section>
-          <h3 className="text-xl font-bold text-slate-900 mb-2">훈련 여정</h3>
-          <div className="border-t border-slate-200">
-            {JOURNEY.map((item) => (
-              <div
-                key={item.step}
-                className="flex items-start gap-6 py-5 border-b border-slate-100"
-              >
-                <span className="text-2xl font-black text-slate-200 w-6 shrink-0 leading-none mt-0.5">
-                  {item.step}
-                </span>
-                <div>
-                  <p className="font-bold text-slate-900 text-base mb-1">{item.name}</p>
-                  <p className="text-sm text-slate-500 leading-relaxed break-keep">{item.desc}</p>
+          <h2 className="text-xl font-bold text-slate-900 mb-12">훈련 여정</h2>
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-0">
+            {JOURNEY.map((item, i) => (
+              <React.Fragment key={item.name}>
+                {/* 스텝 */}
+                <div className="flex-1 py-6 md:py-0 md:pr-8">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">
+                    {item.en}
+                  </p>
+                  <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">
+                    {item.name}
+                  </h3>
+                  <p className="text-sm text-slate-500 leading-relaxed break-keep max-w-xs">
+                    {item.desc}
+                  </p>
                 </div>
-              </div>
+                {/* 화살표 */}
+                {i < JOURNEY.length - 1 && (
+                  <div className="flex items-center justify-start md:justify-center md:px-2 py-2 md:py-0 shrink-0">
+                    {/* 모바일: 아래 화살표 */}
+                    <svg className="block md:hidden w-5 h-5 text-slate-300 ml-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                    {/* PC: 오른쪽 화살표 */}
+                    <svg className="hidden md:block w-6 h-6 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                )}
+              </React.Fragment>
             ))}
           </div>
         </section>
@@ -104,21 +150,19 @@ export default function DiscipleshipPage() {
             </div>
           </div>
 
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">일정 안내</h3>
-              <div className="border-t border-slate-200">
-                {[
-                  { label: "일시", value: "매주 수요일 저녁 8시" },
-                  { label: "장소", value: "본당 2층 대예배실 및 소그룹실" },
-                  { label: "대상", value: "등록교인 누구나" },
-                ].map(({ label, value }) => (
-                  <div key={label} className="flex items-center justify-between py-4 border-b border-slate-100">
-                    <p className="font-bold text-slate-900 text-base">{label}</p>
-                    <p className="text-slate-600 text-right text-sm">{value}</p>
-                  </div>
-                ))}
-              </div>
+          <div>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">일정 안내</h3>
+            <div className="border-t border-slate-200">
+              {[
+                { label: "일시", value: "매주 수요일 저녁 8시" },
+                { label: "장소", value: "2층 본당, 중예배실 및 소그룹실" },
+                { label: "대상", value: "제자의 삶을 수료하고 훈련을 듣기 희망하는 수원하나교회 성도" },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex items-start justify-between py-4 border-b border-slate-100 gap-6">
+                  <p className="font-bold text-slate-900 text-base shrink-0">{label}</p>
+                  <p className="text-slate-600 text-sm text-right break-keep">{value}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
