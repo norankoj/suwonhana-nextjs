@@ -21,6 +21,9 @@ export default async function VisionPage() {
   }
 
   const fields = pageData.visionFields || {};
+  const heroImageUrl =
+    (pageData as { heroImageUrl?: string | null }).heroImageUrl ??
+    "/images/pastor_ko2.jpg";
 
   const mainTitleText =
     fields.mainTitle || "하나님을 즐거워하고\n그 분의 목적에 헌신하는 공동체";
@@ -60,73 +63,80 @@ export default async function VisionPage() {
   return (
     <div className="bg-white pb-32">
       {/* 히어로 섹션 - 단체 사진 풀블리드 */}
-      <section className="relative w-full h-[60vh] md:h-[75vh] overflow-hidden bg-slate-900">
+      <section className="relative w-full h-screen md:h-[90vh] min-h-[500px] overflow-hidden bg-slate-900">
         <img
-          src="/images/pastor_ko2.jpg"
+          src={heroImageUrl}
           alt="수원하나교회 공동체"
           className="w-full h-full object-cover object-center opacity-70"
         />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 flex items-center justify-center px-6">
-          <div className="max-w-content w-full text-center">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-snug break-keep">
-              {mainTitleText
-                .split(/<br\s*\/?>|\n/i)
-                .map((line: string, i: number, array: string[]) => (
-                  <React.Fragment key={i}>
-                    {line.trim()}
-                    {i < array.length - 1 && <br />}
-                  </React.Fragment>
-                ))}
-            </h1>
-          </div>
+        {/* 그라데이션: 하단 왼쪽 강조 */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
+
+        {/* 텍스트: 좌하단 배치 */}
+        <div className="absolute bottom-0 left-0 right-0 px-8 sm:px-12 lg:px-20 pb-14 md:pb-20 max-w-content">
+          <p className="text-[11px] md:text-xs font-bold tracking-[0.35em] text-white/60 uppercase mb-4">
+            Vision
+          </p>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight break-keep">
+            {mainTitleText
+              .split(/<br\s*\/?>|\n/i)
+              .map((line: string, i: number, array: string[]) => (
+                <React.Fragment key={i}>
+                  {line.trim()}
+                  {i < array.length - 1 && <br />}
+                </React.Fragment>
+              ))}
+          </h1>
+          {visionStatementText && visionStatementText !== "Vision Statement" && (
+            <p className="mt-5 text-sm md:text-base text-white/70 font-medium max-w-xl leading-relaxed">
+              {visionStatementText}
+            </p>
+          )}
         </div>
       </section>
 
       {/* Vision 항목들 */}
-      <section className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 mt-24 md:mt-32">
-        <div className="flex flex-col gap-24 md:gap-36">
+      <section className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+        <div className="flex flex-col gap-20 md:gap-32">
           {vision.map((item, idx) => {
-            const index = idx + 1;
-            const mainText = item.desc || "";
             const isEven = idx % 2 === 0;
-
             return (
               <div
                 key={`vision-${idx}`}
-                className={`flex flex-col md:flex-row gap-10 md:gap-20 items-center ${
-                  isEven ? "" : "md:flex-row-reverse"
-                }`}
+                className={`flex flex-col md:flex-row gap-10 md:gap-16 items-center ${isEven ? "" : "md:flex-row-reverse"}`}
               >
-                <div className="w-full md:w-1/2">
-                  <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                    />
-                  </div>
+                {/* 이미지 */}
+                <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden bg-slate-100 shrink-0">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  />
                 </div>
 
+                {/* 텍스트 패널 */}
                 <div className="w-full md:w-1/2 flex flex-col justify-center">
-                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-8 leading-tight break-keep tracking-tight">
+                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight break-keep tracking-tight mb-6">
                     {item.title}
                   </h3>
-
-                  <div className="text-base md:text-lg text-slate-600 leading-loose text-justify mb-8 space-y-4">
-                    {mainText
+                  <div className="text-slate-600 text-base md:text-lg leading-loose space-y-4 mb-8">
+                    {(item.desc || "")
                       .split("\n")
-                      .map((paragraph: string, pIdx: number) => {
-                        if (!paragraph.trim()) return null;
-                        return <p key={pIdx}>{paragraph}</p>;
-                      })}
+                      .filter((p: string) => p.trim())
+                      .map((p: string, i: number) => (
+                        <p key={i}>{p}</p>
+                      ))}
                   </div>
-
+                  <hr className="border-slate-200 mb-8" />
                   {item.verse && (
-                    <div className="border-l-2 border-slate-200 pl-6 py-1">
-                      <p className="text-slate-500 text-sm md:text-base font-medium leading-relaxed whitespace-pre-wrap italic">
-                        &ldquo;{item.verse}&rdquo;
-                      </p>
+                    <div className="text-slate-500 text-sm md:text-base leading-relaxed space-y-1">
+                      {item.verse
+                        .split("\n")
+                        .filter((l: string) => l.trim())
+                        .map((line: string, i: number) => (
+                          <p key={i}>{line}</p>
+                        ))}
                     </div>
                   )}
                 </div>

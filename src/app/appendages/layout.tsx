@@ -19,6 +19,11 @@ export default function AppendagesLayout({
     return "부속기관";
   };
 
+  // 상담실은 자체 풀너비 히어로를 가지므로 레이아웃 래퍼 제외
+  if (currentTab === "counseling") {
+    return <div className="bg-white min-h-screen animate-fade-in">{children}</div>;
+  }
+
   return (
     <div className="bg-white min-h-screen">
       <HeroSub title={getPageTitle()} />

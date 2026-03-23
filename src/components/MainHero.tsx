@@ -115,7 +115,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                 className="w-full h-full object-cover object-center"
               />
             )}
-            {/* [수정 포인트 2] 모바일 가독성을 위해 하단 그라데이션을 더 진하게 처리 */}
+            {/* 모바일 가독성을 위해 하단 그라데이션을 더 진하게 처리 */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none md:bg-gradient-to-r md:from-slate-900/70 md:via-slate-900/30 md:to-transparent"></div>
           </div>
         ))}
