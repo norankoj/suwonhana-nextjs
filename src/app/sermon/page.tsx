@@ -519,6 +519,8 @@ function SermonPageInner() {
       .replace(/<p[^>]*>\s*MP3\s*[Dd]ownload[^<]*<\/p>/gi, "")
       // MP3 링크 a태그 제거 (단독)
       .replace(/<a[^>]+href=["'][^"']*\.mp3[^"']*["'][^>]*>[^<]*<\/a>/gi, "")
+      // 빈 단락 제거 (&nbsp; 또는 공백만 있는 p 태그)
+      .replace(/<p[^>]*>\s*(?:&nbsp;|\u00a0)?\s*<\/p>/gi, "")
       .replace(/^\s*[\r\n]/gm, "")
       .trim();
     return cleaned;
