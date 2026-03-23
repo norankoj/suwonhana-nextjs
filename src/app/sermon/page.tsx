@@ -168,7 +168,7 @@ const SermonCard = ({
             {tags.slice(0, 5).map((tag, i) => (
               <span
                 key={i}
-                className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md border ${getTagColor(tag)}`}
+                className={`text-[11px] font-bold px-1.5 py-0.5 rounded-md border ${getTagColor(tag)}`}
               >
                 {tag}
               </span>
@@ -215,7 +215,7 @@ const SermonCard = ({
           </div>
         )}
         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors"></div>
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
             <Play size={20} className="text-slate-900 fill-slate-900 ml-1" />
           </div>
@@ -226,7 +226,7 @@ const SermonCard = ({
           {tags.slice(0, 3).map((tag, i) => (
             <span
               key={i}
-              className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md border ${getTagColor(tag)}`}
+              className={`text-[11px] font-bold px-1.5 py-0.5 rounded-md border ${getTagColor(tag)}`}
             >
               {tag}
             </span>
@@ -804,7 +804,7 @@ function SermonPageInner() {
                     const cleanedHtml = cleanContent(rawHtml, hasVideo);
                     if (!cleanedHtml.trim()) return null;
                     return (
-                      <div className="mt-4 prose prose-lg max-w-none text-slate-700 leading-loose">
+                      <div className="mt-2 prose prose-lg max-w-none text-slate-700 leading-loose">
                         <div dangerouslySetInnerHTML={{ __html: cleanedHtml }} />
                       </div>
                     );
@@ -816,7 +816,7 @@ function SermonPageInner() {
                 <div className="lg:hidden mb-6">
                   <button
                     onClick={() => setIsMobileFilterOpen(true)}
-                    className="w-full py-3.5 bg-slate-900 text-white rounded-lg font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform"
+                    className="w-full py-3.5 bg-slate-700 text-white rounded-lg font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform"
                   >
                     <FilterIcon size={18} /> 검색 필터 열기
                   </button>
