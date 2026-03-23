@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import LiteYouTubeEmbed from "react-lite-youtube-embed";
-import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 
@@ -60,22 +58,20 @@ export default function TrainingContentPage() {
           {/* ── 본문 ── */}
           <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 space-y-16">
 
-            {/* YouTube 영상 박스 */}
-            <div className="w-full overflow-hidden rounded-lg shadow-lg bg-slate-900">
-              <LiteYouTubeEmbed
-                id="6N7V4WF6dqA"
-                title="DSM — Daniel School of Ministry"
-                wrapperClass="yt-lite w-full aspect-video"
-                iframeClass="w-full h-full"
-                playerClass="lty-playbtn"
+            {/* YouTube 영상 박스 — 자동재생(음소거) */}
+            <div className="w-full overflow-hidden rounded-lg shadow-lg bg-slate-900 aspect-video relative">
+              <iframe
+                src="https://www.youtube.com/embed/6N7V4WF6dqA?autoplay=1&mute=1&loop=1&playlist=6N7V4WF6dqA&rel=0&modestbranding=1"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
               />
             </div>
 
             {/* 소개 */}
             <div>
-              <p className="text-lg md:text-xl text-slate-600 leading-loose break-keep max-w-2xl">
-                세상이 격변하는 이 때 &lsquo;다니엘&rsquo;과 같은 사람들이 일어나야 할 때라고 믿습니다.
-                이를 돕기 위하여 DSM 훈련이 진행됩니다.
+              <p className="text-lg md:text-xl text-slate-600 leading-loose">
+                세상이 격변하는 이 때 &lsquo;다니엘&rsquo;과 같은 사람들이 일어나야 할 때라고 믿습니다. 이를 돕기 위하여 DSM 훈련이 진행됩니다.
               </p>
             </div>
 
