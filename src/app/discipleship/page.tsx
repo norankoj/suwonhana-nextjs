@@ -16,39 +16,53 @@ const JOURNEY = [
   { name: "수요 훈련", desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다." },
 ];
 
-const BOOKS = [
-  { title: "창조주를\n소개합니다!", label: "초신자 과정", bg: "#FDE8D0", text: "#7C3A10" },
-  { title: "성경적\n세계관",          label: null,         bg: "#DBEAFE", text: "#1E3A6E" },
-  { title: "말씀의 삶\n구약",         label: null,         bg: "#E0E7FF", text: "#3730A3" },
-  { title: "말씀의 삶\n신약",         label: null,         bg: "#D1FAE5", text: "#065F46" },
-  { title: "증인의 삶",               label: null,         bg: "#FCE7F3", text: "#831843" },
-  { title: "목자의 삶",               label: null,         bg: "#D1FAE5", text: "#064E3B" },
-  { title: "변화의 삶",               label: null,         bg: "#EDE9FE", text: "#4C1D95" },
-  { title: "하나님을\n경험하는 삶",   label: null,         bg: "#FEF9C3", text: "#78350F" },
+const BOOKS: { title: string; label: string | null; imageUrl: string | null }[] = [
+  { title: "창조주를\n소개합니다!", label: "초신자 과정", imageUrl: null },
+  { title: "성경적\n세계관",          label: null,          imageUrl: null },
+  { title: "말씀의 삶\n구약",         label: null,          imageUrl: null },
+  { title: "말씀의 삶\n신약",         label: null,          imageUrl: null },
+  { title: "증인의 삶",               label: null,          imageUrl: null },
+  { title: "목자의 삶",               label: null,          imageUrl: null },
+  { title: "변화의 삶",               label: null,          imageUrl: null },
+  { title: "하나님을\n경험하는 삶",   label: null,          imageUrl: null },
 ];
 
 /* ─────────────────────────────
-   Book 컴포넌트 (저서 스타일)
+   섹션 타이틀 컴포넌트
 ───────────────────────────── */
-function BookCard({ title, label, bg, text }: { title: string; label: string | null; bg: string; text: string }) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-8">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">{children}</h2>
+      <div className="w-12 h-[2px] bg-slate-300" />
+    </div>
+  );
+}
+
+/* ─────────────────────────────
+   Book 컴포넌트 (저서 스타일 — WP 이미지 기반)
+───────────────────────────── */
+function BookCard({ title, label, imageUrl }: { title: string; label: string | null; imageUrl: string | null }) {
   return (
     <div className="flex flex-col group cursor-default">
-      <div
-        className="relative aspect-[1/1.45] w-full rounded-lg overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-4 flex flex-col justify-between p-4"
-        style={{ backgroundColor: bg }}
-      >
-        <div className="absolute left-0 top-0 bottom-0 w-[5px] rounded-l-lg" style={{ backgroundColor: text, opacity: 0.25 }} />
-        <div className="w-5 h-[2px] rounded-full" style={{ backgroundColor: text, opacity: 0.3 }} />
-        <p className="font-bold text-[13px] sm:text-[14px] leading-snug whitespace-pre-line tracking-tight" style={{ color: text }}>
-          {title}
-        </p>
-        <div className="h-3" />
+      <div className="relative aspect-[1/1.45] w-full rounded-lg overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-4 border border-slate-200/50">
+        {imageUrl ? (
+          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+        ) : (
+          /* WP 이미지 미등록 시 다크 플레이스홀더 */
+          <div className="w-full h-full bg-slate-800 flex flex-col justify-end p-4">
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/10" />
+            <p className="text-white font-bold text-[13px] leading-snug whitespace-pre-line tracking-tight">
+              {title}
+            </p>
+          </div>
+        )}
       </div>
-      <p className="text-[14px] font-bold text-slate-900 leading-snug whitespace-pre-line px-0.5">
+      <p className="text-[14px] font-bold text-slate-900 leading-snug whitespace-pre-line">
         {title}
       </p>
       {label && (
-        <p className="text-[11px] text-slate-400 mt-1 px-0.5">{label}</p>
+        <p className="text-[11px] text-slate-400 mt-1">{label}</p>
       )}
     </div>
   );
@@ -86,14 +100,13 @@ export default async function DiscipleshipPage() {
         </div>
       </div>
 
-      <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 space-y-20 pt-20 md:pt-28">
+      <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 space-y-24 pt-20 md:pt-28">
 
         {/* ── 훈련 과정 ── */}
         <section>
-          <div className="mb-8">
-            <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase pb-4 border-b border-slate-200">
-              훈련과정
-            </h2>
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">훈련 과정</h2>
+            <div className="w-12 h-[2px] bg-slate-300 mx-auto" />
           </div>
           <div className="flex flex-col md:flex-row">
             {JOURNEY.map((item, i) => (
@@ -101,7 +114,7 @@ export default async function DiscipleshipPage() {
                 <div className="flex-1 py-8 md:py-0 md:px-4 first:md:pl-0 last:md:pr-0">
                   <div className="border border-slate-200 rounded-2xl px-6 py-7 h-full hover:border-slate-400 hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-default">
                     <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">{item.name}</h3>
-                    <p className="text-sm text-slate-500 leading-relaxed break-keep">{item.desc}</p>
+                    <p className="text-base text-slate-500 leading-relaxed break-keep">{item.desc}</p>
                   </div>
                 </div>
                 {i < JOURNEY.length - 1 && (
@@ -122,31 +135,31 @@ export default async function DiscipleshipPage() {
         {/* ── 수요 훈련 안내 ── */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
           <div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">수요 훈련</h3>
+            <SectionTitle>수요 훈련</SectionTitle>
             <div className="border-t border-slate-200">
               {[
                 { label: "봄학기", value: "3월 — 5월" },
                 { label: "가을학기", value: "9월 — 12월" },
               ].map(({ label, value }) => (
-                <div key={label} className="flex items-center justify-between py-4 border-b border-slate-100">
-                  <p className="font-bold text-slate-900 text-base">{label}</p>
-                  <p className="text-slate-600 tabular-nums">{value}</p>
+                <div key={label} className="flex items-center justify-between py-5 border-b border-slate-100">
+                  <p className="font-bold text-slate-900 text-lg">{label}</p>
+                  <p className="text-slate-600 text-lg tabular-nums">{value}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">일정 안내</h3>
+            <SectionTitle>일정 안내</SectionTitle>
             <div className="border-t border-slate-200">
               {[
                 { label: "일시", value: "매주 수요일 저녁 8시" },
                 { label: "장소", value: "2층 본당, 중예배실 및 소그룹실" },
                 { label: "대상", value: "제자의 삶을 수료하고 훈련을 듣기 희망하는 수원하나교회 성도" },
               ].map(({ label, value }) => (
-                <div key={label} className="flex items-start justify-between py-4 border-b border-slate-100 gap-6">
-                  <p className="font-bold text-slate-900 text-base shrink-0">{label}</p>
-                  <p className="text-slate-600 text-sm text-right break-keep">{value}</p>
+                <div key={label} className="flex items-start justify-between py-5 border-b border-slate-100 gap-8">
+                  <p className="font-bold text-slate-900 text-lg shrink-0">{label}</p>
+                  <p className="text-slate-600 text-base text-right break-keep">{value}</p>
                 </div>
               ))}
             </div>
@@ -155,13 +168,13 @@ export default async function DiscipleshipPage() {
 
         {/* ── 훈련 과목 ── */}
         <section>
-          <h3 className="text-xl font-bold text-slate-900 mb-2">훈련 과목</h3>
-          <p className="text-sm text-slate-500 mb-10">
+          <SectionTitle>훈련 과목</SectionTitle>
+          <p className="text-base text-slate-500 -mt-2 mb-10">
             매 학기 개설 과목은 교회 공지를 통해 안내됩니다.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-5 gap-y-10">
             {BOOKS.map((book) => (
-              <BookCard key={book.title} title={book.title} label={book.label} bg={book.bg} text={book.text} />
+              <BookCard key={book.title} title={book.title} label={book.label} imageUrl={book.imageUrl} />
             ))}
           </div>
         </section>
