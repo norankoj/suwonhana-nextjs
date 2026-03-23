@@ -24,7 +24,12 @@ const BIBLE_BOOKS = [
   "요한계시록",
 ];
 
-export default async function SermonPage() {
+export default async function SermonPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>;
+}) {
+  const { id: initialSermonId } = await searchParams;
   // 서버에서 병렬 fetch — ISR 캐시로 60초간 재사용
   const [allCategories, allTags, initialResult] = await Promise.all([
     fetchAllCategories(),
@@ -53,6 +58,7 @@ export default async function SermonPage() {
         initialTotalPages={initialResult.totalPages}
         tagMap={tagMap}
         categoryMap={categoryMap}
+        initialSermonId={initialSermonId ?? null}
       />
     </Suspense>
   );

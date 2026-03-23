@@ -257,6 +257,7 @@ interface SermonClientProps {
   initialTotalPages: number;
   tagMap: Record<string, number>;
   categoryMap: Record<string, number[]>;
+  initialSermonId: string | null;
 }
 
 export default function SermonClient({
@@ -264,17 +265,14 @@ export default function SermonClient({
   initialTotalPages,
   tagMap,
   categoryMap,
+  initialSermonId,
 }: SermonClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [selectedSermon, setSelectedSermon] = useState<WPSermon | null>(null);
   // URL에 ?id= 있으면 fetch 완료 전까지 목록 대신 로딩 표시 (새로고침 깜빡임 방지)
-  const [isLoadingDetail, setIsLoadingDetail] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      return new URLSearchParams(window.location.search).has("id");
-    }
-    return false;
-  });
+  // initialSermonId는 Server Component에서 내려온 값 → hydration mismatch 없음
+  const [isLoadingDetail, setIsLoadingDetail] = useState<boolean>(!!initialSermonId);
   const [sermons, setSermons] = useState<WPSermon[]>(initialSermons);
   // 필터 변경 시 페이지 effect 중복 fetch 방지용 ref
   const skipNextPageEffect = React.useRef(false);
