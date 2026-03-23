@@ -45,7 +45,7 @@ export default async function HistoryPage() {
         <div className="absolute top-40 -left-10 w-72 h-72 bg-white/10 rounded-full mix-blend-overlay filter blur-3xl"></div>
       </div>
 
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24 lg:py-32 flex flex-col lg:flex-row gap-16 lg:gap-24">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 md:pt-40 lg:pt-48 pb-20 md:pb-24 lg:pb-32 flex flex-col lg:flex-row gap-16 lg:gap-24">
         {/* [좌측] 타이틀 영역 */}
         <div className="lg:w-1/3 lg:sticky lg:top-32 h-fit relative z-10">
           <p className="text-xs md:text-sm font-bold text-white/80 uppercase tracking-widest md:tracking-[0.2em] mb-8 whitespace-nowrap">
