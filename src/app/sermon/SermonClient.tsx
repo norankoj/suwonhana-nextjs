@@ -720,7 +720,7 @@ export default function SermonClient({
                     <ChevronLeft size={16} /> 목록으로 돌아가기
                   </button>
                 </div>
-                <div className="w-full bg-black">
+                <div className="w-full bg-slate-900">
                   {(() => {
                     const youtubeId = getYouTubeId(selectedSermon.sermon_meta?.video_url);
                     const embedUrl = getEmbedUrl(selectedSermon.sermon_meta?.video_url);
@@ -797,7 +797,7 @@ export default function SermonClient({
                             download
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="ml-auto inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-900 hover:text-white hover:border-slate-900 text-slate-600 border border-slate-200 rounded text-xs font-bold transition-colors shrink-0"
+                            className="ml-auto inline-flex items-center gap-2 px-4 py-2 bg-gray-300 hover:bg-slate-500 hover:text-white hover:border-slate-500 text-slate-700 border border-gray-300 rounded text-xs font-bold transition-colors shrink-0"
                           >
                             <Headphones size={14} />
                             MP3
