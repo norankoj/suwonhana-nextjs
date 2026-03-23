@@ -64,8 +64,8 @@ export default async function DiscipleshipPage() {
   return (
     <div className="bg-white pb-32 font-sans">
 
-      {/* ── 히어로 (하나상담실 동일 패턴) ── */}
-      <div className="relative w-full h-[60vh] min-h-[400px] flex items-end overflow-hidden">
+      {/* ── 히어로 ── */}
+      <div className="relative w-full h-screen md:h-[90vh] min-h-[500px] flex items-end overflow-hidden">
         {finalHeroImage ? (
           <img
             src={finalHeroImage}
@@ -94,7 +94,7 @@ export default async function DiscipleshipPage() {
             {JOURNEY.map((item, i) => (
               <React.Fragment key={item.name}>
                 <div className="flex-1 py-8 md:py-0 md:px-4 first:md:pl-0 last:md:pr-0">
-                  <div className="border border-slate-200 rounded-2xl px-6 py-7 h-full">
+                  <div className="border border-slate-200 rounded-2xl px-6 py-7 h-full hover:border-slate-400 hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-default">
                     <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">{item.name}</h3>
                     <p className="text-sm text-slate-500 leading-relaxed break-keep">{item.desc}</p>
                   </div>
