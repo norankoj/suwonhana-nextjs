@@ -1,4 +1,3 @@
-import React from "react";
 import type { Metadata } from "next";
 import { fetchTrainingData } from "@/lib/wordpress";
 
@@ -10,24 +9,6 @@ export const metadata: Metadata = {
 /* ─────────────────────────────
    데이터
 ───────────────────────────── */
-const JOURNEY = [
-  {
-    name: "새로운 삶",
-    en: "New Life",
-    desc: "새가족을 위한 첫 번째 과정. 신앙의 기초와 교회 공동체를 소개합니다.",
-  },
-  {
-    name: "제자의 삶",
-    en: "Discipleship",
-    desc: "말씀과 기도, 전도와 교제를 통해 예수님의 제자로 세워지는 과정입니다.",
-  },
-  {
-    name: "수요 훈련",
-    en: "Wednesday Training",
-    desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다.",
-  },
-];
-
 const BOOKS = [
   { title: "창조주를\n소개합니다!", label: "초신자 과정" },
   { title: "성경적\n세계관", label: null },
@@ -73,66 +54,29 @@ export default async function DiscipleshipPage() {
   return (
     <div className="bg-white pb-32 font-sans">
 
-      {/* ── 히어로 (비전 페이지 동일 패턴) ── */}
-      <section className="relative w-full h-screen md:h-[90vh] min-h-[500px] overflow-hidden bg-slate-900">
-        <img
-          src={finalHeroImage}
-          alt="수원하나교회 훈련"
-          className="w-full h-full object-cover object-center opacity-70"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 px-8 sm:px-12 lg:px-20 pb-14 md:pb-20 max-w-content">
-          <p className="text-[11px] md:text-xs font-bold tracking-[0.35em] text-white/60 uppercase mb-4">
+      {/* ── 히어로 (하나상담실 동일 패턴) ── */}
+      <div className="relative w-full h-[60vh] min-h-[400px] flex items-end overflow-hidden">
+        {finalHeroImage ? (
+          <img
+            src={finalHeroImage}
+            alt="수원하나교회 훈련"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-slate-800" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="relative z-10 w-full max-w-content mx-auto px-6 pb-14 md:pb-20">
+          <p className="text-white/60 text-sm font-medium tracking-[0.2em] uppercase mb-3">
             Discipleship Training
           </p>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight break-keep">
-            예수님의 제자로<br />자라가는 여정
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+            훈련
           </h1>
-          <p className="mt-5 text-sm md:text-base text-white/70 font-medium max-w-xl leading-relaxed break-keep">
-            말씀과 훈련을 통해 성숙한 제자로 세워지는<br />
-            수원하나교회의 훈련 과정입니다.
-          </p>
         </div>
-      </section>
+      </div>
 
       <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 space-y-20 pt-20 md:pt-28">
-
-        {/* ── 훈련 여정 (화살표 연결) ── */}
-        <section>
-          <h2 className="text-xl font-bold text-slate-900 mb-12">훈련 여정</h2>
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-0">
-            {JOURNEY.map((item, i) => (
-              <React.Fragment key={item.name}>
-                {/* 스텝 */}
-                <div className="flex-1 py-6 md:py-0 md:pr-8">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">
-                    {item.en}
-                  </p>
-                  <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">
-                    {item.name}
-                  </h3>
-                  <p className="text-sm text-slate-500 leading-relaxed break-keep max-w-xs">
-                    {item.desc}
-                  </p>
-                </div>
-                {/* 화살표 */}
-                {i < JOURNEY.length - 1 && (
-                  <div className="flex items-center justify-start md:justify-center md:px-2 py-2 md:py-0 shrink-0">
-                    {/* 모바일: 아래 화살표 */}
-                    <svg className="block md:hidden w-5 h-5 text-slate-300 ml-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                    {/* PC: 오른쪽 화살표 */}
-                    <svg className="hidden md:block w-6 h-6 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </section>
 
         {/* ── 수요 훈련 안내 ── */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
