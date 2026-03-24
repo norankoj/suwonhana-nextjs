@@ -101,7 +101,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                 <img
                   src={slide.imageUrl}
                   alt="slide background"
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-contain object-center"
                 />
                 <span
                   className="absolute inset-0 z-10"
@@ -112,7 +112,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
               <img
                 src={slide.imageUrl}
                 alt="slide background"
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-contain object-center"
               />
             )}
             {/* 모바일 가독성을 위해 하단 그라데이션을 더 진하게 처리 */}
