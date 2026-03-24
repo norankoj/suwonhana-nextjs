@@ -67,9 +67,10 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
     };
   }, [currentIndex, totalSlides, isLoading]);
 
-  // 공통 섹션 클래스 (원본 사이트 참고: 헤더 높이 제외한 full-height)
+  // 원본 사이트(joyfulchurch.or.kr) 기준 높이: 751px
+  // 헤더가 fixed+transparent로 위에 올라오므로 margin 없이 top:0에서 시작
   const sectionClass =
-    "relative mt-20 md:mt-24 h-[calc(100vh-5rem)] md:h-[85vh] min-h-[500px] overflow-hidden group bg-slate-900";
+    "relative w-full h-[500px] md:h-[751px] overflow-hidden group bg-slate-900";
 
   // 로딩 스켈레톤 (hooks 이후에 early return)
   if (isLoading) {
@@ -117,8 +118,8 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
         ))}
       </div>
 
-      {/* 2. 텍스트 콘텐츠 */}
-      <div className="absolute inset-0 flex items-end md:items-center pb-20 md:pb-0 z-30 pointer-events-none">
+      {/* 2. 텍스트 콘텐츠 (헤더 높이[4.5rem/5rem] 아래 배치) */}
+      <div className="absolute inset-0 pt-[4.5rem] md:pt-[5rem] flex items-end md:items-center pb-20 md:pb-0 z-30 pointer-events-none">
         <div className="max-w-7xl mx-auto px-6 w-full pointer-events-auto">
           <div key={currentSlide.id} className="animate-fade-in">
             <div
