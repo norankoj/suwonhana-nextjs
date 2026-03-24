@@ -121,6 +121,19 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
               className="w-full h-full flex-shrink-0 relative transition-colors duration-700"
               style={{ backgroundColor: slideBg }}
             >
+              {/* 색상 추출용 숨김 이미지 (CORS 시도, 실패해도 표시 이미지에 영향 없음) */}
+              <img
+                src={slide.imageUrl}
+                alt=""
+                aria-hidden="true"
+                crossOrigin="anonymous"
+                className="hidden"
+                onLoad={(e) => {
+                  const color = extractDarkColor(e.currentTarget);
+                  setBgColors((prev) => ({ ...prev, [slide.id]: color }));
+                }}
+              />
+
               {/* ── 데스크탑: 이미지 오른쪽 크게 ── */}
               <div className="hidden md:block absolute right-0 top-0 w-[70%] h-full">
                 {slide.link && slide.link !== "#" ? (
@@ -128,24 +141,14 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                     <img
                       src={slide.imageUrl}
                       alt="slide"
-                      crossOrigin="anonymous"
                       className="w-full h-full object-cover object-center"
-                      onLoad={(e) => {
-                        const color = extractDarkColor(e.currentTarget);
-                        setBgColors((prev) => ({ ...prev, [slide.id]: color }));
-                      }}
                     />
                   </Link>
                 ) : (
                   <img
                     src={slide.imageUrl}
                     alt="slide"
-                    crossOrigin="anonymous"
                     className="w-full h-full object-cover object-center"
-                    onLoad={(e) => {
-                      const color = extractDarkColor(e.currentTarget);
-                      setBgColors((prev) => ({ ...prev, [slide.id]: color }));
-                    }}
                   />
                 )}
                 {/* 왼쪽 그라데이션 블렌드 (배경색 → 투명) */}
@@ -171,12 +174,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                 <img
                   src={slide.imageUrl}
                   alt="slide"
-                  crossOrigin="anonymous"
                   className="w-full h-full object-cover object-center"
-                  onLoad={(e) => {
-                    const color = extractDarkColor(e.currentTarget);
-                    setBgColors((prev) => ({ ...prev, [slide.id]: color }));
-                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               </div>
