@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Calendar, Tag } from "lucide-react";
+import { Calendar, Tag, ArrowRight } from "lucide-react";
 import { HeroSub } from "@/components/Common";
 
 const WP_DOMAIN =
@@ -33,7 +33,8 @@ const FALLBACK_POSTS = [
   {
     id: 1,
     title: "2026년 전반기 제자훈련 신청 안내",
-    excerpt: "할렐루야! 2026년 전반기 제자훈련 과정을 다음과 같이 모집합니다.",
+    excerpt:
+      "할렐루야! 2026년 전반기 제자훈련 과정을 다음과 같이 모집합니다. 많은 참여 바랍니다.",
     date: "2026-03-10",
     category: "공지사항",
     image: "/images/background02.jpg",
@@ -41,7 +42,8 @@ const FALLBACK_POSTS = [
   {
     id: 2,
     title: "부활절 연합예배 안내",
-    excerpt: "부활하신 주님을 함께 기념하는 연합예배에 초대합니다.",
+    excerpt:
+      "부활하신 주님을 함께 기념하는 연합예배에 초대합니다. 가족들과 함께 은혜 나누시길 바랍니다.",
     date: "2026-03-05",
     category: "예배",
     image: "/images/background03.jpg",
@@ -49,7 +51,8 @@ const FALLBACK_POSTS = [
   {
     id: 3,
     title: "봄 수양회 신청 모집",
-    excerpt: "하나님과 더 깊이 만나는 봄 수양회를 안내드립니다.",
+    excerpt:
+      "하나님과 더 깊이 만나는 봄 수양회를 안내드립니다. 자연 속에서 영적 쉼을 누리세요.",
     date: "2026-02-28",
     category: "수양회",
     image: "/images/background02.jpg",
@@ -111,23 +114,22 @@ export default function NewsPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen animate-fade-in">
+    <div className="bg-white min-h-screen animate-fade-in selection:bg-blue-100 selection:text-blue-900">
       <HeroSub
         title="교회소식"
         desc="수원하나교회의 소식과 행사 안내를 확인하세요."
       />
 
-      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* 카테고리 탭 */}
-        <div className="flex flex-nowrap gap-2 overflow-x-auto pb-2 mb-12 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        <div className="flex flex-nowrap gap-2 overflow-x-auto pb-4 mb-12 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] border-b border-slate-200">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.slug}
               onClick={() => setActiveCategory(cat.slug)}
-              className={`shrink-0 px-5 py-2.5 text-sm font-bold rounded-full border transition-all duration-200 ${
+              className={`shrink-0 px-6 py-1 text-[15px] font-bold transition-all duration-200 -mb-[1px] ${
                 activeCategory === cat.slug
-                  ? "bg-slate-900 text-white border-slate-900"
-                  : "bg-white text-slate-500 border-slate-200 hover:border-slate-400 hover:text-slate-900"
+                  ? "border-slate-900 text-slate-900"
+                  : "border-transparent text-slate-400 hover:text-slate-900"
               }`}
             >
               {cat.label}
@@ -153,32 +155,32 @@ export default function NewsPage() {
             ))}
           </div>
         ) : useFallback ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {FALLBACK_POSTS.map((post) => (
               <div
                 key={post.id}
-                className="overflow-hidden border border-slate-100 bg-white flex flex-col"
+                className="group flex flex-col border border-slate-200 bg-white hover:border-slate-900 hover:shadow-lg transition-all duration-300"
               >
-                <div className="aspect-[4/3] overflow-hidden bg-slate-100 group cursor-pointer">
+                <div className="aspect-[4/3] overflow-hidden bg-slate-100 cursor-pointer">
                   <img
                     src={post.image}
                     alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                 </div>
-                <div className="p-5 flex flex-col flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full border border-slate-200">
+                <div className="p-6 md:p-8 flex flex-col flex-1">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-[11px] font-bold px-2.5 py-1 bg-slate-100 text-slate-700 tracking-wider">
                       {post.category}
                     </span>
-                    <span className="text-xs text-slate-400 flex items-center gap-1">
-                      <Calendar size={11} /> {formatDate(post.date)}
+                    <span className="text-sm font-semibold text-slate-400">
+                      {formatDate(post.date)}
                     </span>
                   </div>
-                  <h3 className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug">
+                  <h3 className="font-extrabold text-xl md:text-2xl text-slate-900 mb-3 line-clamp-2 leading-snug tracking-tight group-hover:text-blue-600 transition-colors">
                     {post.title}
                   </h3>
-                  <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">
+                  <p className="text-base text-slate-500 line-clamp-2 leading-relaxed flex-1">
                     {post.excerpt}
                   </p>
                 </div>
@@ -215,59 +217,58 @@ export default function NewsPage() {
                         <img
                           src={imgUrl}
                           alt={post.title.rendered}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale-[10%] group-hover:grayscale-0"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-slate-50">
-                          <Tag size={32} className="text-slate-200" />
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Tag size={40} className="text-slate-200" />
                         </div>
                       )}
                     </div>
-                    <div className="p-5 flex flex-col flex-1">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full border border-slate-200">
+
+                    <div className="p-4 md:p-6 flex flex-col flex-1">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-[11px] font-bold px-2.5 py-1 bg-slate-100 text-slate-700 tracking-wider">
                           {getCategoryLabel(post)}
                         </span>
-                        <span className="text-xs text-slate-400 flex items-center gap-1">
-                          <Calendar size={11} /> {formatDate(post.date)}
+                        <span className="text-sm font-semibold text-slate-400">
+                          {formatDate(post.date)}
                         </span>
                       </div>
                       <h3
-                        className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug"
+                        className="font-extrabold text-xl md:text-2xl text-slate-900 mb-3 line-clamp-2 leading-snug tracking-tight group-hover:text-blue-600 transition-colors"
                         dangerouslySetInnerHTML={{
                           __html: post.title.rendered,
                         }}
                       />
-                      {excerpt && (
-                        <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">
-                          {excerpt}
-                        </p>
-                      )}
+                      <div className="mt-6 flex items-center gap-1 text-sm font-bold text-slate-400 group-hover:text-slate-900 transition-colors">
+                        자세히 보기 <ArrowRight size={16} />
+                      </div>
                     </div>
                   </Link>
                 );
               })}
             </div>
 
-            {/* 페이지네이션 */}
+            {/* 🔥 각진 페이지네이션 */}
             {totalPages > 1 && (
-              <div className="flex justify-center gap-2 mt-12">
+              <div className="flex justify-center gap-2 mt-20">
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 text-sm font-bold rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-30"
+                  className="px-4 py-2 text-sm font-bold border border-slate-200 text-slate-500 hover:bg-slate-900 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-500 transition-colors"
                 >
-                  이전
+                  PREV
                 </button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                   (p) => (
                     <button
                       key={p}
                       onClick={() => setCurrentPage(p)}
-                      className={`w-10 h-10 text-sm font-bold rounded-lg border transition-all ${
+                      className={`w-10 h-10 text-sm font-bold border transition-all ${
                         p === currentPage
                           ? "bg-slate-900 text-white border-slate-900"
-                          : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                          : "border-slate-200 text-slate-500 hover:bg-slate-100"
                       }`}
                     >
                       {p}
@@ -279,9 +280,9 @@ export default function NewsPage() {
                     setCurrentPage((p) => Math.min(totalPages, p + 1))
                   }
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 text-sm font-bold rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-30"
+                  className="px-4 py-2 text-sm font-bold border border-slate-200 text-slate-500 hover:bg-slate-900 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-500 transition-colors"
                 >
-                  다음
+                  NEXT
                 </button>
               </div>
             )}
