@@ -34,7 +34,7 @@ export default function AppendagesContentPage() {
       try {
         const res = await fetch(
           `${WP}/wp-json/wp/v2/pages?slug=hana-counseling&_fields=acf,_links&_embed=wp:featuredmedia`,
-          { cache: "no-store" }
+          { cache: "no-store" },
         );
         const pages = res.ok ? await res.json() : [];
         if (!pages.length) return;
@@ -57,7 +57,6 @@ export default function AppendagesContentPage() {
       ========================================================= */}
       {tab === "counseling" && (
         <div className="animate-fade-in">
-
           {/* ── 1. 히어로 섹션 (대표이미지 + 타이틀) ── */}
           <div className="relative w-full h-[60vh] min-h-[400px] flex items-end overflow-hidden">
             {/* 배경 이미지 */}
@@ -86,15 +85,14 @@ export default function AppendagesContentPage() {
 
           {/* ── 2. 본문 ── */}
           <div className="max-w-content mx-auto px-6 py-16 md:py-24 space-y-20">
-
             {/* 사명 및 목표 */}
             <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-10">
               <Quote size={36} className="text-slate-200 fill-slate-100" />
 
               <blockquote className="text-xl md:text-2xl font-serif font-bold text-slate-800 leading-relaxed break-keep">
-                "평강의 하나님이 친히 너희를 온전히 거룩하게 하시고 또 너희의
-                온 영과 혼과 몸이 우리 주 예수 그리스도께서 강림하실 때에 흠
-                없게 보전되기를 원하노라"
+                "평강의 하나님이 친히 너희를 온전히 거룩하게 하시고 또 너희의 온
+                영과 혼과 몸이 우리 주 예수 그리스도께서 강림하실 때에 흠 없게
+                보전되기를 원하노라"
                 <cite className="block text-sm text-slate-400 font-sans font-normal mt-3 not-italic">
                   데살로니가전서 5:23
                 </cite>
@@ -115,7 +113,9 @@ export default function AppendagesContentPage() {
               <div className="flex items-start gap-4 bg-slate-50 p-6 rounded-xl text-left w-full border border-slate-100">
                 <Info size={20} className="text-slate-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-bold text-slate-900 mb-1">상담 신청 대상</h4>
+                  <h4 className="font-bold text-slate-900 mb-1">
+                    상담 신청 대상
+                  </h4>
                   <p className="text-slate-500 text-sm">
                     수원하나교회 등록 교인 또는 셀리더의 추천을 받은 분
                   </p>
@@ -134,7 +134,10 @@ export default function AppendagesContentPage() {
                 >
                   <CalendarCheck size={20} />
                   <span>상담 예약 신청하기</span>
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight
+                    size={20}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
                 </a>
               ) : (
                 <button
@@ -143,7 +146,10 @@ export default function AppendagesContentPage() {
                 >
                   <CalendarCheck size={20} />
                   <span>상담 예약 신청하기</span>
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight
+                    size={20}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
                 </button>
               )}
               <p className="mt-4 text-sm text-slate-400">
@@ -157,7 +163,9 @@ export default function AppendagesContentPage() {
                 <span className="flex items-center justify-center w-12 h-12 rounded-full bg-slate-100 text-slate-900 mb-2">
                   <MapPin size={24} />
                 </span>
-                <h3 className="text-2xl font-bold text-slate-900">찾아오시는 길</h3>
+                <h3 className="text-2xl font-bold text-slate-900">
+                  찾아오시는 길
+                </h3>
                 <p className="text-slate-500">
                   경기도 용인시 기흥구 서그내로 53번길 30 하나교회 교육관 1층
                 </p>
@@ -174,11 +182,12 @@ export default function AppendagesContentPage() {
                   className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
                 />
                 <div className="absolute bottom-5 left-5 bg-white/90 backdrop-blur-sm px-4 py-2.5 rounded-xl shadow-md border border-slate-100">
-                  <p className="font-bold text-slate-900 text-sm">하나 상담실 (교육관 1층)</p>
+                  <p className="font-bold text-slate-900 text-sm">
+                    하나 상담실 (교육관 1층)
+                  </p>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       )}
@@ -206,23 +215,43 @@ export default function AppendagesContentPage() {
                   <Lightbulb size={32} className="text-amber-500" />
                 </div>
                 <p className="text-slate-600 leading-loose break-keep text-base">
-                  수원하나교회 창업보육센터는 하나님의 나라를 위한 비즈니스 창업을 지원하고,
-                  크리스천 창업가들이 신앙과 사업을 통합하여 세상에 선한 영향력을 끼칠 수 있도록 돕습니다.
+                  수원하나교회 창업보육센터는 하나님의 나라를 위한 비즈니스
+                  창업을 지원하고, 크리스천 창업가들이 신앙과 사업을 통합하여
+                  세상에 선한 영향력을 끼칠 수 있도록 돕습니다.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
                 {[
-                  { icon: <Users size={24} />, label: "멘토링", desc: "경험 있는 크리스천 비즈니스 리더의 멘토링" },
-                  { icon: <Lightbulb size={24} />, label: "교육 프로그램", desc: "창업 실무 및 신앙 통합 교육 지원" },
-                  { icon: <Heart size={24} />, label: "네트워크", desc: "크리스천 창업가 커뮤니티 연결" },
+                  {
+                    icon: <Users size={24} />,
+                    label: "멘토링",
+                    desc: "경험 있는 크리스천 비즈니스 리더의 멘토링",
+                  },
+                  {
+                    icon: <Lightbulb size={24} />,
+                    label: "교육 프로그램",
+                    desc: "창업 실무 및 신앙 통합 교육 지원",
+                  },
+                  {
+                    icon: <Heart size={24} />,
+                    label: "네트워크",
+                    desc: "크리스천 창업가 커뮤니티 연결",
+                  },
                 ].map((item, i) => (
-                  <div key={i} className="flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div
+                    key={i}
+                    className="flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl border border-slate-100"
+                  >
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 mb-4">
                       {item.icon}
                     </div>
-                    <h4 className="font-bold text-slate-900 mb-2">{item.label}</h4>
-                    <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
+                    <h4 className="font-bold text-slate-900 mb-2">
+                      {item.label}
+                    </h4>
+                    <p className="text-sm text-slate-500 leading-relaxed">
+                      {item.desc}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -235,7 +264,7 @@ export default function AppendagesContentPage() {
               창업보육센터에 대한 자세한 내용은 곧 업데이트될 예정입니다.
             </p>
             <p className="text-slate-400 text-sm mt-2">
-              문의: 교회 사무실 031-203-3693
+              문의: 교회 사무실 031-202-0697
             </p>
           </div>
         </div>
@@ -276,8 +305,9 @@ export default function AppendagesContentPage() {
 
               <div className="lg:w-3/4 space-y-6">
                 <p className="text-slate-600 leading-loose break-keep text-base">
-                  다니엘 선교원은 영아 및 유아를 위한 기독교 교육 기관으로, 말씀과 사랑으로 다음 세대를 양육합니다.
-                  어린 시절부터 하나님을 알고 경험하는 신앙의 기초를 세워가는 곳입니다.
+                  다니엘 선교원은 영아 및 유아를 위한 기독교 교육 기관으로,
+                  말씀과 사랑으로 다음 세대를 양육합니다. 어린 시절부터 하나님을
+                  알고 경험하는 신앙의 기초를 세워가는 곳입니다.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -285,11 +315,18 @@ export default function AppendagesContentPage() {
                     { label: "대상", value: "영아 ~ 유아 (만 0-7세)" },
                     { label: "운영", value: "평일 운영 (월-금)" },
                     { label: "위치", value: "수원하나교회 내" },
-                    { label: "문의", value: "교회 사무실 031-203-3693" },
+                    { label: "문의", value: "교회 사무실 031-202-0697" },
                   ].map((info, i) => (
-                    <div key={i} className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">{info.label}</span>
-                      <span className="text-sm font-bold text-slate-700">{info.value}</span>
+                    <div
+                      key={i}
+                      className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100"
+                    >
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">
+                        {info.label}
+                      </span>
+                      <span className="text-sm font-bold text-slate-700">
+                        {info.value}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -318,8 +355,9 @@ export default function AppendagesContentPage() {
 
               <div className="lg:w-3/4 space-y-6">
                 <p className="text-slate-600 leading-loose break-keep text-base">
-                  다니엘 훈련센터는 아동 및 청소년을 대상으로 신앙 훈련과 리더십을 양성하는 교육 기관입니다.
-                  말씀과 기도를 통해 하나님의 사람으로 세워지는 훈련의 장을 제공합니다.
+                  다니엘 훈련센터는 아동 및 청소년을 대상으로 신앙 훈련과
+                  리더십을 양성하는 교육 기관입니다. 말씀과 기도를 통해 하나님의
+                  사람으로 세워지는 훈련의 장을 제공합니다.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -327,11 +365,18 @@ export default function AppendagesContentPage() {
                     { label: "대상", value: "초등 ~ 고등학생" },
                     { label: "과정", value: "신앙 훈련 및 리더십 과정" },
                     { label: "위치", value: "수원하나교회 내" },
-                    { label: "문의", value: "교회 사무실 031-203-3693" },
+                    { label: "문의", value: "교회 사무실 031-202-0697" },
                   ].map((info, i) => (
-                    <div key={i} className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">{info.label}</span>
-                      <span className="text-sm font-bold text-slate-700">{info.value}</span>
+                    <div
+                      key={i}
+                      className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100"
+                    >
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">
+                        {info.label}
+                      </span>
+                      <span className="text-sm font-bold text-slate-700">
+                        {info.value}
+                      </span>
                     </div>
                   ))}
                 </div>

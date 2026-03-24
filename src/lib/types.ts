@@ -27,6 +27,10 @@ export interface WPSlide {
   _embedded?: {
     "wp:featuredmedia"?: Array<{ source_url: string }>;
   };
+  acf?: {
+    link?: string;
+    button_text?: string;
+  };
   custom_meta?: {
     caption?: string;
     link?: string;
@@ -184,8 +188,8 @@ export interface WPCommunityPage {
   featuredImageUrl: string | null;
   galleryImages: string[];
   // ACF 필드
-  acfTitle?: string;       // community_title (슬로건/타이틀)
-  acfAge?: string;         // community_age (대상 나이)
-  acfSchedule?: string;    // community_schedule (예배 일시)
-  acfLocation?: string;    // community_location (장소)
+  acfTitle?: string; // community_title (슬로건/타이틀)
+  acfAge?: string; // community_age (대상 나이)
+  acfSchedule?: string; // community_schedule (예배 일시)
+  acfLocation?: string; // community_location (장소)
 }

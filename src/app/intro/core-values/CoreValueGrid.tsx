@@ -85,9 +85,7 @@ function ModalContent({
       <div className="text-sm md:text-base text-slate-700 leading-loose break-keep space-y-8 border-t border-slate-200 pt-8">
         {item.desc?.split(/\n\s*\n/).map((block, bIdx) => {
           if (!block.trim()) return null;
-          const lines = block
-            .split("\n")
-            .filter((line) => line.trim() !== "");
+          const lines = block.split("\n").filter((line) => line.trim() !== "");
           if (lines.length === 0) return null;
           const titleLine = lines[0];
           const descLines = lines.slice(1);
@@ -168,7 +166,12 @@ function Modal({
           </span>
         </div>
         <div className="p-6 pb-16">
-          <ModalContent item={item} index={index} onClose={onClose} showClose={false} />
+          <ModalContent
+            item={item}
+            index={index}
+            onClose={onClose}
+            showClose={false}
+          />
         </div>
       </div>
 
@@ -201,7 +204,9 @@ function Modal({
             <div className="text-sm md:text-base text-slate-700 leading-loose break-keep space-y-8 border-t border-slate-200 pt-8">
               {item.desc?.split(/\n\s*\n/).map((block, bIdx) => {
                 if (!block.trim()) return null;
-                const lines = block.split("\n").filter((line) => line.trim() !== "");
+                const lines = block
+                  .split("\n")
+                  .filter((line) => line.trim() !== "");
                 if (lines.length === 0) return null;
                 const titleLine = lines[0];
                 const descLines = lines.slice(1);
@@ -292,7 +297,7 @@ export default function CoreValueGrid({
       {/* Part 2 */}
       {part2Items.length > 0 && (
         <div>
-          <div className="text-center mb-6">
+          <div className="text-center mb-6 pt-12 md:pt-16">
             <h2 className="text-xl md:text-2xl font-bold text-slate-900 tracking-widest uppercase">
               {part2Title}
             </h2>

@@ -23,8 +23,12 @@ export default function MainPage() {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
 
   const [heroSlides, setHeroSlides] = useState<MainHeroData[] | null>(null);
-  const [wpHomeData, setWpHomeData] = useState<Record<string, string> | null>(null);
-  const [bulletinImages, setBulletinImages] = useState<{ url: string; alt?: string }[] | null>(null);
+  const [wpHomeData, setWpHomeData] = useState<Record<string, string> | null>(
+    null,
+  );
+  const [bulletinImages, setBulletinImages] = useState<
+    { url: string; alt?: string }[] | null
+  >(null);
 
   // =================================================================
   // [API 연동] 홈페이지 ACF 데이터 (Bento Grid 이미지)
@@ -34,7 +38,10 @@ export default function MainPage() {
       try {
         const url = `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=homepage-settings`;
         const r = await fetch(url);
-        const pages: Array<{ id?: number; acf?: Record<string, unknown> | false }> = r.ok ? await r.json() : [];
+        const pages: Array<{
+          id?: number;
+          acf?: Record<string, unknown> | false;
+        }> = r.ok ? await r.json() : [];
 
         if (!pages.length) {
           console.warn("[WP] ❌ homepage-settings 페이지 없음");
@@ -42,7 +49,10 @@ export default function MainPage() {
         }
         const page = pages[0];
         if (!page.acf) {
-          console.warn("[WP] ❌ acf false — ACF 위치 규칙 확인 필요. page.id:", page.id);
+          console.warn(
+            "[WP] ❌ acf false — ACF 위치 규칙 확인 필요. page.id:",
+            page.id,
+          );
           return;
         }
 
@@ -50,7 +60,9 @@ export default function MainPage() {
         const normalized: Record<string, string> = {};
         const idEntries: Array<[string, number]> = [];
 
-        for (const [key, val] of Object.entries(page.acf as Record<string, unknown>)) {
+        for (const [key, val] of Object.entries(
+          page.acf as Record<string, unknown>,
+        )) {
           if (typeof val === "string" && val) {
             normalized[key] = val;
           } else if (typeof val === "number" && val) {
@@ -58,7 +70,8 @@ export default function MainPage() {
           } else if (val && typeof val === "object") {
             if ("url" in val) normalized[key] = (val as { url: string }).url;
             else if ("sizes" in val) {
-              const s = (val as { sizes?: { large?: string; full?: string } }).sizes;
+              const s = (val as { sizes?: { large?: string; full?: string } })
+                .sizes;
               normalized[key] = s?.large || s?.full || "";
             }
           }
@@ -66,18 +79,26 @@ export default function MainPage() {
 
         // Image ID → media API로 URL 조회
         if (idEntries.length > 0) {
-          console.log("[WP] Image ID 형식 감지, media API 조회 중...", idEntries);
+          console.log(
+            "[WP] Image ID 형식 감지, media API 조회 중...",
+            idEntries,
+          );
           const results = await Promise.all(
             idEntries.map(async ([key, id]) => {
-              const mr = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/media/${id}`).catch(() => null);
+              const mr = await fetch(
+                `${WP_DOMAIN}/wp-json/wp/v2/media/${id}`,
+              ).catch(() => null);
               const m = mr?.ok ? await mr.json() : null;
-              return m?.source_url ? [key, m.source_url as string] as [string, string] : null;
-            })
+              return m?.source_url
+                ? ([key, m.source_url as string] as [string, string])
+                : null;
+            }),
           );
-          results.forEach((res) => { if (res) normalized[res[0]] = res[1]; });
+          results.forEach((res) => {
+            if (res) normalized[res[0]] = res[1];
+          });
         }
 
-        console.log("[WP] ✅ home images:", normalized);
         setWpHomeData(normalized);
       } catch (err) {
         console.error("[WP] homepage-settings fetch 실패:", err);
@@ -120,10 +141,10 @@ export default function MainPage() {
               }
 
               // Click URL 연결 — 없으면 빈값
-              const link = item.custom_meta?.link || "";
+              const link = item.acf?.link || "";
 
               // 버튼 텍스트 — 빈값이면 버튼 미표시
-              const buttonText = item.custom_meta?.button_text || "";
+              const buttonText = item.acf?.button_text || "";
 
               return {
                 imageUrl: media.source_url,
@@ -135,7 +156,9 @@ export default function MainPage() {
             }
             return null;
           })
-          .filter((item: MainHeroData | null): item is MainHeroData => item !== null);
+          .filter(
+            (item: MainHeroData | null): item is MainHeroData => item !== null,
+          );
 
         // 데이터가 있으면 설정, 없으면 빈 배열(기본 슬라이드 표시)
         setHeroSlides(slideData.length > 0 ? slideData : []);
@@ -157,11 +180,17 @@ export default function MainPage() {
         const ts = Date.now();
         const pageRes = await fetch(
           `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=content&_=${ts}`,
-          { cache: "no-store" }
+          { cache: "no-store" },
         );
-        if (!pageRes.ok) { setBulletinImages([]); return; }
+        if (!pageRes.ok) {
+          setBulletinImages([]);
+          return;
+        }
         const pages: { content: { rendered: string } }[] = await pageRes.json();
-        if (!pages.length) { setBulletinImages([]); return; }
+        if (!pages.length) {
+          setBulletinImages([]);
+          return;
+        }
 
         // 페이지 본문 HTML에서 이미지 URL 추출
         const html = pages[0].content.rendered;
@@ -169,7 +198,10 @@ export default function MainPage() {
         const seen = new Set<string>();
         const addImage = (url: string) => {
           const clean = url.split("?")[0];
-          if (clean && !seen.has(clean)) { seen.add(clean); images.push({ url: clean }); }
+          if (clean && !seen.has(clean)) {
+            seen.add(clean);
+            images.push({ url: clean });
+          }
         };
 
         // src에서 -NxN suffix 제거 → 원본 URL 복원 (srcset은 크롭 썸네일만 포함)
@@ -193,7 +225,10 @@ export default function MainPage() {
     <>
       <div className="animate-fade-in">
         {/* 1. 메인 히어로 — null이면 skeleton, 배열이면 실제 데이터 */}
-        <MainHero slidesData={heroSlides} key={heroSlides?.length ?? "loading"} />
+        <MainHero
+          slidesData={heroSlides}
+          key={heroSlides?.length ?? "loading"}
+        />
 
         {/* 2. 환영 메시지 (Welcome) - 중앙 정렬 타이포그래피 집중형 */}
         <section className="py-24 md:py-32 bg-white flex items-center justify-center">
@@ -270,7 +305,10 @@ export default function MainPage() {
               {/* 닷 인디케이터 스켈레톤 */}
               <div className="flex gap-1.5">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className={`h-1.5 rounded-full bg-slate-200 ${i === 0 ? "w-6" : "w-1.5"}`} />
+                  <div
+                    key={i}
+                    className={`h-1.5 rounded-full bg-slate-200 ${i === 0 ? "w-6" : "w-1.5"}`}
+                  />
                 ))}
               </div>
             </div>
@@ -278,11 +316,11 @@ export default function MainPage() {
             /* ── 로딩 완료: 실제 캐러셀 ── */
             <HomePhotoCarousel
               images={[
-                { src: wpHomeData.bento_image_1 || "/images/worship01.png"    },
-                { src: wpHomeData.bento_image_2 || "/images/temp01.jpg"       },
-                { src: wpHomeData.bento_image_3 || "/images/temp02.jpg"       },
-                { src: wpHomeData.bento_image_4 || "/images/pastor_ko2.jpg"   },
-                { src: wpHomeData.bento_image_5 || "/images/corner.jpg"       },
+                { src: wpHomeData.bento_image_1 || "/images/worship01.png" },
+                { src: wpHomeData.bento_image_2 || "/images/temp01.jpg" },
+                { src: wpHomeData.bento_image_3 || "/images/temp02.jpg" },
+                { src: wpHomeData.bento_image_4 || "/images/pastor_ko2.jpg" },
+                { src: wpHomeData.bento_image_5 || "/images/corner.jpg" },
                 { src: wpHomeData.bento_image_6 || "/images/background01.jpg" },
               ]}
             />
@@ -336,7 +374,9 @@ export default function MainPage() {
             ) : (
               /* 이미지 없음 */
               <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
-                <p className="text-slate-400 text-sm">아직 업로드된 주보가 없습니다.</p>
+                <p className="text-slate-400 text-sm">
+                  아직 업로드된 주보가 없습니다.
+                </p>
               </div>
             )}
           </div>

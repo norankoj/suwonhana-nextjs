@@ -82,7 +82,8 @@ export const Header = () => {
   // 메인 페이지에서 스크롤 전이면 투명 헤더
   const isVision = pathname === "/intro/vision";
   const isCoreValues = pathname === "/intro/core-values";
-  const isTransparent = (isHome || isVision || isCoreValues) && !isScrolled && !isMobileMenuOpen;
+  const isTransparent =
+    (isHome || isVision || isCoreValues) && !isScrolled && !isMobileMenuOpen;
 
   return (
     <>
@@ -94,10 +95,7 @@ export const Header = () => {
         }`}
       >
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center h-full">
-          <Link
-            href="/"
-            className="flex-shrink-0 flex items-center"
-          >
+          <Link href="/" className="flex-shrink-0 flex items-center">
             <img
               src="/images/mainlogo-removebg-preview.png"
               className={`h-11 md:h-14 w-auto object-contain transition-all duration-500 ${
@@ -254,7 +252,7 @@ export const Footer = () => {
             <p className="ml-1 mb-6 leading-relaxed max-w-md text-sm text-slate-500">
               (17103) 경기도 용인시 기흥구 서그내로 16번길 11-6
               <br />
-              Tel: 031-203-3693 | Fax: 031-203-3694
+              Tel: 031-202-0697
             </p>
             {/* SNS 아이콘 */}
             <div className="flex items-center gap-3 ml-1">

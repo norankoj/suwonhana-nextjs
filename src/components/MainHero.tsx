@@ -128,7 +128,10 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                        transition-all duration-300 group/btn"
           >
             <span>{currentSlide.buttonText}</span>
-            <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+            <ArrowRight
+              size={18}
+              className="group-hover/btn:translate-x-1 transition-transform"
+            />
           </Link>
         )}
       </div>

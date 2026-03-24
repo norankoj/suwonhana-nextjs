@@ -22,8 +22,8 @@ export default function PrivacyPage() {
               1. 개인정보의 수집 및 이용 목적
             </h2>
             <p>
-              수원하나교회는 교회 행정, 심방, 새가족 등록, 상담 예약 등의 목적으로
-              필요한 최소한의 개인정보를 수집하고 있습니다.
+              수원하나교회는 교회 행정, 심방, 새가족 등록, 상담 예약 등의
+              목적으로 필요한 최소한의 개인정보를 수집하고 있습니다.
             </p>
           </section>
 
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
               <p className="text-sm text-slate-600">
                 수원하나교회
                 <br />
-                Tel: 031-203-3693
+                Tel: 031-202-0697
                 <br />
                 주소: (17103) 경기도 용인시 기흥구 서그내로 16번길 11-6
               </p>

@@ -18,11 +18,45 @@ interface WPFaqPost {
 }
 
 const FALLBACK: WPFaqPost[] = [
-  { id: 1, title: { rendered: "처음 방문하는데 어떻게 하면 좋을까요?" }, content: { rendered: "<p>수원하나교회에 방문해주셔서 감사합니다! 로비 안내데스크에서 새가족 담당자에게 인사해주세요.</p>" } },
-  { id: 2, title: { rendered: "주일예배 시간은 언제인가요?" }, content: { rendered: "<p>주일예배는 오전 9:00, 11:00, 오후 2:30 세 차례 드립니다. 금요예배는 저녁 9:00입니다.</p>" } },
-  { id: 3, title: { rendered: "온라인으로도 예배를 드릴 수 있나요?" }, content: { rendered: "<p>네, 유튜브 채널(@suwonhana)에서 주일예배를 실시간으로 시청하실 수 있습니다.</p>" } },
-  { id: 4, title: { rendered: "어린이/청소년 프로그램이 있나요?" }, content: { rendered: "<p>유아부터 고등부까지 연령별 예배와 교육 프로그램이 운영되고 있습니다.</p>" } },
-  { id: 5, title: { rendered: "헌금은 어떻게 하나요?" }, content: { rendered: "<p>현장 헌금함 또는 온라인 계좌이체로 하실 수 있습니다.</p>" } },
+  {
+    id: 1,
+    title: { rendered: "처음 방문하는데 어떻게 하면 좋을까요?" },
+    content: {
+      rendered:
+        "<p>수원하나교회에 방문해주셔서 감사합니다! 로비 안내데스크에서 새가족 담당자에게 인사해주세요.</p>",
+    },
+  },
+  {
+    id: 2,
+    title: { rendered: "주일예배 시간은 언제인가요?" },
+    content: {
+      rendered:
+        "<p>주일예배는 오전 9:00, 11:00, 오후 2:30 세 차례 드립니다. 금요예배는 저녁 9:00입니다.</p>",
+    },
+  },
+  {
+    id: 3,
+    title: { rendered: "온라인으로도 예배를 드릴 수 있나요?" },
+    content: {
+      rendered:
+        "<p>네, 유튜브 채널(@suwonhana)에서 주일예배를 실시간으로 시청하실 수 있습니다.</p>",
+    },
+  },
+  {
+    id: 4,
+    title: { rendered: "어린이/청소년 프로그램이 있나요?" },
+    content: {
+      rendered:
+        "<p>유아부터 고등부까지 연령별 예배와 교육 프로그램이 운영되고 있습니다.</p>",
+    },
+  },
+  {
+    id: 5,
+    title: { rendered: "헌금은 어떻게 하나요?" },
+    content: {
+      rendered: "<p>현장 헌금함 또는 온라인 계좌이체로 하실 수 있습니다.</p>",
+    },
+  },
 ];
 
 async function fetchFaq(): Promise<WPFaqPost[]> {
@@ -58,10 +92,10 @@ export default async function FAQPage() {
         <p className="mt-16 text-center text-sm text-slate-400">
           찾으시는 답변이 없으신가요?{" "}
           <a
-            href="tel:031-203-3693"
+            href="tel:031-202-0697"
             className="text-slate-700 font-semibold hover:text-slate-900 transition-colors"
           >
-            031-203-3693
+            031-202-0697
           </a>
           으로 문의해 주세요.
         </p>
