@@ -135,6 +135,7 @@ export default async function DiscipleshipPage() {
           <div className="absolute inset-0 bg-slate-800" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
         <div className="relative z-10 w-full max-w-content mx-auto px-6 pb-14 md:pb-20">
           <p className="text-white/60 text-sm font-medium tracking-[0.2em] uppercase mb-3">
             Discipleship Training
