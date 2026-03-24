@@ -6,6 +6,7 @@ import { MainHero, MainHeroData } from "@/components/MainHero";
 import WelcomeSection from "@/components/WelcomeSection";
 import HomePhotoCarousel from "@/components/HomePhotoCarousel";
 import BulletinFlipbook from "@/components/BulletinFlipbook";
+import RecentSermons from "@/components/RecentSermons";
 import type { WPSlide } from "@/lib/types";
 
 // =================================================================
@@ -309,7 +310,7 @@ export default function MainPage() {
             </div>
           </div>
         </section>
-        {/* <RecentSermons /> */}
+        <RecentSermons />
 
         {/* 7. 온라인 주보 */}
         <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100">
