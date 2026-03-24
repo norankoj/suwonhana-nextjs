@@ -1,29 +1,92 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowRight, ChevronRight, Copy, X, ChevronDown } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
-import RecentSermons from "@/components/RecentSermons";
 import WelcomeSection from "@/components/WelcomeSection";
+import HomePhotoCarousel from "@/components/HomePhotoCarousel";
+import BulletinFlipbook from "@/components/BulletinFlipbook";
+import type { WPSlide } from "@/lib/types";
 
 // =================================================================
 // [설정 영역] 워드프레스 연결 정보
 // =================================================================
 
-// [상태 관리] 슬라이드 데이터 & 로딩
-const WP_API_DOMAIN = "http://suwonhana.local";
+const WP_DOMAIN =
+  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 const SLIDE_POST_TYPE = "risen_slide";
 
 const RECEIPT_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSfD5f0YpO6Y1b9Z6U6Yz4k3n8FQ1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1ZQ/viewform";
 
 export default function MainPage() {
-  const router = useRouter();
   const [showAccountInfo, setShowAccountInfo] = useState(false);
 
-  // [상태 관리] 초기값을 빈 배열로 둠
-  const [heroSlides, setHeroSlides] = useState<MainHeroData[]>([]);
+  const [heroSlides, setHeroSlides] = useState<MainHeroData[] | null>(null);
+  const [wpHomeData, setWpHomeData] = useState<Record<string, string> | null>(null);
+  const [bulletinImages, setBulletinImages] = useState<{ url: string; alt?: string }[] | null>(null);
+
+  // =================================================================
+  // [API 연동] 홈페이지 ACF 데이터 (Bento Grid 이미지)
+  // =================================================================
+  useEffect(() => {
+    const loadHomeData = async () => {
+      try {
+        const url = `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=homepage-settings`;
+        const r = await fetch(url);
+        const pages: Array<{ id?: number; acf?: Record<string, unknown> | false }> = r.ok ? await r.json() : [];
+
+        if (!pages.length) {
+          console.warn("[WP] ❌ homepage-settings 페이지 없음");
+          return;
+        }
+        const page = pages[0];
+        if (!page.acf) {
+          console.warn("[WP] ❌ acf false — ACF 위치 규칙 확인 필요. page.id:", page.id);
+          return;
+        }
+
+        // 반환 형식 자동 처리: URL string / 배열 object / ID number
+        const normalized: Record<string, string> = {};
+        const idEntries: Array<[string, number]> = [];
+
+        for (const [key, val] of Object.entries(page.acf as Record<string, unknown>)) {
+          if (typeof val === "string" && val) {
+            normalized[key] = val;
+          } else if (typeof val === "number" && val) {
+            idEntries.push([key, val]);
+          } else if (val && typeof val === "object") {
+            if ("url" in val) normalized[key] = (val as { url: string }).url;
+            else if ("sizes" in val) {
+              const s = (val as { sizes?: { large?: string; full?: string } }).sizes;
+              normalized[key] = s?.large || s?.full || "";
+            }
+          }
+        }
+
+        // Image ID → media API로 URL 조회
+        if (idEntries.length > 0) {
+          console.log("[WP] Image ID 형식 감지, media API 조회 중...", idEntries);
+          const results = await Promise.all(
+            idEntries.map(async ([key, id]) => {
+              const mr = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/media/${id}`).catch(() => null);
+              const m = mr?.ok ? await mr.json() : null;
+              return m?.source_url ? [key, m.source_url as string] as [string, string] : null;
+            })
+          );
+          results.forEach((res) => { if (res) normalized[res[0]] = res[1]; });
+        }
+
+        console.log("[WP] ✅ home images:", normalized);
+        setWpHomeData(normalized);
+      } catch (err) {
+        console.error("[WP] homepage-settings fetch 실패:", err);
+        setWpHomeData({}); // 실패해도 로딩 완료 처리
+      }
+    };
+    loadHomeData();
+  }, []);
+
   // =================================================================
   // [API 연동] 워드프레스에서 슬라이드 이미지 가져오기
   // =================================================================
@@ -31,16 +94,14 @@ export default function MainPage() {
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const endpoint = `${WP_API_DOMAIN}/wp-json/wp/v2/${SLIDE_POST_TYPE}?per_page=10&_embed`;
+        const endpoint = `${WP_DOMAIN}/wp-json/wp/v2/${SLIDE_POST_TYPE}?per_page=10&_embed`;
         const res = await fetch(endpoint);
 
         if (!res.ok) throw new Error("API Network Error");
         const data = await res.json();
 
-        console.log("워드프레스 데이터:", data);
-
         const slideData = data
-          .map((item: any) => {
+          .map((item: WPSlide) => {
             // 특성 이미지 추출
             if (
               item._embedded &&
@@ -74,29 +135,65 @@ export default function MainPage() {
             }
             return null;
           })
-          .filter((item): item is MainHeroData => item !== null);
+          .filter((item: MainHeroData | null): item is MainHeroData => item !== null);
 
-        if (slideData.length > 0) {
-          setHeroSlides(slideData);
-        }
+        // 데이터가 있으면 설정, 없으면 빈 배열(기본 슬라이드 표시)
+        setHeroSlides(slideData.length > 0 ? slideData : []);
       } catch (error) {
         console.error("슬라이드 로딩 실패:", error);
-      } finally {
-        //
+        setHeroSlides([]); // 에러 시 기본 슬라이드 표시
       }
     };
 
     fetchSlides();
   }, []);
 
-  const handleNavClick = (path: string) => {
-    router.push(path);
-  };
+  // =================================================================
+  // [API 연동] 온라인 주보 이미지 (jubo 페이지 첨부 미디어)
+  // =================================================================
+  useEffect(() => {
+    const loadBulletin = async () => {
+      try {
+        const ts = Date.now();
+        const pageRes = await fetch(
+          `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=content&_=${ts}`,
+          { cache: "no-store" }
+        );
+        if (!pageRes.ok) { setBulletinImages([]); return; }
+        const pages: { content: { rendered: string } }[] = await pageRes.json();
+        if (!pages.length) { setBulletinImages([]); return; }
+
+        // 페이지 본문 HTML에서 이미지 URL 추출
+        const html = pages[0].content.rendered;
+        const images: { url: string }[] = [];
+        const seen = new Set<string>();
+        const addImage = (url: string) => {
+          const clean = url.split("?")[0];
+          if (clean && !seen.has(clean)) { seen.add(clean); images.push({ url: clean }); }
+        };
+
+        // src에서 -NxN suffix 제거 → 원본 URL 복원 (srcset은 크롭 썸네일만 포함)
+        const imgTagRegex = /<img[^>]+>/gi;
+        let tag;
+        while ((tag = imgTagRegex.exec(html)) !== null) {
+          const srcMatch = /src="([^"]+)"/.exec(tag[0]);
+          if (srcMatch) {
+            addImage(srcMatch[1].replace(/-\d+x\d+(\.[^.?]+)$/, "$1"));
+          }
+        }
+        setBulletinImages(images);
+      } catch {
+        setBulletinImages([]);
+      }
+    };
+    loadBulletin();
+  }, []);
+
   return (
     <>
       <div className="animate-fade-in">
-        {/* 1. 메인 히어로 */}
-        <MainHero slidesData={heroSlides} key={heroSlides.length} />
+        {/* 1. 메인 히어로 — null이면 skeleton, 배열이면 실제 데이터 */}
+        <MainHero slidesData={heroSlides} key={heroSlides?.length ?? "loading"} />
 
         {/* 2. 환영 메시지 (Welcome) - 중앙 정렬 타이포그래피 집중형 */}
         <section className="py-24 md:py-32 bg-white flex items-center justify-center">
@@ -145,18 +242,109 @@ export default function MainPage() {
           </div>
         </section>
 
-        {/* 3. 새가족 안내 (bg-slate-50으로 자연스러운 구분) */}
+        {/* 3. 교회 소개 이미지 — 캐러셀 */}
+        <section className="pb-20 md:pb-28 bg-white">
+          {wpHomeData === null ? (
+            /* ── 로딩 스켈레톤 ── */
+            <div className="flex flex-col items-center gap-5">
+              {/* 메인 슬라이드 스켈레톤 */}
+              <div className="w-full flex items-center justify-center gap-3 md:gap-4 overflow-hidden">
+                {/* 좌측 흐린 카드 */}
+                <div className="shrink-0 w-[12%] md:w-[16%] aspect-[16/9] bg-slate-100 rounded opacity-40" />
+                {/* 중앙 메인 카드 */}
+                <div className="shrink-0 w-[75%] md:w-[58%] aspect-[16/9] bg-slate-200 rounded overflow-hidden relative">
+                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+                </div>
+                {/* 우측 흐린 카드 */}
+                <div className="shrink-0 w-[12%] md:w-[16%] aspect-[16/9] bg-slate-100 rounded opacity-40" />
+              </div>
+              {/* 로딩 텍스트 + 점 애니메이션 */}
+              <div className="flex items-center gap-1.5 text-slate-400 text-sm">
+                <span>사진을 불러오는 중</span>
+                <span className="flex gap-0.5">
+                  <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce [animation-delay:0ms]" />
+                  <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce [animation-delay:150ms]" />
+                  <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce [animation-delay:300ms]" />
+                </span>
+              </div>
+              {/* 닷 인디케이터 스켈레톤 */}
+              <div className="flex gap-1.5">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className={`h-1.5 rounded-full bg-slate-200 ${i === 0 ? "w-6" : "w-1.5"}`} />
+                ))}
+              </div>
+            </div>
+          ) : (
+            /* ── 로딩 완료: 실제 캐러셀 ── */
+            <HomePhotoCarousel
+              images={[
+                { src: wpHomeData.bento_image_1 || "/images/worship01.png"    },
+                { src: wpHomeData.bento_image_2 || "/images/temp01.jpg"       },
+                { src: wpHomeData.bento_image_3 || "/images/temp02.jpg"       },
+                { src: wpHomeData.bento_image_4 || "/images/pastor_ko2.jpg"   },
+                { src: wpHomeData.bento_image_5 || "/images/corner.jpg"       },
+                { src: wpHomeData.bento_image_6 || "/images/background01.jpg" },
+              ]}
+            />
+          )}
+        </section>
+
+        {/* 4. 새가족 안내 (bg-slate-50으로 자연스러운 구분) */}
         <WelcomeSection />
 
-        {/* 4. 이벤트 배너 (필요시 활성화, bg-white 영역) */}
+        {/* 5. 이벤트 배너 (필요시 활성화, bg-white 영역) */}
         {/* <EventBanner slidesData={heroSlides} /> */}
 
-        {/* 5. 최근 설교 (bg-white) */}
-        <RecentSermons />
+        {/* 6. 교회 영상 */}
+        <section className="py-12 md:py-20 bg-white">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative w-full aspect-video overflow-hidden shadow-2xl shadow-slate-900/15">
+              <iframe
+                src="https://www.youtube.com/embed/a6vpGcSwX-o?autoplay=1&mute=1&loop=1&playlist=a6vpGcSwX-o&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0"
+                title="수원하나교회 영상"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                className="absolute w-[110%] h-[110%] -top-[5%] -left-[5%]"
+                style={{ border: "none", pointerEvents: "none" }}
+              />
+            </div>
+          </div>
+        </section>
+        {/* <RecentSermons /> */}
 
-        {/* 6. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
+        {/* 7. 온라인 주보 */}
+        <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* 헤더 */}
+            <div className="text-center mb-10 md:mb-14">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
+                Weekly Bulletin
+              </p>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                온라인 주보
+              </h2>
+            </div>
+
+            {/* 플립북 or 로딩 */}
+            {bulletinImages === null ? (
+              /* 로딩 중 */
+              <div className="flex flex-col items-center gap-3 py-20 text-slate-300">
+                <div className="w-48 h-64 bg-slate-200 rounded animate-pulse" />
+                <p className="text-sm">주보를 불러오는 중...</p>
+              </div>
+            ) : bulletinImages.length > 0 ? (
+              <BulletinFlipbook images={bulletinImages} />
+            ) : (
+              /* 이미지 없음 */
+              <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
+                <p className="text-slate-400 text-sm">아직 업로드된 주보가 없습니다.</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* 8. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
         <section className="py-16 bg-slate-50 border-t border-slate-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
               <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">
                 기부금 영수증 및 헌금 안내

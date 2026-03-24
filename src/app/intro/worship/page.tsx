@@ -1,228 +1,213 @@
-"use client";
-
 import React from "react";
-import { Clock, MapPin, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import IntroPageHeader from "@/components/IntroPageHeader";
+import { fetchWorshipData } from "@/lib/wordpress";
+import type { WorshipServiceItem } from "@/lib/types";
 
-// 재사용 가능한 예배 리스트 아이템 컴포넌트 (원래 소스 그대로!)
-const ServiceItem = ({
-  name,
-  time,
-  place,
-  target,
-  isMain = false,
-  isParentAccompany = false, // 부모님 동반 여부 (강조용)
-}: {
-  name: string;
-  time: string;
-  place: string;
-  target?: string;
-  isMain?: boolean;
-  isParentAccompany?: boolean;
-}) => (
-  <div
-    className={`flex flex-col md:flex-row md:items-center justify-between py-5 ${
-      isMain
-        ? "border-b border-slate-100 last:border-0"
-        : "border-b border-slate-100 last:border-0"
-    }`}
-  >
-    <div className="mb-2 md:mb-0">
-      <div className="flex flex-wrap items-center gap-2 mb-1">
-        <h4
-          className={`font-bold text-slate-900 ${isMain ? "text-lg" : "text-base"}`}
-        >
-          {name}
-        </h4>
-        {target && (
-          <span
-            className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-              isParentAccompany
-                ? "bg-orange-100 text-orange-600" // 부모동반: 주황색 강조
-                : "bg-slate-100 text-slate-500" // 일반: 회색
-            }`}
-          >
-            {target}
-          </span>
-        )}
-      </div>
-      <div className="flex items-center gap-4 text-sm text-slate-500">
-        <span className="flex items-center gap-1">
-          <MapPin size={14} className="shrink-0" /> {place}
-        </span>
-      </div>
+// 주일예배 행
+const SundayRow = ({ name, schedule, place }: WorshipServiceItem) => (
+  <div className="flex items-center justify-between py-4 border-b border-slate-100 last:border-0">
+    <div>
+      <p className="font-bold text-slate-900 text-base">{name}</p>
+      {place && <p className="text-sm text-slate-500 mt-0.5">{place}</p>}
     </div>
-    <div
-      className={`text-right ${isMain ? "text-xl md:text-2xl" : "text-lg"} font-bold text-blue-900`}
-    >
-      {time}
-    </div>
+    <p className="text-2xl font-bold text-slate-900 tabular-nums shrink-0 ml-6">
+      {schedule}
+    </p>
   </div>
 );
 
-export default function WorshipPage() {
-  return (
-    <div className="bg-white pb-32 font-sans selection:bg-blue-50 selection:text-blue-900">
-      {/* =========================================
-          [헤더] 상단 여백을 대폭 줄였습니다 (pt-12 pb-8)
-          ========================================= */}
-      <section className="pt-12 pb-8 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center border-b border-slate-100 mb-10">
-        <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
-          Worship Guide
+// 이미지 카드형 (다음세대용)
+const ServiceCard = ({
+  image,
+  name,
+  englishName,
+  schedule,
+  place,
+}: {
+  image?: string;
+  name: string;
+  englishName?: string;
+  schedule: string;
+  place?: string;
+}) => (
+  <div>
+    <div className="w-full aspect-[4/3] overflow-hidden rounded-sm bg-slate-100 mb-4">
+      {image && (
+        <img src={image} alt={name} className="w-full h-full object-cover" />
+      )}
+    </div>
+    <p className="font-bold text-slate-900 text-base leading-snug">{name}</p>
+    {englishName && (
+      <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mt-1 mb-2">
+        {englishName}
+      </p>
+    )}
+    <p className="text-sm text-slate-700">{schedule}</p>
+    {place && <p className="text-sm text-slate-500 mt-0.5">{place}</p>}
+  </div>
+);
+
+// 멤버십 행
+const MembershipRow = ({
+  name,
+  englishName,
+  schedule,
+  place,
+}: WorshipServiceItem) => (
+  <div className="flex items-center justify-between py-4 border-b border-slate-100 last:border-0">
+    <div>
+      <p className="font-bold text-slate-900 text-base">{name}</p>
+      {/* {englishName && (
+        <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5">
+          {englishName}
         </p>
-        <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
-          예배 안내
-        </h1>
-      </section>
+      )} */}
+      {place && <p className="text-sm text-slate-500 mt-0.5">{place}</p>}
+    </div>
+    {schedule && (
+      <p className="text-2xl font-bold text-slate-900 tabular-nums shrink-0 ml-6">
+        {schedule}
+      </p>
+    )}
+  </div>
+);
 
-      <div className="animate-fade-in max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        {/* 1. 환영 메시지 (Welcome) - 기존 오리지널 소스 */}
-        <section className="mb-16">
-          <div className="bg-slate-50 rounded-2xl p-8 md:p-10 text-center border border-slate-100">
-            <h3 className="text-2xl font-bold text-slate-900 mb-3">
-              수원하나교회에 오신 여러분을 환영합니다
-            </h3>
-            <p className="text-slate-600 mb-6 max-w-2xl mx-auto leading-relaxed text-[15px]">
-              처음 오셨나요? 낯선 환경이 어색하지 않도록 새가족부에서 친절히
-              안내해 드립니다.
-              <br className="hidden md:block" />
-              본당 입구 안내 데스크를 찾아주시거나, 아래 연락처로 문의해주세요.
-            </p>
-            <div className="inline-flex flex-col md:flex-row items-center gap-2 md:gap-6 bg-white px-6 py-3 rounded-full border border-slate-200 shadow-sm">
-              <span className="font-bold text-slate-800 text-sm">
-                새가족 담당
-              </span>
-              <span className="hidden md:block w-px h-3 bg-slate-300"></span>
-              <span className="text-blue-600 font-medium text-sm">
-                신상철 목사 (010-2484-0776)
-              </span>
+const NEXT_GEN_FALLBACK = [
+  {
+    name: "영아부 (조이베이비)",
+    englishName: "Infant Ministry",
+    schedule: "주일 오전 9시 30분",
+    place: "NGC 지하예배실 · 36개월 미만 + 부모님",
+    image: "/images/temp01.jpg",
+  },
+  {
+    name: "유치부 (조이코너)",
+    englishName: "Kids Corner",
+    schedule: "주일 오후 1시",
+    place: "본당 2층 · 36개월 이상 미취학 + 부모님",
+    image: "/images/temp02.jpg",
+  },
+  {
+    name: "초등부 (조이랜드)",
+    englishName: "Joyland",
+    schedule: "화요일 오후 7시",
+    place: "NGC 지하예배실 · 초등학생",
+    image: "/images/temp03.jpg",
+  },
+  {
+    name: "중고등부 (YCM)",
+    englishName: "Youth Church Ministry",
+    schedule: "주일 오후 4시 30분",
+    place: "본당 2층 · 청소년",
+    image: "/images/worship01.png",
+  },
+];
+
+export default async function WorshipPage() {
+  const { data: worshipData, nextGenImages } = await fetchWorshipData();
+
+  // WP 데이터 없을 때 폴백
+  const sundayServices = worshipData?.sunday ?? [
+    { name: "주일 1부", schedule: "09:00", place: "2층 본당" },
+    { name: "주일 2부", schedule: "11:00", place: "2층 본당" },
+    {
+      name: "주일 3부",
+      schedule: "14:30",
+      place: "2층 본당 · 청년 및 일반",
+    },
+  ];
+  const membershipServices = worshipData?.membership ?? [
+    {
+      name: "금요 멤버십 예배",
+      englishName: "Friday Membership Service",
+      schedule: "21:00",
+      place: "2층 본당",
+    },
+  ];
+  const sundayNote =
+    worshipData?.sundayNote ??
+    "모든 주일 예배는 자녀들과 함께 드리며, '복음과 구원'에 초점을 맞추어 드려집니다.";
+
+  // 다음세대: JSON 기본 정보 + ACF 이미지 필드 병합
+  const nextGenServices = (worshipData?.nextGen ?? NEXT_GEN_FALLBACK).map(
+    (s, i) => ({ ...s, image: nextGenImages[i] ?? s.image }),
+  );
+
+  return (
+    <div className="bg-white pb-32 font-sans">
+      <IntroPageHeader label="Worship Guide" title="예배 안내" />
+
+      <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-16">
+        {/* 주일예배 + 멤버십/온라인 — 2열 */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
+          {/* 좌: 주일 예배 */}
+          <div>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">주일 예배</h3>
+            <div className="border-t border-slate-200">
+              {sundayServices.map((s) => (
+                <SundayRow key={s.name} {...s} />
+              ))}
             </div>
-          </div>
-        </section>
-
-        {/* 2. 주일 예배 (Main Worship) */}
-        <section className="mb-16">
-          <div className="flex items-end justify-between mb-2 border-b-2 border-slate-900 pb-2">
-            <h3 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              주일 예배
-            </h3>
-            <span className="text-slate-500 font-medium text-sm">
-              Sunday Worship
-            </span>
-          </div>
-
-          <div className="bg-white">
-            <ServiceItem
-              isMain
-              name="주일 1부"
-              time="09:00"
-              place="본당 2층 대예배실"
-              target="전 세대"
-            />
-            <ServiceItem
-              isMain
-              name="주일 2부"
-              time="11:00"
-              place="본당 2층 대예배실"
-              target="전 세대"
-            />
-            <ServiceItem
-              isMain
-              name="주일 3부"
-              time="14:30"
-              place="본당 2층 대예배실"
-              target="청년 및 일반"
-            />
-          </div>
-          <div className="mt-4 bg-blue-50 p-4 rounded-lg flex items-start gap-3">
-            <div className="mt-0.5 text-blue-600 shrink-0">
-              <Clock size={16} />
-            </div>
-            <p className="text-sm text-slate-700 leading-relaxed break-keep">
-              <strong>자녀와 함께 드리는 열린예배:</strong> 모든 주일 예배는
-              자녀들과 함께 드리며,
-              <span className="text-blue-700 font-bold ml-1">
-                '복음과 구원'
-              </span>
-              에 초점을 맞추어 드려집니다.
+            <p className="mt-4 text-sm text-slate-500 break-keep">
+              {sundayNote}
             </p>
           </div>
-        </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* 3. 다음세대 (Next Generation) */}
-          <section>
-            <div className="flex items-end justify-between mb-2 border-b border-slate-200 pb-2">
-              <h3 className="text-xl font-bold text-slate-900">
-                다음세대 예배
+          {/* 우: 멤버십 + 온라인 */}
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">
+                금요 예배
               </h3>
-              <span className="text-slate-400 text-sm">Church School</span>
+              <div className="border-t border-slate-200">
+                {membershipServices.map((s) => (
+                  <MembershipRow key={s.name} {...s} />
+                ))}
+              </div>
             </div>
-            <div>
-              <ServiceItem
-                name="영아부 (조이베이비)"
-                target="36개월 미만 + 부모님"
-                isParentAccompany
-                time="주일 09:30"
-                place="NGC 지하예배실"
-              />
-              <ServiceItem
-                name="유치부 (조이코너)"
-                target="36개월 이상 ~ 미취학 + 부모님"
-                isParentAccompany
-                time="주일 13:00"
-                place="본당 2층"
-              />
-              <ServiceItem
-                name="초등부 (조이랜드)"
-                target="초등학생"
-                time="화요일 19:00"
-                place="NGC 지하예배실"
-              />
-              <ServiceItem
-                name="중고등부 (YCM)"
-                target="청소년"
-                time="주일 16:30"
-                place="본당 2층"
-              />
-            </div>
-          </section>
 
-          {/* 4. 주중 예배 (Weekdays) */}
-          <section>
-            <div className="flex items-end justify-between mb-2 border-b border-slate-200 pb-2">
-              <h3 className="text-xl font-bold text-slate-900">멤버십 예배</h3>
-              <span className="text-slate-400 text-sm">Weekdays</span>
-            </div>
             <div>
-              <ServiceItem
-                name="금요 예배"
-                target="전 세대"
-                time="금요일 21:00"
-                place="본당 2층 대예배실"
-              />
-              <div className="mt-6 p-5 bg-slate-50 rounded-xl border border-slate-100">
-                <h5 className="font-bold text-slate-900 mb-2 flex items-center gap-2 text-sm">
-                  <span className="relative flex h-2.5 w-2.5 mr-1">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                  </span>
-                  온라인 예배 안내
-                </h5>
-                <p className="text-sm text-slate-600 mb-3 break-keep">
-                  모든 공예배는 유튜브를 통해 실시간으로 중계됩니다.
+              <h3 className="text-xl font-bold text-slate-900 mb-2 pt-3">
+                온라인 예배
+              </h3>
+              <div className="border-t border-slate-200 pt-4">
+                <p className="text-sm text-slate-500 mb-4">
+                  모든 공예배 유튜브 실시간 중계
                 </p>
                 <a
                   href="https://youtube.com/@수원하나교회"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center text-sm font-bold text-slate-900 hover:text-red-600 transition-colors"
+                  className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors group"
                 >
-                  유튜브 채널 바로가기 <ArrowRight size={14} className="ml-1" />
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4 fill-[#FF0000] shrink-0"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.5v-7l6.5 3.5-6.5 3.5z" />
+                  </svg>
+                  <span className="underline underline-offset-2 decoration-slate-300 group-hover:decoration-slate-600 transition-colors">
+                    유튜브 채널 바로가기
+                  </span>
                 </a>
               </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
+
+        {/* 다음세대 예배 — 이미지 카드형 */}
+        <section>
+          <h3 className="text-xl font-bold text-slate-900 mb-8">
+            다음세대 예배
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {nextGenServices.map((s) => (
+              <ServiceCard key={s.name} {...s} />
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

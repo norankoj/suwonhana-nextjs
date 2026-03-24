@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import type { CoreValueItem } from "@/lib/types";
 
 export default function CoreValueAccordion({
   item,
   index,
 }: {
-  item: any;
+  item: CoreValueItem;
   index: number;
 }) {
   const [isOpen, setIsOpen] = useState(false);

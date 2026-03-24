@@ -23,7 +23,7 @@ export const PageHeader = ({
   return (
     // pt-[80px]: 고정 헤더 높이만큼 상단 여백 유지
     // pb-16: 배너 아래 여백을 늘려 본문과의 간격 확보 (안정감)
-    <div className="w-full pt-[80px] bg-white animate-fade-in pb-16">
+    <div className="w-full pt-[96px] bg-white animate-fade-in pb-16">
       {/* 1. 브레드크럼 & 대제목 영역 */}
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex items-center text-sm text-slate-500 mb-6">

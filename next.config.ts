@@ -18,6 +18,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com", // 기존에 쓰던 이미지용
       },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com", // YouTube 썸네일
+      },
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com", // YouTube 썸네일 (대체 도메인)
+      },
       // 나중에 실제 도메인 연결하면 그것도 추가해야 함
       // { protocol: 'https', hostname: 'suwonhana.org' },
     ],

@@ -1,71 +1,19 @@
 import React from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import BackToTopButton from "../history/BackToTopButton";
+import IntroPageHeader from "@/components/IntroPageHeader";
+import type { StaffMember, BookItem, WPStaffNode, ServingFields } from "@/lib/types";
+import { fetchPastorAndStaffData } from "@/lib/wordpress";
+import { decodeHtmlEntities } from "@/utils/format";
 
-// ==========================================
-// 1. WPGraphQL 통신 (담임목사님 & 사역자 리스트 모두 가져오기)
-// ==========================================
-async function getPastorAndStaffData() {
-  const query = `
-    query GetServingPeopleAndStaff {
-      # 1. 담임목사님 페이지 데이터
-      page(id: "serving-people", idType: URI) {
-        servingFields {
-          pastorName
-          pastorBio
-          pastorHistory
-          booksJson
-          pastorImage {
-            node {
-              sourceUrl
-            }
-          }
-        }
-      }
-      
-      # 2. Staff 사역자 리스트 데이터 (최대 50명, 메뉴 순서(Menu Order) 오름차순 정렬)
-      staffs(first: 50, where: { orderby: { field: MENU_ORDER, order: ASC } }) {
-        nodes {
-          title
-          content 
-          featuredImage { 
-            node {
-              sourceUrl
-            }
-          }
-          staffFields {
-            teamCategory
-            staffRole
-          }
-        }
-      }
-    }
-  `;
+export const metadata: Metadata = {
+  title: "섬기는 이들",
+  description: "수원하나교회 담임목사 및 사역팀 소개",
+};
 
-  try {
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-        next: { revalidate: 60 },
-      },
-    );
-    if (!res.ok) throw new Error("Network response was not ok");
-    const json = await res.json();
-    return json.data;
-  } catch (error) {
-    console.error("WPGraphQL Fetch Error:", error);
-    return null;
-  }
-}
-
-// ==========================================
-// 2. 사역자 카드 컴포넌트
-// ==========================================
-const StaffCard = ({ staff }: { staff: any }) => (
+const StaffCard = ({ staff }: { staff: StaffMember }) => (
   <div className="bg-white border border-slate-100 overflow-hidden font-sans shadow-sm group flex flex-col h-full w-full max-w-[250px] mx-auto">
     <div className="aspect-[4/5] relative overflow-hidden bg-slate-50 shrink-0">
       <img
@@ -89,13 +37,10 @@ const StaffCard = ({ staff }: { staff: any }) => (
   </div>
 );
 
-// ==========================================
-// 3. 메인 페이지 컴포넌트
-// ==========================================
 export default async function PastorPage() {
-  const wpData = await getPastorAndStaffData();
+  const wpData = await fetchPastorAndStaffData();
 
-  const fields = wpData?.page?.servingFields || {};
+  const fields: Partial<ServingFields> = wpData?.page?.servingFields || {};
   const pastorName = fields.pastorName || "고성준";
   const pastorBio = fields.pastorBio || "";
   const pastorHistoryArray = (fields.pastorHistory || "")
@@ -104,7 +49,7 @@ export default async function PastorPage() {
   const spastorImageUrl =
     fields.pastorImage?.node?.sourceUrl || "/images/pastor_ko2.jpg";
 
-  let bookList = [];
+  let bookList: BookItem[] = [];
   if (fields.booksJson) {
     try {
       const safeJson = fields.booksJson
@@ -116,15 +61,15 @@ export default async function PastorPage() {
     }
   }
 
-  const rawStaffs = wpData?.staffs?.nodes || [];
+  const rawStaffs: WPStaffNode[] = wpData?.staffs?.nodes || [];
 
   const staffTeams = {
-    ministry: [] as any[],
-    administration: [] as any[],
-    media: [] as any[],
+    ministry: [] as StaffMember[],
+    administration: [] as StaffMember[],
+    media: [] as StaffMember[],
   };
 
-  rawStaffs.forEach((staff: any) => {
+  rawStaffs.forEach((staff) => {
     const roleFallback = staff.staffFields?.staffRole || "간사";
 
     let rawDesc = staff.content
@@ -135,15 +80,9 @@ export default async function PastorPage() {
       rawDesc = rawDesc.split("|")[1].trim();
     }
 
-    rawDesc = rawDesc
-      .replace(/&amp;/g, "&")
-      .replace(/&#038;/g, "&")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&quot;/g, '"')
-      .replace(/&#039;/g, "'");
+    rawDesc = decodeHtmlEntities(rawDesc);
 
-    const formattedStaff = {
+    const formattedStaff: StaffMember = {
       name: staff.title,
       role: roleFallback,
       desc: rawDesc,
@@ -166,22 +105,11 @@ export default async function PastorPage() {
   });
 
   return (
-    <div className="bg-white pb-20 font-sans selection:bg-blue-50 selection:text-blue-900">
-      {/* =========================================
-          [섹션 1] 통합 페이지 헤더
-          ========================================= */}
-      <section className="pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center border-b border-slate-100 mb-16 lg:mb-20">
-        <p className="text-xs md:text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-6">
-          Serving People
-        </p>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.3] tracking-wide">
-          섬기는 이들
-        </h1>
-      </section>
+    <div className="bg-white pb-20 font-sans">
+      {/* [섹션 1] 통합 페이지 헤더 */}
+      <IntroPageHeader label="Serving People" title="섬기는 이들" />
 
-      {/* =========================================
-          [섹션 2] 담임목사 프로필
-          ========================================= */}
+      {/* [섹션 2] 담임목사 프로필 */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 lg:mb-24">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
           <div className="w-full lg:w-[45%] shrink-0">
@@ -216,7 +144,7 @@ export default async function PastorPage() {
                     return (
                       <li key={idx} className="flex items-start gap-3">
                         <span
-                          className={`w-1.5 h-1.5 rounded-full mt-2.5 shrink-0 ${isLast ? "bg-blue-600" : "bg-slate-300"}`}
+                          className={`w-1.5 h-1.5 rounded-full mt-2.5 shrink-0 ${isLast ? "bg-slate-900" : "bg-slate-300"}`}
                         ></span>
                         <span
                           className={isLast ? "font-bold text-slate-900" : ""}
@@ -233,9 +161,7 @@ export default async function PastorPage() {
         </div>
       </section>
 
-      {/* =========================================
-          [섹션 3] 저서 소개 
-          ========================================= */}
+      {/* [섹션 3] 저서 소개 */}
       <section className="bg-[#F8F9FA] py-16 md:py-20 border-t border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-10 lg:mb-12 px-1">
@@ -248,7 +174,7 @@ export default async function PastorPage() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-5 gap-y-12">
             {bookList.length > 0 ? (
-              bookList.map((book: any) => (
+              bookList.map((book) => (
                 <a
                   key={book.id || book.title}
                   href={book.link}
@@ -270,7 +196,7 @@ export default async function PastorPage() {
                       </div>
                     </div>
                   </div>
-                  <h4 className="text-[15px] font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1 px-1">
+                  <h4 className="text-[15px] font-bold text-slate-900 mb-1 group-hover:text-slate-600 transition-colors line-clamp-1 px-1">
                     {book.title}
                   </h4>
                   <p className="text-xs md:text-sm text-slate-500 leading-snug line-clamp-2 break-keep px-1">
@@ -287,11 +213,8 @@ export default async function PastorPage() {
         </div>
       </section>
 
-      {/* =========================================
-          [섹션 4] 섬기는 이들
-          ========================================= */}
+      {/* [섹션 4] 섬기는 이들 */}
       <section className="py-16 md:py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 사역팀 */}
         {staffTeams.ministry.length > 0 && (
           <div className="mb-16 md:mb-20">
             <div className="mb-10 text-center">
@@ -310,7 +233,6 @@ export default async function PastorPage() {
           </div>
         )}
 
-        {/* 행정팀 */}
         {staffTeams.administration.length > 0 && (
           <div className="mb-16 md:mb-20">
             <div className="mb-10 text-center">
@@ -329,7 +251,6 @@ export default async function PastorPage() {
           </div>
         )}
 
-        {/* 미디어팀 */}
         {staffTeams.media.length > 0 && (
           <div className="mb-16 md:mb-20">
             <div className="mb-10 text-center">

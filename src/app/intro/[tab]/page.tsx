@@ -63,8 +63,8 @@ export default function IntroContentPage() {
   ];
 
   // 연혁 토글 기능
-  const [expandedYears, setExpandedYears] = useState<number[]>(["2025"]);
-  const toggleYear = (year: number) => {
+  const [expandedYears, setExpandedYears] = useState<string[]>(["2025"]);
+  const toggleYear = (year: string) => {
     if (expandedYears.includes(year)) {
       setExpandedYears(expandedYears.filter((y) => y !== year));
     } else {
@@ -325,11 +325,11 @@ export default function IntroContentPage() {
               <div className="space-y-10">
                 {historyData?.map((item: any, idx: number) => {
                   const isExpanded = expandedYears.includes(item.year);
-                  const decade = Math.floor(item.year / 10) * 10;
+                  const decade = Math.floor(Number(item.year) / 10) * 10;
                   // 연대 시작점 체크 (데이터가 내림차순 정렬이어야 정확함)
                   const isDecadeStart =
                     idx === 0 ||
-                    Math.floor(historyData[idx - 1].year / 10) * 10 !== decade;
+                    Math.floor(Number(historyData[idx - 1].year) / 10) * 10 !== decade;
 
                   return (
                     <div

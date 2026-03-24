@@ -1,79 +1,16 @@
 import React from "react";
-import CoreValueAccordion from "./CoreValueAccordion";
+import type { Metadata } from "next";
+import CoreValueGrid from "./CoreValueGrid";
+import type { CoreValueItem } from "@/lib/types";
+import { fetchCoreValuesData } from "@/lib/wordpress";
 
-async function getCoreValuesData() {
-  const query = `
-    query GetCoreValuesPage {
-      page(id: "핵심가치", idType: URI) {
-        coreValueFields {
-          valueStatement 
-          mainTitle
-          subDesc
-          part1Title
-          part2Title
-          value1Title
-          value1Sub
-          value1Desc
-          value2Title
-          value2Sub
-          value2Desc
-          value3Title
-          value3Sub
-          value3Desc
-          value4Title
-          value4Sub
-          value4Desc
-          value5Title
-          value5Sub
-          value5Desc
-          value6Title
-          value6Sub
-          value6Desc
-          value7Title
-          value7Sub
-          value7Desc
-          value8Title
-          value8Sub
-          value8Desc
-          value9Title
-          value9Sub
-          value9Desc
-          value10Title
-          value10Sub
-          value10Desc
-          value11Title
-          value11Sub
-          value11Desc
-          value12Title
-          value12Sub
-          value12Desc
-        }
-      }
-    }
-  `;
-
-  try {
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_WORDPRESS_API_URL as string,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-        next: { revalidate: 60 },
-      },
-    );
-
-    if (!res.ok) throw new Error("Network response was not ok");
-    const json = await res.json();
-    return json.data?.page;
-  } catch (error) {
-    console.error("WPGraphQL Fetch Error:", error);
-    return null;
-  }
-}
+export const metadata: Metadata = {
+  title: "핵심가치",
+  description: "수원하나교회가 중요하게 여기는 12가지 핵심가치",
+};
 
 export default async function CoreValuesPage() {
-  const pageData = await getCoreValuesData();
+  const pageData = await fetchCoreValuesData();
 
   if (!pageData) {
     return (
@@ -84,9 +21,11 @@ export default async function CoreValuesPage() {
   }
 
   const fields = pageData.coreValueFields || {};
+  const heroImageUrl =
+    (pageData as { heroImageUrl?: string | null }).heroImageUrl ??
+    "/images/worship01.png";
 
-  // 타이틀 기본값 세팅
-  const valueStatementText = fields.valueStatement || "Value Statement"; // 워드프레스 데이터 연동
+  const valueStatementText = fields.valueStatement || "Core Values";
   const mainTitle = fields.mainTitle || "핵심가치들";
   const subDesc =
     fields.subDesc ||
@@ -94,129 +33,63 @@ export default async function CoreValuesPage() {
   const part1Title = fields.part1Title || "Part 1. 6가지 핵심가치";
   const part2Title = fields.part2Title || "Part 2. 6가지 핵심가치";
 
-  // 워드프레스에서 받아온 낱개 데이터들을 Part 1(1~6)과 Part 2(7~12) 배열로 재구성
-  const coreValuePart1 = [
-    {
-      title: fields.value1Title,
-      sub: fields.value1Sub,
-      desc: fields.value1Desc,
-    },
-    {
-      title: fields.value2Title,
-      sub: fields.value2Sub,
-      desc: fields.value2Desc,
-    },
-    {
-      title: fields.value3Title,
-      sub: fields.value3Sub,
-      desc: fields.value3Desc,
-    },
-    {
-      title: fields.value4Title,
-      sub: fields.value4Sub,
-      desc: fields.value4Desc,
-    },
-    {
-      title: fields.value5Title,
-      sub: fields.value5Sub,
-      desc: fields.value5Desc,
-    },
-    {
-      title: fields.value6Title,
-      sub: fields.value6Sub,
-      desc: fields.value6Desc,
-    },
-  ].filter((item) => item.title); // 데이터가 있는 것만 남김
+  const buildCoreValues = (startIdx: number, count: number): CoreValueItem[] => {
+    const result: CoreValueItem[] = [];
+    for (let i = startIdx; i < startIdx + count; i++) {
+      const title = fields[`value${i}Title`];
+      if (title) {
+        result.push({
+          title,
+          sub: fields[`value${i}Sub`] || "",
+          desc: fields[`value${i}Desc`] || "",
+        });
+      }
+    }
+    return result;
+  };
 
-  const coreValuePart2 = [
-    {
-      title: fields.value7Title,
-      sub: fields.value7Sub,
-      desc: fields.value7Desc,
-    },
-    {
-      title: fields.value8Title,
-      sub: fields.value8Sub,
-      desc: fields.value8Desc,
-    },
-    {
-      title: fields.value9Title,
-      sub: fields.value9Sub,
-      desc: fields.value9Desc,
-    },
-    {
-      title: fields.value10Title,
-      sub: fields.value10Sub,
-      desc: fields.value10Desc,
-    },
-    {
-      title: fields.value11Title,
-      sub: fields.value11Sub,
-      desc: fields.value11Desc,
-    },
-    {
-      title: fields.value12Title,
-      sub: fields.value12Sub,
-      desc: fields.value12Desc,
-    },
-  ].filter((item) => item.title);
+  const coreValuePart1 = buildCoreValues(1, 6);
+  const coreValuePart2 = buildCoreValues(7, 6);
 
   return (
     <div className="bg-white pb-32">
-      {/* 1. 페이지 헤더 */}
-      <section className="pt-20 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
-        <p className="text-sm font-bold text-slate-400 uppercase tracking-[0.3em] mb-6">
-          {valueStatementText}
-        </p>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.45] tracking-normal mb-8">
-          {mainTitle}
-        </h1>
-        <p className="text-lg md:text-xl text-slate-600 font-medium break-keep whitespace-pre-wrap">
-          {subDesc}
-        </p>
+      {/* 1. 히어로 섹션 */}
+      <section className="relative w-full h-screen md:h-[90vh] min-h-[500px] overflow-hidden bg-slate-900">
+        <img
+          src={heroImageUrl}
+          alt="수원하나교회 핵심가치"
+          className="w-full h-full object-cover object-center opacity-70"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 px-8 sm:px-12 lg:px-20 pb-14 md:pb-20 max-w-content">
+          <p className="text-[11px] md:text-xs font-bold tracking-[0.35em] text-white/60 uppercase mb-4">
+            {valueStatementText}
+          </p>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight break-keep">
+            {mainTitle.split(/<br\s*\/?>|\n/i).map((line: string, i: number, arr: string[]) => (
+              <React.Fragment key={i}>
+                {line.trim()}
+                {i < arr.length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </h1>
+          {subDesc && (
+            <p className="mt-5 text-sm md:text-base text-white/70 font-medium max-w-xl leading-relaxed">
+              {subDesc}
+            </p>
+          )}
+        </div>
       </section>
 
-      {/* 2. 핵심가치 아코디언 리스트 */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-        {/* Part 1 */}
-        {coreValuePart1.length > 0 && (
-          <div className="mb-20">
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase">
-                {part1Title}
-              </h2>
-              <div className="h-px flex-1 bg-slate-200"></div>
-            </div>
-
-            <div className="border-t border-slate-900">
-              {coreValuePart1.map((item, idx) => (
-                <CoreValueAccordion key={idx} item={item} index={idx + 1} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Part 2 */}
-        {coreValuePart2.length > 0 && (
-          <div>
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-lg font-bold text-slate-900 tracking-widest uppercase">
-                {part2Title}
-              </h2>
-              <div className="h-px flex-1 bg-slate-200"></div>
-            </div>
-
-            <div className="border-t border-slate-900">
-              {coreValuePart2.map((item, idx) => (
-                <CoreValueAccordion
-                  key={idx}
-                  item={item}
-                  index={coreValuePart1.length + idx + 1}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+      {/* 2. 핵심가치 그리드 */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+        <CoreValueGrid
+          part1Title={part1Title}
+          part2Title={part2Title}
+          part1Items={coreValuePart1}
+          part2Items={coreValuePart2}
+        />
       </section>
     </div>
   );
