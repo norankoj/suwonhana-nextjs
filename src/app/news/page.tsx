@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Calendar, ArrowRight, Tag } from "lucide-react";
+import { Calendar, Tag } from "lucide-react";
 import { HeroSub } from "@/components/Common";
 
 const WP_DOMAIN =
   process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 
-// 카테고리 탭 (WP 카테고리 슬러그와 매핑)
 const CATEGORIES = [
   { label: "전체", slug: "" },
   { label: "공지사항", slug: "notice" },
@@ -30,7 +29,6 @@ interface WPPost {
   };
 }
 
-// 하드코딩 폴백 데이터
 const FALLBACK_POSTS = [
   {
     id: 1,
@@ -141,7 +139,7 @@ export default function NewsPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="rounded-2xl overflow-hidden bg-slate-100 animate-pulse">
+              <div key={i} className="overflow-hidden bg-slate-100 animate-pulse">
                 <div className="aspect-[4/3] bg-slate-200" />
                 <div className="p-5 space-y-3">
                   <div className="h-3 bg-slate-200 rounded w-1/4" />
@@ -152,43 +150,38 @@ export default function NewsPage() {
             ))}
           </div>
         ) : useFallback ? (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {FALLBACK_POSTS.map((post) => (
-                <div
-                  key={post.id}
-                  className="group rounded-2xl overflow-hidden border border-slate-100 bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col"
-                >
-                  <div className="aspect-[4/3] overflow-hidden bg-slate-100">
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                  <div className="p-5 flex flex-col flex-1">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full border border-slate-200">
-                        {post.category}
-                      </span>
-                      <span className="text-xs text-slate-400 flex items-center gap-1">
-                        <Calendar size={11} /> {formatDate(post.date)}
-                      </span>
-                    </div>
-                    <h3 className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">
-                      {post.excerpt}
-                    </p>
-                    <div className="mt-4 pt-4 border-t border-slate-100 flex items-center text-xs font-bold text-slate-400 group-hover:text-blue-600 transition-colors">
-                      자세히 보기 <ArrowRight size={12} className="ml-1" />
-                    </div>
-                  </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FALLBACK_POSTS.map((post) => (
+              <div
+                key={post.id}
+                className="overflow-hidden border border-slate-100 bg-white flex flex-col"
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-slate-100 group cursor-pointer">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
                 </div>
-              ))}
-            </div>
-          </>
+                <div className="p-5 flex flex-col flex-1">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full border border-slate-200">
+                      {post.category}
+                    </span>
+                    <span className="text-xs text-slate-400 flex items-center gap-1">
+                      <Calendar size={11} /> {formatDate(post.date)}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">
+                    {post.excerpt}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : posts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 text-center">
             <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
@@ -207,9 +200,9 @@ export default function NewsPage() {
                   <Link
                     key={post.id}
                     href={`/news/${post.id}`}
-                    className="group rounded-2xl overflow-hidden border border-slate-100 bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col"
+                    className="overflow-hidden border border-slate-100 bg-white flex flex-col"
                   >
-                    <div className="aspect-[4/3] overflow-hidden bg-slate-100">
+                    <div className="aspect-[4/3] overflow-hidden bg-slate-100 group">
                       {imgUrl ? (
                         <img
                           src={imgUrl}
@@ -232,7 +225,7 @@ export default function NewsPage() {
                         </span>
                       </div>
                       <h3
-                        className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors"
+                        className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug"
                         dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                       />
                       {excerpt && (
@@ -240,9 +233,6 @@ export default function NewsPage() {
                           {excerpt}
                         </p>
                       )}
-                      <div className="mt-4 pt-4 border-t border-slate-100 flex items-center text-xs font-bold text-slate-400 group-hover:text-blue-600 transition-colors">
-                        자세히 보기 <ArrowRight size={12} className="ml-1" />
-                      </div>
                     </div>
                   </Link>
                 );
