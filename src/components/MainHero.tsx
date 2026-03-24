@@ -51,7 +51,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
     if (isLoading || totalSlides <= 1 || !isPlaying) return;
     const id = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % totalSlides);
-    }, 3000);
+    }, 5000);
     return () => clearInterval(id);
   }, [totalSlides, isLoading, isPlaying]);
 
@@ -73,8 +73,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
   if (!currentSlide) return null;
 
   return (
-    <section className="relative w-full h-screen min-h-[600px] overflow-hidden bg-slate-950">
-
+    <section className="relative w-full h-screen object-center  min-h-[600px] overflow-hidden bg-slate-950">
       {/* ── 슬라이드 배경 (크로스페이드) ── */}
       {displaySlides.map((slide, idx) => (
         <div
@@ -116,23 +115,20 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           dangerouslySetInnerHTML={{ __html: currentSlide.caption }}
         />
 
-        {/* 재생/이동 버튼 */}
-        {currentSlide.link && currentSlide.link !== "#" && (
+        {/* 버튼 */}
+        {currentSlide.buttonText && currentSlide.link && currentSlide.link !== "#" && (
           <Link
             href={currentSlide.link}
             target={currentSlide.link.startsWith("http") ? "_blank" : "_self"}
-            className="mt-8 inline-flex items-center justify-center
-                       w-14 h-14 rounded-full
-                       border-2 border-white/50 bg-white/10
-                       backdrop-blur-sm text-white
-                       hover:bg-white/25 hover:border-white
-                       transition-all duration-300 group/play"
-            aria-label={currentSlide.buttonText || "자세히 보기"}
+            className="mt-8 inline-flex items-center gap-2
+                       px-7 py-3.5 rounded-full
+                       border border-white/40 bg-white/10
+                       backdrop-blur-sm text-white text-sm font-bold
+                       hover:bg-white hover:text-slate-900
+                       transition-all duration-300 group/btn"
           >
-            <Play
-              size={20}
-              className="ml-0.5 fill-white group-hover/play:scale-110 transition-transform"
-            />
+            {currentSlide.buttonText}
+            <Play size={14} className="fill-current group-hover/btn:translate-x-0.5 transition-transform" />
           </Link>
         )}
       </div>
