@@ -64,8 +64,13 @@ export default function NewsDetailPage() {
         <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
           <Tag size={28} className="text-slate-300" />
         </div>
-        <p className="text-slate-900 font-bold text-lg mb-2">게시물을 찾을 수 없습니다</p>
-        <Link href="/news" className="mt-6 text-sm text-slate-500 hover:text-slate-900 flex items-center gap-1">
+        <p className="text-slate-900 font-bold text-lg mb-2">
+          게시물을 찾을 수 없습니다
+        </p>
+        <Link
+          href="/news"
+          className="mt-6 text-sm text-slate-500 hover:text-slate-900 flex items-center gap-1"
+        >
           <ArrowLeft size={14} /> 목록으로
         </Link>
       </div>
@@ -73,13 +78,13 @@ export default function NewsDetailPage() {
   }
 
   const imgUrl = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
-  const imgAlt = post._embedded?.["wp:featuredmedia"]?.[0]?.alt_text || post.title.rendered;
+  const imgAlt =
+    post._embedded?.["wp:featuredmedia"]?.[0]?.alt_text || post.title.rendered;
   const category = post._embedded?.["wp:term"]?.[0]?.[0]?.name;
 
   return (
     <div className="bg-white min-h-screen animate-fade-in">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-
         {/* 뒤로가기 */}
         <Link
           href="/news"
@@ -135,7 +140,6 @@ export default function NewsDetailPage() {
             <ArrowLeft size={14} /> 목록으로 돌아가기
           </Link>
         </div>
-
       </div>
     </div>
   );

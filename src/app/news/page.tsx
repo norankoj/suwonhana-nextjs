@@ -139,7 +139,10 @@ export default function NewsPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="overflow-hidden bg-slate-100 animate-pulse">
+              <div
+                key={i}
+                className="overflow-hidden bg-slate-100 animate-pulse"
+              >
                 <div className="aspect-[4/3] bg-slate-200" />
                 <div className="p-5 space-y-3">
                   <div className="h-3 bg-slate-200 rounded w-1/4" />
@@ -187,14 +190,19 @@ export default function NewsPage() {
             <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
               <Tag size={28} className="text-slate-300" />
             </div>
-            <p className="text-slate-900 font-bold text-lg mb-2">소식이 없습니다</p>
-            <p className="text-slate-400 text-sm">다른 카테고리를 선택해보세요.</p>
+            <p className="text-slate-900 font-bold text-lg mb-2">
+              소식이 없습니다
+            </p>
+            <p className="text-slate-400 text-sm">
+              다른 카테고리를 선택해보세요.
+            </p>
           </div>
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => {
-                const imgUrl = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+                const imgUrl =
+                  post._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
                 const excerpt = stripHtml(post.excerpt.rendered);
                 return (
                   <Link
@@ -226,7 +234,9 @@ export default function NewsPage() {
                       </div>
                       <h3
                         className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug"
-                        dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                        dangerouslySetInnerHTML={{
+                          __html: post.title.rendered,
+                        }}
                       />
                       {excerpt && (
                         <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">
@@ -249,21 +259,25 @@ export default function NewsPage() {
                 >
                   이전
                 </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setCurrentPage(p)}
-                    className={`w-10 h-10 text-sm font-bold rounded-lg border transition-all ${
-                      p === currentPage
-                        ? "bg-slate-900 text-white border-slate-900"
-                        : "border-slate-200 text-slate-500 hover:bg-slate-50"
-                    }`}
-                  >
-                    {p}
-                  </button>
-                ))}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (p) => (
+                    <button
+                      key={p}
+                      onClick={() => setCurrentPage(p)}
+                      className={`w-10 h-10 text-sm font-bold rounded-lg border transition-all ${
+                        p === currentPage
+                          ? "bg-slate-900 text-white border-slate-900"
+                          : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ),
+                )}
                 <button
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
                   disabled={currentPage === totalPages}
                   className="px-4 py-2 text-sm font-bold rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-30"
                 >
