@@ -35,19 +35,11 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  if (slidesData === null) {
-    return (
-      <section className="relative w-full aspect-video min-h-[260px] bg-slate-900 flex items-center justify-center">
-        <div className="text-center animate-pulse">
-          <div className="w-48 h-8 bg-slate-800 rounded mx-auto mb-4" />
-          <div className="w-32 h-4 bg-slate-800 rounded mx-auto" />
-        </div>
-      </section>
-    );
-  }
+  // slidesData === null 이면 로딩 중 (WP API 응답 대기)
+  const isLoading = slidesData === null;
 
   const displaySlides =
-    slidesData && slidesData.length > 0
+    !isLoading && slidesData && slidesData.length > 0
       ? slidesData.map((item, idx) => ({ ...item, id: idx }))
       : DEFAULT_DATA.map((item, idx) => ({ ...item, id: idx + 100 }));
 
@@ -63,19 +55,40 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
   const nextSlide = () => goToSlide((currentIndex + 1) % totalSlides);
   const prevSlide = () => goToSlide((currentIndex - 1 + totalSlides) % totalSlides);
 
+  // hooks는 조건 분기 없이 항상 최상단에서 호출
   useEffect(() => {
-    if (totalSlides <= 1) return;
+    if (isLoading || totalSlides <= 1) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => { nextSlide(); }, 6000);
-    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
-  }, [currentIndex, totalSlides]);
+    timeoutRef.current = setTimeout(() => {
+      nextSlide();
+    }, 6000);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [currentIndex, totalSlides, isLoading]);
+
+  // 공통 섹션 클래스 (원본 사이트 참고: 헤더 높이 제외한 full-height)
+  const sectionClass =
+    "relative mt-20 md:mt-24 h-[calc(100vh-5rem)] md:h-[85vh] min-h-[500px] overflow-hidden group bg-slate-900";
+
+  // 로딩 스켈레톤 (hooks 이후에 early return)
+  if (isLoading) {
+    return (
+      <section className={`${sectionClass} flex items-center justify-center`}>
+        <div className="text-center animate-pulse">
+          <div className="w-48 h-8 bg-slate-800 rounded mx-auto mb-4" />
+          <div className="w-32 h-4 bg-slate-800 rounded mx-auto" />
+        </div>
+      </section>
+    );
+  }
 
   const currentSlide = displaySlides[currentIndex];
   if (!currentSlide) return null;
 
   return (
-    <section className="relative w-full aspect-video min-h-[260px] overflow-hidden group bg-slate-900">
-      {/* 슬라이드 트랙 */}
+    <section className={sectionClass}>
+      {/* 1. 슬라이드 트랙 */}
       <div
         className="flex w-full h-full transition-transform duration-700 ease-in-out will-change-transform"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -89,6 +102,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                   alt="slide background"
                   className="w-full h-full object-cover object-center"
                 />
+                <span className="absolute inset-0 z-10" aria-hidden="true" />
               </Link>
             ) : (
               <img
@@ -97,12 +111,13 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                 className="w-full h-full object-cover object-center"
               />
             )}
+            {/* 모바일: 하단 그라디언트 / PC: 좌측 그라디언트 */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none md:bg-gradient-to-r md:from-slate-900/70 md:via-slate-900/30 md:to-transparent" />
           </div>
         ))}
       </div>
 
-      {/* 텍스트 콘텐츠 */}
+      {/* 2. 텍스트 콘텐츠 */}
       <div className="absolute inset-0 flex items-end md:items-center pb-20 md:pb-0 z-30 pointer-events-none">
         <div className="max-w-7xl mx-auto px-6 w-full pointer-events-auto">
           <div key={currentSlide.id} className="animate-fade-in">
@@ -127,25 +142,25 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
         </div>
       </div>
 
-      {/* 화살표 */}
+      {/* 3. 화살표 (PC에서만 보임) */}
       {totalSlides > 1 && (
         <>
           <button
             onClick={prevSlide}
-            className="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/30 md:left-8"
+            className="hidden md:block absolute left-8 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/30"
           >
             <ChevronLeft size={24} />
           </button>
           <button
             onClick={nextSlide}
-            className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/30 md:right-8"
+            className="hidden md:block absolute right-8 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/30"
           >
             <ChevronRight size={24} />
           </button>
         </>
       )}
 
-      {/* 인디케이터 */}
+      {/* 4. 하단 인디케이터 */}
       {totalSlides > 1 && (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex gap-2 md:gap-3">
           {displaySlides.map((_, idx) => (
