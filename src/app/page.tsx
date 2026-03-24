@@ -119,13 +119,11 @@ export default function MainPage() {
                 caption = item.title?.rendered;
               }
 
-              // 링크 가져오기 (Slide Options에 적은 URL)
-              const link = item.custom_meta?.link || "#";
+              // 링크 가져오기 — 없으면 말씀 페이지로
+              const link = item.custom_meta?.link || "/sermon";
 
-              // 버튼 가져오기 — WP에 없으면 링크가 있을 때만 기본 텍스트 사용
-              const buttonText =
-                item.custom_meta?.button_text ||
-                (link && link !== "#" ? "자세히 보기" : "");
+              // 버튼 텍스트 — 없으면 기본값
+              const buttonText = item.custom_meta?.button_text || "말씀 바로가기";
 
               return {
                 imageUrl: media.source_url,

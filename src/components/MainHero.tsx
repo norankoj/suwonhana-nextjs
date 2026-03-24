@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, ArrowRight } from "lucide-react";
 
 export interface MainHeroData {
   imageUrl: string;
@@ -116,19 +116,19 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
         />
 
         {/* 버튼 */}
-        {currentSlide.buttonText && currentSlide.link && currentSlide.link !== "#" && (
+        {currentSlide.link && (
           <Link
             href={currentSlide.link}
             target={currentSlide.link.startsWith("http") ? "_blank" : "_self"}
             className="mt-8 inline-flex items-center gap-2
-                       px-7 py-3.5 rounded-full
+                       px-6 py-3 md:px-8 md:py-4 rounded-full
                        border border-white/40 bg-white/10
-                       backdrop-blur-sm text-white text-sm font-bold
+                       backdrop-blur-sm text-white text-sm md:text-base font-bold
                        hover:bg-white hover:text-slate-900
                        transition-all duration-300 group/btn"
           >
-            {currentSlide.buttonText}
-            <Play size={14} className="fill-current group-hover/btn:translate-x-0.5 transition-transform" />
+            <span>{currentSlide.buttonText || "말씀 바로가기"}</span>
+            <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
           </Link>
         )}
       </div>
