@@ -66,11 +66,32 @@ const navItems = [
 export const Header = () => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const isHome = pathname === "/";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // 메인 페이지에서 스크롤 전이면 투명 헤더
+  const isVision = pathname === "/intro/vision";
+  const isCoreValues = pathname === "/intro/core-values";
+  const isTransparent = (isHome || isVision || isCoreValues) && !isScrolled && !isMobileMenuOpen;
 
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 h-[4.5rem] md:h-[5rem] flex items-center bg-white border-b border-slate-100 shadow-sm"
+        className={`fixed top-0 left-0 right-0 z-50 h-[4.5rem] md:h-[5rem] flex items-center transition-all duration-500 ${
+          isTransparent
+            ? "bg-transparent border-transparent"
+            : "bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm"
+        }`}
       >
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center h-full">
           <Link
@@ -79,7 +100,11 @@ export const Header = () => {
           >
             <img
               src="/images/mainlogo-removebg-preview.png"
-              className="h-11 md:h-14 w-auto object-contain hover:opacity-80 transition-opacity"
+              className={`h-11 md:h-14 w-auto object-contain transition-all duration-500 ${
+                isTransparent
+                  ? "brightness-0 invert opacity-95"
+                  : "hover:opacity-80"
+              }`}
               alt="수원하나교회"
             />
           </Link>
@@ -95,8 +120,12 @@ export const Header = () => {
                   href={item.path}
                   className={`flex items-center px-2 transition-all duration-200 text-[15px] font-semibold ${
                     pathname.startsWith(item.path)
-                      ? "text-slate-900"
-                      : "text-slate-500 hover:text-slate-900"
+                      ? isTransparent
+                        ? "text-white"
+                        : "text-slate-900"
+                      : isTransparent
+                        ? "text-white/80 hover:text-white"
+                        : "text-slate-500 hover:text-slate-900"
                   }`}
                 >
                   {item.name}
@@ -127,7 +156,11 @@ export const Header = () => {
 
           {/* 모바일 메뉴 버튼 */}
           <button
-            className="md:hidden p-2 rounded-md -mr-2 transition-colors text-slate-900 hover:bg-slate-50"
+            className={`md:hidden p-2 rounded-md -mr-2 transition-colors ${
+              isTransparent
+                ? "text-white hover:bg-white/10"
+                : "text-slate-900 hover:bg-slate-50"
+            }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}

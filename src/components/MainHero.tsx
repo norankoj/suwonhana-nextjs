@@ -33,8 +33,6 @@ interface MainHeroProps {
 export const MainHero = ({ slidesData }: MainHeroProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   const isLoading = slidesData === null;
 
@@ -45,31 +43,22 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
 
   const totalSlides = displaySlides.length;
 
-  const goToSlide = (index: number) => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentIndex(index);
-    setTimeout(() => setIsAnimating(false), 700);
-  };
+  // 수동 슬라이드 이동
+  const goToSlide = (index: number) => setCurrentIndex(index);
 
-  const nextSlide = () => goToSlide((currentIndex + 1) % totalSlides);
-  const prevSlide = () => goToSlide((currentIndex - 1 + totalSlides) % totalSlides);
-
+  // 자동 슬라이드 — setInterval + 함수형 업데이터로 stale closure 방지
   useEffect(() => {
     if (isLoading || totalSlides <= 1 || !isPlaying) return;
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      nextSlide();
-    }, 6000);
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, [currentIndex, totalSlides, isLoading, isPlaying]);
+    const id = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % totalSlides);
+    }, 3000);
+    return () => clearInterval(id);
+  }, [totalSlides, isLoading, isPlaying]);
 
   // 로딩 스켈레톤
   if (isLoading) {
     return (
-      <section className="relative w-full mt-[4.5rem] md:mt-[5rem] h-[55vh] md:h-[65vh] min-h-[400px] bg-slate-950 flex items-end px-6 md:px-12 lg:px-20 pb-20">
+      <section className="relative w-full h-screen min-h-[600px] bg-slate-950 flex items-end px-6 md:px-12 lg:px-20 pb-32">
         <div className="animate-pulse w-full max-w-xl">
           <div className="w-36 h-3 bg-slate-800 rounded mb-5" />
           <div className="w-72 h-12 bg-slate-800 rounded mb-3" />
@@ -84,7 +73,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
   if (!currentSlide) return null;
 
   return (
-    <section className="relative w-full mt-[4.5rem] md:mt-[5rem] h-[55vh] md:h-[65vh] min-h-[400px] overflow-hidden bg-slate-950">
+    <section className="relative w-full h-screen min-h-[600px] overflow-hidden bg-slate-950">
 
       {/* ── 슬라이드 배경 (크로스페이드) ── */}
       {displaySlides.map((slide, idx) => (
@@ -109,7 +98,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
       {/* ── 텍스트 오버레이 (좌측 하단) ── */}
       <div
         key={`text-${currentSlide.id}`}
-        className="absolute bottom-16 md:bottom-20 left-0 z-20
+        className="absolute bottom-28 md:bottom-32 left-0 z-20
                    px-6 md:px-12 lg:px-20
                    max-w-full md:max-w-2xl
                    animate-fade-in"
@@ -150,7 +139,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
 
       {/* ── 좌측 하단 인디케이터 + 일시정지 ── */}
       {totalSlides > 1 && (
-        <div className="absolute bottom-6 left-6 md:left-12 lg:left-20 z-40 flex items-center gap-3">
+        <div className="absolute bottom-10 left-6 md:left-12 lg:left-20 z-40 flex items-center gap-3">
           {/* 도트 */}
           <div className="flex items-center gap-2">
             {displaySlides.map((_, idx) => (
