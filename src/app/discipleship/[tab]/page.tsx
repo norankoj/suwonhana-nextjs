@@ -63,7 +63,7 @@ export default function TrainingContentPage() {
                 src="https://www.youtube.com/embed/6N7V4WF6dqA?autoplay=1&mute=1&loop=1&playlist=6N7V4WF6dqA&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0"
                 allow="autoplay; encrypted-media"
                 className="absolute w-[110%] h-[110%] -top-[5%] -left-[5%]"
-                style={{ border: "none" }}
+                style={{ border: "none", pointerEvents: "none" }}
               />
             </div>
 

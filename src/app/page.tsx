@@ -303,8 +303,8 @@ export default function MainPage() {
                 src="https://www.youtube.com/embed/a6vpGcSwX-o?autoplay=1&mute=1&loop=1&playlist=a6vpGcSwX-o&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0"
                 title="수원하나교회 영상"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                className="absolute inset-0 w-full h-full"
-                style={{ border: "none" }}
+                className="absolute w-[110%] h-[110%] -top-[5%] -left-[5%]"
+                style={{ border: "none", pointerEvents: "none" }}
               />
             </div>
           </div>
