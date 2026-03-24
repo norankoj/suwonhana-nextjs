@@ -122,8 +122,10 @@ export default function MainPage() {
               // 링크 가져오기 (Slide Options에 적은 URL)
               const link = item.custom_meta?.link || "#";
 
-              // 버튼 가져오기
-              const buttonText = item.custom_meta?.button_text || "";
+              // 버튼 가져오기 — WP에 없으면 링크가 있을 때만 기본 텍스트 사용
+              const buttonText =
+                item.custom_meta?.button_text ||
+                (link && link !== "#" ? "자세히 보기" : "");
 
               return {
                 imageUrl: media.source_url,
