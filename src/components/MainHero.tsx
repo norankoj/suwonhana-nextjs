@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ChevronUp, ChevronDown, Play, Pause } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 
 export interface MainHeroData {
   imageUrl: string;
@@ -69,7 +69,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
   // 로딩 스켈레톤
   if (isLoading) {
     return (
-      <section className="relative w-full h-screen min-h-[600px] bg-slate-950 flex items-end px-6 md:px-12 lg:px-20 pb-32">
+      <section className="relative w-full mt-[4.5rem] md:mt-[5rem] h-[55vh] md:h-[65vh] min-h-[400px] bg-slate-950 flex items-end px-6 md:px-12 lg:px-20 pb-20">
         <div className="animate-pulse w-full max-w-xl">
           <div className="w-36 h-3 bg-slate-800 rounded mb-5" />
           <div className="w-72 h-12 bg-slate-800 rounded mb-3" />
@@ -84,7 +84,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
   if (!currentSlide) return null;
 
   return (
-    <section className="relative w-full h-screen min-h-[600px] overflow-hidden bg-slate-950">
+    <section className="relative w-full mt-[4.5rem] md:mt-[5rem] h-[55vh] md:h-[65vh] min-h-[400px] overflow-hidden bg-slate-950">
 
       {/* ── 슬라이드 배경 (크로스페이드) ── */}
       {displaySlides.map((slide, idx) => (
@@ -109,7 +109,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
       {/* ── 텍스트 오버레이 (좌측 하단) ── */}
       <div
         key={`text-${currentSlide.id}`}
-        className="absolute bottom-28 md:bottom-32 left-0 z-20
+        className="absolute bottom-16 md:bottom-20 left-0 z-20
                    px-6 md:px-12 lg:px-20
                    max-w-full md:max-w-2xl
                    animate-fade-in"
@@ -148,37 +148,9 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
         )}
       </div>
 
-      {/* ── 우측 세로 화살표 (PC에서만) ── */}
-      {totalSlides > 1 && (
-        <div className="hidden md:flex absolute right-6 md:right-8 top-1/2 -translate-y-1/2 z-40 flex-col gap-3">
-          <button
-            onClick={prevSlide}
-            aria-label="이전 슬라이드"
-            className="w-11 h-11 flex items-center justify-center
-                       rounded-full border border-white/40 bg-white/10
-                       text-white backdrop-blur-sm
-                       hover:bg-white/25 hover:border-white/70
-                       transition-all duration-200"
-          >
-            <ChevronUp size={20} />
-          </button>
-          <button
-            onClick={nextSlide}
-            aria-label="다음 슬라이드"
-            className="w-11 h-11 flex items-center justify-center
-                       rounded-full border border-white/40 bg-white/10
-                       text-white backdrop-blur-sm
-                       hover:bg-white/25 hover:border-white/70
-                       transition-all duration-200"
-          >
-            <ChevronDown size={20} />
-          </button>
-        </div>
-      )}
-
       {/* ── 좌측 하단 인디케이터 + 일시정지 ── */}
       {totalSlides > 1 && (
-        <div className="absolute bottom-10 left-6 md:left-12 lg:left-20 z-40 flex items-center gap-3">
+        <div className="absolute bottom-6 left-6 md:left-12 lg:left-20 z-40 flex items-center gap-3">
           {/* 도트 */}
           <div className="flex items-center gap-2">
             {displaySlides.map((_, idx) => (
