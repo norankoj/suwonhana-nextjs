@@ -82,8 +82,7 @@ export const Header = () => {
   // 메인 페이지에서 스크롤 전이면 투명 헤더
   const isVision = pathname === "/intro/vision";
   const isCoreValues = pathname === "/intro/core-values";
-  const isTraining = pathname === "/discipleship" || pathname === "/discipleship/dsm";
-  const isTransparent = (isHome || isVision || isCoreValues || isTraining) && !isScrolled && !isMobileMenuOpen;
+  const isTransparent = (isHome || isVision || isCoreValues) && !isScrolled && !isMobileMenuOpen;
 
   return (
     <>
