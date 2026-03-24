@@ -119,11 +119,11 @@ export default function MainPage() {
                 caption = item.title?.rendered;
               }
 
-              // 링크 가져오기 — 없으면 말씀 페이지로
-              const link = item.custom_meta?.link || "/sermon";
+              // Click URL 연결 — 없으면 빈값
+              const link = item.custom_meta?.link || "";
 
-              // 버튼 텍스트 — 없으면 기본값
-              const buttonText = item.custom_meta?.button_text || "말씀 바로가기";
+              // 버튼 텍스트 — 빈값이면 버튼 미표시
+              const buttonText = item.custom_meta?.button_text || "";
 
               return {
                 imageUrl: media.source_url,

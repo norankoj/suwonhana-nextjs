@@ -115,8 +115,8 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           dangerouslySetInnerHTML={{ __html: currentSlide.caption }}
         />
 
-        {/* 버튼 */}
-        {currentSlide.link && (
+        {/* 버튼 — buttonText 있을 때만 표시 */}
+        {currentSlide.buttonText && currentSlide.link && (
           <Link
             href={currentSlide.link}
             target={currentSlide.link.startsWith("http") ? "_blank" : "_self"}
@@ -127,7 +127,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                        hover:bg-white hover:text-slate-900
                        transition-all duration-300 group/btn"
           >
-            <span>{currentSlide.buttonText || "말씀 바로가기"}</span>
+            <span>{currentSlide.buttonText}</span>
             <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
           </Link>
         )}
