@@ -85,9 +85,14 @@ export default function WelcomeSection() {
 
           {/* 오른쪽: 4단계 등록 절차 */}
           <div className="lg:w-3/5">
-            <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-x-10 sm:gap-y-10">
+            <div className="grid grid-cols-2 gap-x-6 sm:gap-x-10">
               {steps.map((step, idx) => (
-                <div key={idx} className="group flex flex-col items-start">
+                <div
+                  key={idx}
+                  className={`group flex flex-col items-start py-8 md:py-10 ${
+                    idx < 2 ? "border-b border-slate-200" : ""
+                  }`}
+                >
                   {/* 숫자 — 고정 높이로 타이틀 시작 위치 통일 */}
                   <div className="h-14 md:h-[72px] flex items-start text-5xl md:text-7xl font-black text-slate-200 group-hover:text-slate-900 transition-colors duration-500 leading-none mb-3 select-none">
                     {step.num}

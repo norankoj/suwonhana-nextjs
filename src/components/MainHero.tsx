@@ -105,7 +105,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
             <img
               src={slide.imageUrl}
               alt=""
-              className="w-full h-full object-cover object-[60%_50%] md:object-center"
+              className="w-full h-full object-cover object-[70%_50%] md:object-center"
             />
           </div>
         );
@@ -138,7 +138,9 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           텍스트 + 버튼 오버레이 (좌하단)
           pointer-events-none → 버튼만 auto 복원
       ══════════════════════════════════════════ */}
-      <div className="absolute inset-0 z-[20] flex flex-col justify-end px-5 pb-14 md:px-14 md:pb-24 pointer-events-none">
+      <div className="absolute inset-0 z-[20] flex flex-col justify-end pointer-events-none">
+        {/* PC: max-w-7xl 컨테이너로 좌측 여백 이전 버전과 동일하게 */}
+        <div className="w-full md:max-w-7xl md:mx-auto px-5 pb-20 md:px-10 lg:px-14 md:pb-24">
         <div className="flex flex-col max-w-2xl">
 
           {/* LIVE 배지 */}
@@ -187,6 +189,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
               <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform md:w-4 md:h-4" />
             </Link>
           )}
+        </div>
         </div>
       </div>
 

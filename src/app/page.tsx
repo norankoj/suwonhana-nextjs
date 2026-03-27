@@ -341,7 +341,7 @@ export default function MainPage() {
         {/* 6. 교회 영상 */}
         <section className="py-8 md:py-16 bg-white">
           <div className="w-full max-w-7xl mx-auto px-0 md:px-6 lg:px-8">
-            <div className="relative w-full aspect-video overflow-hidden shadow-2xl shadow-slate-900/15 md:rounded-2xl">
+            <div className="relative w-full aspect-video overflow-hidden shadow-2xl shadow-slate-900/15">
               <iframe
                 src="https://www.youtube.com/embed/a6vpGcSwX-o?autoplay=1&mute=1&loop=1&playlist=a6vpGcSwX-o&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&vq=hd1080"
                 title="수원하나교회 영상"
@@ -362,7 +362,7 @@ export default function MainPage() {
               <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
                 Weekly Bulletin
               </p>
-              <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+              <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
                 온라인 주보
               </h2>
             </div>
