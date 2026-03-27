@@ -56,13 +56,14 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
     return () => clearInterval(id);
   }, [totalSlides, isLoading, isPlaying]);
 
+  // ── 로딩 스켈레톤 ──
   if (isLoading) {
     return (
-      <section className="relative w-full h-[80vh] md:h-[90vh] min-h-[600px] bg-slate-950 flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-32">
+      <section className="relative w-full h-[60vh] md:h-[85vh] min-h-[480px] bg-slate-950 flex flex-col justify-end px-6 md:px-12 lg:px-20 pb-24">
         <div className="animate-pulse w-full max-w-xl">
           <div className="w-36 h-3 bg-slate-800 rounded mb-5" />
-          <div className="w-72 h-12 bg-slate-800 rounded mb-3" />
-          <div className="w-52 h-12 bg-slate-800 rounded mb-10" />
+          <div className="w-72 h-10 bg-slate-800 rounded mb-3" />
+          <div className="w-52 h-10 bg-slate-800 rounded mb-10" />
         </div>
       </section>
     );
@@ -72,44 +73,80 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
   if (!currentSlide) return null;
 
   return (
-    <section className="relative w-full h-[80vh] md:h-[90vh] object-center min-h-[600px] overflow-hidden bg-slate-950 selection:bg-blue-100 selection:text-blue-900">
-      {/* ── 슬라이드 배경 ── */}
+    <section className="relative w-full h-[60vh] md:h-[85vh] min-h-[480px] overflow-hidden bg-slate-950 selection:bg-blue-100 selection:text-blue-900">
+
+      {/* ══════════════════════════════════════════
+          슬라이드 배경 이미지 레이어
+          ① 블러 배경  → object-contain 사용 시 좌우/상하 여백 채움
+          ② 블러 오버레이 (블러 위 어두움)
+          ③ 메인 이미지  → object-contain, 원본 비율 그대로 잘림 없음
+          ④ 텍스트 가독성 그라디언트
+      ══════════════════════════════════════════ */}
       {displaySlides.map((slide, idx) => {
         const isActive = idx === currentIndex;
         return (
           <div
             key={slide.id}
             className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
-              isActive
-                ? "opacity-100 z-10"
-                : "opacity-0 z-0 pointer-events-none"
+              isActive ? "opacity-100 z-[10]" : "opacity-0 z-[1] pointer-events-none"
             }`}
             aria-hidden={!isActive}
           >
+            {/* ① 블러 배경 — 빈 여백(상하 또는 좌우)을 자연스럽게 채워줌 */}
             <img
               src={slide.imageUrl}
               alt=""
-              className="w-full h-full object-cover"
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover opacity-55"
+              style={{ filter: "blur(36px)", transform: "scale(1.18)" }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
-            <div className="absolute inset-0 bg-black/20" />
+            {/* ② 블러 위 어두운 오버레이 */}
+            <div className="absolute inset-0 bg-black/40" />
+            {/* ③ 메인 이미지 — 원본 비율 유지, 잘림 없음 */}
+            <img
+              src={slide.imageUrl}
+              alt=""
+              className="absolute inset-0 w-full h-full object-contain"
+            />
+            {/* ④ 텍스트 가독성 그라디언트 (좌→우 + 하단) */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/25 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
           </div>
         );
       })}
 
-      {/* ── 콘텐츠 컨테이너 ── */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto h-full px-3 md:px-6 flex items-center">
-        {/* ── 텍스트 오버레이 영역 ── */}
-        <div className="flex flex-col flex-1 max-w-3xl animate-fade-in">
+      {/* ══════════════════════════════════════════
+          이미지 클릭 → 페이지 이동 (투명 Link 레이어)
+          z-[15]: 이미지(z-10) 위, 콘텐츠(z-20) 아래
+          콘텐츠 영역 pointer-events-none 덕분에
+          이미지 빈 곳 클릭 시 이 Link 가 동작함
+      ══════════════════════════════════════════ */}
+      {currentSlide.link && (
+        <Link
+          href={currentSlide.link}
+          target={currentSlide.link.startsWith("http") ? "_blank" : "_self"}
+          className="absolute inset-0 z-[15] cursor-pointer"
+          aria-label="슬라이드 자세히 보기"
+          tabIndex={-1}
+        />
+      )}
+
+      {/* ══════════════════════════════════════════
+          텍스트 + 버튼 콘텐츠 (z-[20])
+          pointer-events-none  → 클릭이 z-[15] 투명 Link 로 통과
+          내부 버튼은 pointer-events-auto 로 복원
+      ══════════════════════════════════════════ */}
+      <div className="relative z-[20] w-full max-w-7xl mx-auto h-full px-4 sm:px-6 md:px-10 lg:px-14 flex items-end pb-16 sm:pb-20 md:pb-24 pointer-events-none">
+        <div className="flex flex-col max-w-2xl w-full">
+
+          {/* LIVE 배지 */}
           {currentSlide.isLive && (
-            <div className="ml-2 mb-5 flex items-center w-max">
+            <div className="mb-3 md:mb-4 flex items-center w-max">
               <div className="flex items-center gap-2 px-3 py-1.5 bg-red-600 rounded-sm shadow-lg">
-                {/* 깜빡이는 하얀 점 */}
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
                 </span>
-                {/* 텍스트 */}
                 <span className="text-white text-[11px] font-black tracking-widest leading-none mt-[1px]">
                   LIVE
                 </span>
@@ -117,38 +154,45 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
             </div>
           )}
 
-          {/* 타이틀 및 캡션 */}
+          {/* 캡션 + 제목
+              모바일:    p(10px bold) + h1(2xl)
+              태블릿:    p(xs)        + h1(3xl)
+              데스크톱:  p(sm)        + h1(5xl~6xl)
+          */}
           <div
             className="
-              [&>p:first-child]:text-sm [&>p:first-child]:md:text-base [&>p:first-child]:font-bold
-              [&>p:first-child]:text-white/70 [&>p:first-child]:uppercase [&>p:first-child]:tracking-[0.25em]
-              [&>p:first-child]:mb-3
-              
-              [&>h1]:text-4xl [&>h1]:md:text-5xl [&>h1]:lg:text-6xl
-              [&>h1]:font-extrabold [&>h1]:text-white 
-              [&>h1]:tracking-tight 
-              [&>h1]:break-keep
-              
-              [&>h1+p]:mt-4 [&>h1+p]:text-sm [&>h1+p]:text-white/50
+              [&>p:first-child]:text-[10px] [&>p:first-child]:sm:text-xs [&>p:first-child]:md:text-sm
+              [&>p:first-child]:font-bold
+              [&>p:first-child]:text-white/70 [&>p:first-child]:uppercase [&>p:first-child]:tracking-[0.2em]
+              [&>p:first-child]:mb-1.5 [&>p:first-child]:md:mb-3
+
+              [&>h1]:text-2xl [&>h1]:sm:text-3xl [&>h1]:md:text-5xl [&>h1]:lg:text-6xl
+              [&>h1]:font-extrabold [&>h1]:text-white
+              [&>h1]:tracking-tight [&>h1]:break-keep [&>h1]:leading-snug
+
+              [&>h1+p]:mt-3 [&>h1+p]:text-sm [&>h1+p]:text-white/50
             "
             dangerouslySetInnerHTML={{ __html: currentSlide.caption }}
           />
 
-          {/* 버튼 */}
-          {currentSlide.buttonText && currentSlide.link && (
+          {/* 버튼
+              ✅ buttonText 만 있으면 표시 (link 없어도 됨 → href="#" 폴백)
+              ✅ pointer-events-auto 복원 — 버튼 클릭 정상 동작
+          */}
+          {currentSlide.buttonText && (
             <Link
-              href={currentSlide.link}
-              target={currentSlide.link.startsWith("http") ? "_blank" : "_self"}
-              className="mt-1 md:mt-2 inline-flex items-center justify-center gap-2
-                         px-4 py-2 md:px-6 md:py-3 w-max rounded-full
+              href={currentSlide.link || "#"}
+              target={currentSlide.link?.startsWith("http") ? "_blank" : "_self"}
+              className="pointer-events-auto mt-3 md:mt-5 inline-flex items-center justify-center gap-2
+                         px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 w-max rounded-full
                          border border-white/40 bg-white/10
-                         backdrop-blur-sm text-white text-sm md:text-base font-bold
+                         backdrop-blur-sm text-white text-xs sm:text-sm md:text-base font-bold
                          hover:bg-white hover:text-slate-900
                          transition-all duration-300 group/btn"
             >
               <span>{currentSlide.buttonText}</span>
               <ArrowRight
-                size={18}
+                size={15}
                 className="group-hover/btn:translate-x-1 transition-transform"
               />
             </Link>
@@ -156,10 +200,12 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
         </div>
       </div>
 
-      {/* ── 슬라이드 이동 버튼 ── */}
+      {/* ══════════════════════════════════════════
+          도트 인디케이터 + 재생/정지 (z-[40])
+          pointer-events-auto — 이미지 클릭 Link 방해 안 함
+      ══════════════════════════════════════════ */}
       {totalSlides > 1 && (
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3">
-          {/* 도트 */}
+        <div className="absolute bottom-5 md:bottom-7 left-1/2 -translate-x-1/2 z-[40] flex items-center gap-3">
           <div className="flex items-center gap-2">
             {displaySlides.map((_, idx) => (
               <button
@@ -174,7 +220,6 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
               />
             ))}
           </div>
-
           <div className="w-px h-5 bg-white/20" />
           <button
             onClick={() => setIsPlaying((p) => !p)}
