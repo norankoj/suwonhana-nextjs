@@ -7,9 +7,9 @@ import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
 
 // react-pageflip은 default export — SSR 비활성화
 const HTMLFlipBook = dynamic(
-  () => import("react-pageflip").then((m) => m.default ?? m),
-  { ssr: false }
-) as React.ComponentType<FlipBookProps>;
+  () => import("react-pageflip").then((m) => (m.default ?? m) as any),
+  { ssr: false },
+) as React.ComponentType<any>;
 
 interface FlipBookProps {
   width: number;
@@ -52,18 +52,19 @@ interface Props {
 }
 
 // 낱장 페이지 컴포넌트 (forwardRef 필요)
-const Page = React.forwardRef<HTMLDivElement, { image: BulletinImage; pageNum: number }>(
-  ({ image, pageNum }, ref) => (
-    <div ref={ref} className="bg-white shadow-sm overflow-hidden">
-      <img
-        src={image.url}
-        alt={image.alt || `주보 ${pageNum}페이지`}
-        className="w-full h-full object-contain"
-        draggable={false}
-      />
-    </div>
-  )
-);
+const Page = React.forwardRef<
+  HTMLDivElement,
+  { image: BulletinImage; pageNum: number }
+>(({ image, pageNum }, ref) => (
+  <div ref={ref} className="bg-white shadow-sm overflow-hidden">
+    <img
+      src={image.url}
+      alt={image.alt || `주보 ${pageNum}페이지`}
+      className="w-full h-full object-contain"
+      draggable={false}
+    />
+  </div>
+));
 Page.displayName = "Page";
 
 export default function BulletinFlipbook({ images }: Props) {
@@ -73,7 +74,9 @@ export default function BulletinFlipbook({ images }: Props) {
   const [mounted, setMounted] = useState(false);
   const totalPages = images.length;
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleFlip = useCallback((e: { data: number }) => {
     setCurrentPage(e.data);
@@ -105,7 +108,7 @@ export default function BulletinFlipbook({ images }: Props) {
         <HTMLFlipBook
           ref={bookRef}
           width={420}
-          height={594}       /* A4 비율 (1:√2) */
+          height={594} /* A4 비율 (1:√2) */
           size="stretch"
           minWidth={260}
           maxWidth={500}
@@ -113,7 +116,7 @@ export default function BulletinFlipbook({ images }: Props) {
           maxHeight={707}
           showCover={false}
           mobileScrollSupport={true}
-          usePortrait={true}  /* 모바일: 한 장씩 */
+          usePortrait={true} /* 모바일: 한 장씩 */
           drawShadow={true}
           flippingTime={600}
           className="shadow-2xl shadow-slate-900/20"
@@ -163,60 +166,72 @@ export default function BulletinFlipbook({ images }: Props) {
       </div>
 
       {/* 라이트박스 — Portal로 body에 직접 렌더 */}
-      {lightboxIdx !== null && mounted && createPortal(
-        <div
-          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
-          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
-          onClick={() => setLightboxIdx(null)}
-        >
-          {/* 닫기 */}
-          <button
-            className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+      {lightboxIdx !== null &&
+        mounted &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+            style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
             onClick={() => setLightboxIdx(null)}
           >
-            <X size={32} />
-          </button>
-
-          {/* 페이지 카운터 */}
-          <div className="absolute top-5 left-1/2 -translate-x-1/2 text-white/50 text-sm z-10 pointer-events-none">
-            {lightboxIdx + 1} / {totalPages}
-          </div>
-
-          {/* 이전 */}
-          {lightboxIdx > 0 && (
+            {/* 닫기 */}
             <button
-              className="absolute left-3 md:left-8 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white z-10"
-              onClick={(e) => { e.stopPropagation(); setLightboxIdx((i) => (i ?? 0) - 1); }}
+              className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
+              onClick={() => setLightboxIdx(null)}
             >
-              <ChevronLeft size={40} />
+              <X size={32} />
             </button>
-          )}
 
-          {/* 이미지 */}
-          <div
-            className="flex items-center justify-center w-full h-full p-16"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={images[lightboxIdx].url}
-              alt={`주보 ${lightboxIdx + 1}페이지`}
-              style={{ maxHeight: "85vh", maxWidth: "85vw", objectFit: "contain" }}
-              draggable={false}
-            />
-          </div>
+            {/* 페이지 카운터 */}
+            <div className="absolute top-5 left-1/2 -translate-x-1/2 text-white/50 text-sm z-10 pointer-events-none">
+              {lightboxIdx + 1} / {totalPages}
+            </div>
 
-          {/* 다음 */}
-          {lightboxIdx < totalPages - 1 && (
-            <button
-              className="absolute right-3 md:right-8 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white z-10"
-              onClick={(e) => { e.stopPropagation(); setLightboxIdx((i) => (i ?? 0) + 1); }}
+            {/* 이전 */}
+            {lightboxIdx > 0 && (
+              <button
+                className="absolute left-3 md:left-8 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white z-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIdx((i) => (i ?? 0) - 1);
+                }}
+              >
+                <ChevronLeft size={40} />
+              </button>
+            )}
+
+            {/* 이미지 */}
+            <div
+              className="flex items-center justify-center w-full h-full p-16"
+              onClick={(e) => e.stopPropagation()}
             >
-              <ChevronRight size={40} />
-            </button>
-          )}
-        </div>,
-        document.body
-      )}
+              <img
+                src={images[lightboxIdx].url}
+                alt={`주보 ${lightboxIdx + 1}페이지`}
+                style={{
+                  maxHeight: "85vh",
+                  maxWidth: "85vw",
+                  objectFit: "contain",
+                }}
+                draggable={false}
+              />
+            </div>
+
+            {/* 다음 */}
+            {lightboxIdx < totalPages - 1 && (
+              <button
+                className="absolute right-3 md:right-8 top-1/2 -translate-y-1/2 p-2 text-white/70 hover:text-white z-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIdx((i) => (i ?? 0) + 1);
+                }}
+              >
+                <ChevronRight size={40} />
+              </button>
+            )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }
