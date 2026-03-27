@@ -105,7 +105,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
             <img
               src={slide.imageUrl}
               alt=""
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-[60%_50%] md:object-center"
             />
           </div>
         );
