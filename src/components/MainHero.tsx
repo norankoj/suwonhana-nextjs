@@ -130,8 +130,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           );
         })}
 
-        {/* 모바일 전용: 이미지 하단 → 배경색으로 자연스럽게 이어지는 페이드 */}
-        <div className="md:hidden absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-slate-950 to-transparent z-[20]" />
+        {/* 모바일 전용: 그라데이션 없음 — 이미지 끝이 배경색과 자연스럽게 이어짐 */}
 
         {/* 모바일 + PC 공통: 이미지 클릭 → 링크 이동 (투명 Link 레이어, z-[15]) */}
         {currentSlide.link && (
@@ -149,7 +148,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           [모바일] 텍스트 + 버튼 영역 (이미지 아래)
           PC 에서는 아래 오버레이 섹션으로 대체
       ══════════════════════════════════════════ */}
-      <div className="md:hidden bg-slate-950 px-5 pt-4 pb-3">
+      <div className="md:hidden bg-slate-950 px-5 pt-2 pb-3">
         {/* LIVE 배지 */}
         {currentSlide.isLive && (
           <div className="mb-3 flex items-center w-max">
@@ -183,7 +182,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           <Link
             href={currentSlide.link || "#"}
             target={currentSlide.link?.startsWith("http") ? "_blank" : "_self"}
-            className="mt-3 inline-flex items-center justify-center gap-2
+            className="mt-1.5 inline-flex items-center justify-center gap-2
                        px-4 py-2 w-max rounded-full
                        border border-white/30 bg-white/10
                        text-white text-xs font-bold

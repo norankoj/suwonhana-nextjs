@@ -236,7 +236,10 @@ export default function MainPage() {
         <section className="py-24 md:py-32 bg-white flex items-center justify-center">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* 거대한 메인 타이틀 */}
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.65] mb-10 tracking-normal break-keep">
+            <h2
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-10 tracking-normal break-keep"
+              style={{ lineHeight: '1.2' }}
+            >
               하나님을 즐거워하고
               <br />그 분의 목적에 헌신하는 공동체
             </h2>
@@ -267,11 +270,11 @@ export default function MainPage() {
             <div className="flex justify-center">
               <a
                 href="/intro/vision"
-                className="group inline-flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/20"
+                className="group inline-flex items-center gap-1.5 px-5 py-2.5 md:px-8 md:py-4 bg-slate-900 text-white rounded-full font-bold text-sm md:text-base hover:bg-slate-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/20"
               >
                 교회 소개 더보기
                 <ChevronRight
-                  size={18}
+                  size={16}
                   className="group-hover:translate-x-1 transition-transform"
                 />
               </a>
@@ -336,11 +339,11 @@ export default function MainPage() {
         {/* <EventBanner slidesData={heroSlides} /> */}
 
         {/* 6. 교회 영상 */}
-        <section className="py-12 md:py-20 bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative w-full aspect-video overflow-hidden shadow-2xl shadow-slate-900/15">
+        <section className="py-8 md:py-16 bg-white">
+          <div className="w-full max-w-7xl mx-auto px-0 md:px-6 lg:px-8">
+            <div className="relative w-full aspect-video overflow-hidden shadow-2xl shadow-slate-900/15 md:rounded-2xl">
               <iframe
-                src="https://www.youtube.com/embed/a6vpGcSwX-o?autoplay=1&mute=1&loop=1&playlist=a6vpGcSwX-o&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0"
+                src="https://www.youtube.com/embed/a6vpGcSwX-o?autoplay=1&mute=1&loop=1&playlist=a6vpGcSwX-o&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&vq=hd1080"
                 title="수원하나교회 영상"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 className="absolute w-[110%] h-[110%] -top-[5%] -left-[5%]"
@@ -359,7 +362,7 @@ export default function MainPage() {
               <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
                 Weekly Bulletin
               </p>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+              <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
                 온라인 주보
               </h2>
             </div>
@@ -384,43 +387,54 @@ export default function MainPage() {
           </div>
         </section>
 
-        {/* 8. 기부금 영수증 & 헌금 안내 (푸터 위에서 가볍게) */}
-        <section className="py-16 bg-slate-50 border-t border-slate-100">
-          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-center md:text-left">
-              <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">
-                기부금 영수증 및 헌금 안내
-              </h2>
-              <p className="text-slate-500 text-sm md:text-base">
-                연말정산용 영수증 신청 및 온라인 헌금 계좌를 확인하실 수
-                있습니다.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
-              <a
-                href={RECEIPT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors"
-              >
-                발급 신청하기 <ArrowRight size={16} />
-              </a>
+        {/* 8. 온라인 헌금 안내 */}
+        <section className="py-12 md:py-16 bg-white border-t border-slate-100">
+          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="border border-slate-200 rounded-2xl p-6 md:p-8">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
 
-              {/* PC: 모달 버튼 */}
-              <button
-                onClick={() => setShowAccountInfo(true)}
-                className="hidden md:inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
-              >
-                헌금 계좌 안내 <ChevronDown size={16} />
-              </button>
+                {/* 텍스트 영역 */}
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">
+                    Online Offering
+                  </p>
+                  <h2 className="text-xl font-bold text-slate-900 mb-1.5">
+                    온라인 헌금
+                  </h2>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    헌금 봉헌도 편리하게,<br className="md:hidden" /> 온라인 헌금을 안내드립니다.
+                  </p>
+                </div>
 
-              {/* 모바일: 페이지 이동 링크 */}
-              <Link
-                href="/donation"
-                className="md:hidden w-full inline-flex items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
-              >
-                헌금 계좌 안내 <ArrowRight size={16} />
-              </Link>
+                {/* 버튼 영역 */}
+                <div className="flex flex-row gap-2.5 shrink-0">
+                  <a
+                    href={RECEIPT_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors whitespace-nowrap"
+                  >
+                    영수증 신청 <ArrowRight size={14} />
+                  </a>
+
+                  {/* PC: 모달 */}
+                  <button
+                    onClick={() => setShowAccountInfo(true)}
+                    className="hidden md:inline-flex flex-1 md:flex-none items-center justify-center gap-1.5 bg-slate-50 text-slate-700 border border-slate-200 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-100 transition-colors whitespace-nowrap"
+                  >
+                    계좌 안내 <ChevronDown size={14} />
+                  </button>
+
+                  {/* 모바일: 페이지 이동 */}
+                  <Link
+                    href="/donation"
+                    className="md:hidden flex-1 inline-flex items-center justify-center gap-1.5 bg-slate-50 text-slate-700 border border-slate-200 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-100 transition-colors whitespace-nowrap"
+                  >
+                    계좌 안내 <ArrowRight size={14} />
+                  </Link>
+                </div>
+
+              </div>
             </div>
           </div>
         </section>
@@ -464,12 +478,12 @@ export default function MainPage() {
               {/* 계좌 목록 */}
               <div className="divide-y divide-slate-100">
                 {[
-                  { label: "십일조/감사", bank: "농협", num: "468001-01-318042" },
-                  { label: "선교헌금", bank: "농협", num: "422001-04-084939" },
-                  { label: "건축헌금", bank: "우리", num: "920301-01-563418" },
-                  { label: "DA", bank: "우리", num: "920301-01-563450" },
-                  { label: "난민사역후원", bank: "우리", num: "920301-01-512487" },
-                  { label: "구제헌금", bank: "우리", num: "920301-01-027154" },
+                  { label: "십일조/감사", bank: "국민", num: "468001-01-318042" },
+                  { label: "선교헌금", bank: "국민", num: "422001-04-084939" },
+                  { label: "건축헌금", bank: "국민", num: "920301-01-563418" },
+                  { label: "DA", bank: "국민", num: "920301-01-563450" },
+                  { label: "난민사역후원", bank: "국민", num: "920301-01-512487" },
+                  { label: "구제헌금", bank: "국민", num: "920301-01-027154" },
                 ].map((item, idx) => (
                   <button
                     key={idx}
