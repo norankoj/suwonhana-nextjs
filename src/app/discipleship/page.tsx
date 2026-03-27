@@ -21,8 +21,8 @@ const JOURNEY = [
     desc: "말씀과 기도, 전도와 교제를 통해 예수님의 제자로 세워지는 과정입니다.",
   },
   {
-    name: "수요 훈련",
-    desc: "봄·가을 학기제로 운영되는 심화 훈련. 셀리더와 상의 후 선택해 수강하실 수 있습니다.",
+    name: "성경 훈련 학교",
+    desc: "봄·가을 학기제로 운영되는 성경 훈련 학교. 셀리더와 상의 후 선택해 수강하실 수 있습니다.",
   },
 ];
 
@@ -204,8 +204,8 @@ export default async function DiscipleshipPage() {
             <SmallSectionTitle>수요 훈련</SmallSectionTitle>
             <div className="border-t border-slate-200">
               {[
-                { label: "봄학기", value: "3월 — 5월" },
-                { label: "가을학기", value: "9월 — 12월" },
+                { label: "봄학기", value: "3월 — 5월 (12주)" },
+                { label: "가을학기", value: "9월 — 12월 (12주)" },
               ].map(({ label, value }) => (
                 <div
                   key={label}
@@ -236,10 +236,8 @@ export default async function DiscipleshipPage() {
                   key={label}
                   className="flex items-start justify-between py-3 border-b border-slate-100 gap-8"
                 >
-                  <p className="font-bold text-slate-900 text-base shrink-0">
-                    {label}
-                  </p>
-                  <p className="text-slate-600 text-sm text-right break-keep">
+                  <p className="font-bold text-slate-900 text-base">{label}</p>
+                  <p className="text-slate-600 text-base tabular-nums">
                     {value}
                   </p>
                 </div>
@@ -285,7 +283,9 @@ export default async function DiscipleshipPage() {
                 {course.req && (
                   <div className="mt-4 pt-3 border-t border-slate-100">
                     <p className="text-xs text-slate-400">
-                      <span className="font-semibold text-slate-600">수강요건</span>{" "}
+                      <span className="font-semibold text-slate-600">
+                        수강요건
+                      </span>{" "}
                       {course.req}
                     </p>
                   </div>

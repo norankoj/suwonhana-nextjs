@@ -65,7 +65,9 @@ export default function LocationPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
           {/* 대중교통 */}
           <section>
-            <h3 className="font-bold text-xl text-slate-900 mb-6">대중교통 이용 시</h3>
+            <h3 className="font-bold text-xl text-slate-900 mb-6">
+              대중교통 이용 시
+            </h3>
 
             <div className="space-y-5 text-sm text-slate-600">
               <div>
@@ -94,7 +96,9 @@ export default function LocationPage() {
                 <p className="text-slate-500 mb-1.5">주변 경유 버스</p>
                 <p>
                   <span className="text-slate-700 font-medium">일반</span>{" "}
-                  <span className="text-slate-500">1112, M5107, 5100, 7000 등</span>
+                  <span className="text-slate-500">
+                    1112, M5107, 5100, 7000 등
+                  </span>
                 </p>
                 <p className="mt-1">
                   <span className="text-slate-700 font-medium">마을</span>{" "}
@@ -106,7 +110,9 @@ export default function LocationPage() {
 
           {/* 주차 및 셔틀버스 */}
           <section>
-            <h3 className="font-bold text-xl text-slate-900 mb-6">주차 및 셔틀버스</h3>
+            <h3 className="font-bold text-xl text-slate-900 mb-6">
+              주차 및 셔틀버스
+            </h3>
 
             <div className="space-y-5 text-sm text-slate-600">
               <div>
@@ -125,7 +131,9 @@ export default function LocationPage() {
               </div>
 
               <div>
-                <p className="font-semibold text-slate-900 mb-1">셔틀버스 운행 안내</p>
+                <p className="font-semibold text-slate-900 mb-1">
+                  셔틀버스 운행 안내
+                </p>
                 <p className="text-slate-500 mb-3 break-keep">
                   교육관 ↔ 본당 간 셔틀버스 운행 (각 예배 20분 전부터 수시 운행)
                 </p>
@@ -138,7 +146,7 @@ export default function LocationPage() {
                   ].map((time) => (
                     <span
                       key={time}
-                      className="px-3 py-1 bg-slate-50 text-slate-700 rounded text-xs font-medium border border-slate-200"
+                      className="px-3 py-1 bg-slate-50 text-slate-700 rounded text-sm font-medium border border-slate-200"
                     >
                       {time}
                     </span>
