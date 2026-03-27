@@ -40,10 +40,10 @@ export default function WelcomeSection() {
             <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-4">
               New Family
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight mb-5 break-keep">
+            <h2 className="text-2xl md:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight mb-5 break-keep">
               처음 오셨나요?
             </h2>
-            <p className="text-base md:text-lg text-slate-500 mb-8 leading-relaxed break-keep">
+            <p className="text-sm md:text-lg text-slate-500 mb-8 leading-relaxed break-keep">
               수원하나교회 방문을 진심으로 환영합니다.
               <br />
               새가족 등록 안내를 도와드립니다.
@@ -73,7 +73,7 @@ export default function WelcomeSection() {
               href={QUESTION_FORM_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-slate-900 text-white rounded-full font-bold text-sm hover:bg-slate-800 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg group w-fit"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 md:px-7 md:py-3.5 bg-slate-900 text-white rounded-full font-bold text-xs md:text-sm hover:bg-slate-800 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg group w-fit"
             >
               궁금한 점 질문하기
               <ArrowRight
@@ -88,13 +88,14 @@ export default function WelcomeSection() {
             <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-x-10 sm:gap-y-10">
               {steps.map((step, idx) => (
                 <div key={idx} className="group flex flex-col items-start">
-                  <div className="text-6xl md:text-7xl font-black text-slate-200 group-hover:text-slate-900 transition-colors duration-500 leading-none mb-4 select-none">
+                  {/* 숫자 — 고정 높이로 타이틀 시작 위치 통일 */}
+                  <div className="h-14 md:h-[72px] flex items-start text-5xl md:text-7xl font-black text-slate-200 group-hover:text-slate-900 transition-colors duration-500 leading-none mb-3 select-none">
                     {step.num}
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:translate-x-1 transition-transform duration-300">
+                  <h3 className="text-base md:text-xl font-bold text-slate-900 mb-1.5 group-hover:translate-x-1 transition-transform duration-300 break-keep">
                     {step.title}
                   </h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">
+                  <p className="text-xs md:text-sm text-slate-500 leading-relaxed break-keep">
                     {step.desc}
                   </p>
                 </div>

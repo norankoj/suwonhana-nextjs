@@ -61,7 +61,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
     return (
       <section className="relative w-full bg-slate-950 flex flex-col md:h-[85vh] md:min-h-[600px]">
         {/* 모바일: 이미지 영역 스켈레톤 */}
-        <div className="w-full h-[56vw] min-h-[220px] max-h-[360px] md:hidden bg-slate-900 animate-pulse" />
+        <div className="w-full h-[62vw] min-h-[260px] max-h-[440px] md:hidden bg-slate-900 animate-pulse" />
         {/* 모바일: 텍스트 영역 스켈레톤 */}
         <div className="flex flex-col gap-3 px-5 py-6 md:hidden animate-pulse">
           <div className="w-32 h-3 bg-slate-800 rounded" />
@@ -106,7 +106,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           모바일: 상대 높이 56vw 고정 컨테이너 내 절대 위치
           PC:     section 에 절대 위치 (full-screen)
       ══════════════════════════════════════════ */}
-      <div className="relative w-full h-[56vw] min-h-[220px] max-h-[380px] shrink-0 md:absolute md:inset-0 md:h-auto md:max-h-none">
+      <div className="relative w-full h-[62vw] min-h-[260px] max-h-[440px] shrink-0 md:absolute md:inset-0 md:h-auto md:max-h-none">
         {displaySlides.map((slide, idx) => {
           const isActive = idx === currentIndex;
           return (
@@ -117,11 +117,11 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
               }`}
               aria-hidden={!isActive}
             >
-              {/* 이미지 — object-cover (모바일/PC 공통) */}
+              {/* 이미지 — object-cover + object-center (모바일/PC 공통) */}
               <img
                 src={slide.imageUrl}
                 alt=""
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
               />
               {/* PC 전용 그라디언트 (텍스트 가독성) */}
               <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-black/65 via-black/25 to-transparent" />
@@ -133,12 +133,12 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
         {/* 모바일 전용: 이미지 하단 → 배경색으로 자연스럽게 이어지는 페이드 */}
         <div className="md:hidden absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-slate-950 to-transparent z-[20]" />
 
-        {/* PC 전용: 이미지 클릭 → 링크 이동 (투명 Link 레이어, z-[15]) */}
+        {/* 모바일 + PC 공통: 이미지 클릭 → 링크 이동 (투명 Link 레이어, z-[15]) */}
         {currentSlide.link && (
           <Link
             href={currentSlide.link}
             target={currentSlide.link.startsWith("http") ? "_blank" : "_self"}
-            className="hidden md:block absolute inset-0 z-[15] cursor-pointer"
+            className="absolute inset-0 z-[15] cursor-pointer"
             aria-label="슬라이드 자세히 보기"
             tabIndex={-1}
           />

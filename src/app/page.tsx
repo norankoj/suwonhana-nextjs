@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { ArrowRight, ChevronRight, Copy, X, ChevronDown } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
 import WelcomeSection from "@/components/WelcomeSection";
@@ -235,7 +236,7 @@ export default function MainPage() {
         <section className="py-24 md:py-32 bg-white flex items-center justify-center">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* 거대한 메인 타이틀 */}
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.4] mb-10 tracking-normal break-keep">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.65] mb-10 tracking-normal break-keep">
               하나님을 즐거워하고
               <br />그 분의 목적에 헌신하는 공동체
             </h2>
@@ -404,18 +405,28 @@ export default function MainPage() {
               >
                 발급 신청하기 <ArrowRight size={16} />
               </a>
+
+              {/* PC: 모달 버튼 */}
               <button
                 onClick={() => setShowAccountInfo(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
+                className="hidden md:inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
               >
                 헌금 계좌 안내 <ChevronDown size={16} />
               </button>
+
+              {/* 모바일: 페이지 이동 링크 */}
+              <Link
+                href="/donation"
+                className="md:hidden w-full inline-flex items-center justify-center gap-2 bg-white text-slate-900 border border-slate-200 px-6 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
+              >
+                헌금 계좌 안내 <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
         </section>
       </div>
 
-      {/* 헌금 계좌 모달 */}
+      {/* 헌금 계좌 모달 (PC 전용) */}
       {showAccountInfo && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
@@ -426,66 +437,71 @@ export default function MainPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6 sm:p-8">
+              {/* 모달 헤더 */}
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-slate-900">
-                  헌금 계좌 안내
-                </h3>
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">
+                    Online Offering
+                  </p>
+                  <h3 className="text-2xl font-bold text-slate-900">
+                    헌금 계좌 안내
+                  </h3>
+                </div>
                 <button
                   onClick={() => setShowAccountInfo(false)}
                   className="p-2 hover:bg-slate-100 rounded-full transition-colors"
                 >
-                  <X size={24} className="text-slate-500" />
+                  <X size={22} className="text-slate-400" />
                 </button>
               </div>
 
-              <div className="mb-6 bg-slate-50 p-4 rounded-2xl text-center">
-                <span className="text-slate-500 text-sm font-medium block mb-1">
-                  예금주
-                </span>
-                <p className="text-slate-900 font-bold text-lg">수원하나교회</p>
+              {/* 예금주 */}
+              <div className="mb-5 flex items-center justify-between bg-slate-50 px-5 py-3 rounded-2xl">
+                <span className="text-sm text-slate-500">예금주</span>
+                <span className="font-bold text-slate-900">수원하나교회</span>
               </div>
 
-              <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+              {/* 계좌 목록 */}
+              <div className="divide-y divide-slate-100">
                 {[
-                  { label: "십일조/감사", num: "468001-01-318042" },
-                  { label: "선교헌금", num: "422001-04-084939" },
-                  { label: "건축헌금", num: "920301-01-563418" },
-                  { label: "DA", num: "920301-01-563450" },
-                  { label: "난민사역후원", num: "920301-01-512487" },
-                  { label: "구제헌금", num: "920301-01-027154" },
+                  { label: "십일조/감사", bank: "농협", num: "468001-01-318042" },
+                  { label: "선교헌금", bank: "농협", num: "422001-04-084939" },
+                  { label: "건축헌금", bank: "우리", num: "920301-01-563418" },
+                  { label: "DA", bank: "우리", num: "920301-01-563450" },
+                  { label: "난민사역후원", bank: "우리", num: "920301-01-512487" },
+                  { label: "구제헌금", bank: "우리", num: "920301-01-027154" },
                 ].map((item, idx) => (
-                  <div
+                  <button
                     key={idx}
+                    type="button"
                     onClick={() => {
-                      navigator.clipboard.writeText(`국민 ${item.num}`);
-                      alert(`${item.label} 계좌가 복사되었습니다.`);
+                      navigator.clipboard.writeText(item.num);
+                      alert(`${item.label} 계좌번호가 복사되었습니다.`);
                     }}
-                    className="group flex items-center justify-between p-4 rounded-2xl border border-slate-100 hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer"
+                    className="group w-full flex items-center justify-between py-3.5 px-1 hover:bg-slate-50 rounded-xl transition-colors text-left"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-blue-600 transition-colors">
-                        <span className="text-[10px] font-bold text-slate-500">
-                          국민
-                        </span>
-                      </div>
-                      <span className="font-bold text-slate-700 group-hover:text-slate-900">
+                      <span className="inline-flex items-center justify-center w-10 h-6 rounded-md bg-slate-100 group-hover:bg-slate-200 text-[10px] font-bold text-slate-500 transition-colors shrink-0">
+                        {item.bank}
+                      </span>
+                      <span className="text-sm font-bold text-slate-700">
                         {item.label}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-slate-600 group-hover:text-blue-600">
+                      <span className="font-mono text-sm text-slate-500 group-hover:text-slate-900 transition-colors">
                         {item.num}
                       </span>
                       <Copy
-                        size={14}
-                        className="text-slate-300 group-hover:text-blue-500"
+                        size={13}
+                        className="text-slate-300 group-hover:text-slate-500 transition-colors shrink-0"
                       />
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
 
-              <p className="text-center text-xs text-slate-400 mt-6">
+              <p className="text-center text-xs text-slate-400 mt-5 pt-4 border-t border-slate-100">
                 계좌번호를 클릭하면 복사됩니다.
               </p>
             </div>
