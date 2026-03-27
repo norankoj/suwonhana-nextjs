@@ -130,7 +130,6 @@ export default function MainPage() {
               item._embedded["wp:featuredmedia"][0]
             ) {
               const media = item._embedded["wp:featuredmedia"][0];
-
               // [수정] 캡션 가져오기 로직 (Code Snippets에서 만든 custom_meta 사용)
               // 1순위: Slide Options에 적은 캡션 (custom_meta)
               let caption = item.custom_meta?.caption;
@@ -145,10 +144,12 @@ export default function MainPage() {
 
               // 버튼 텍스트 — 빈값이면 버튼 미표시
               const buttonText = item.acf?.button_text || "";
+              const isLive = item.acf?.is_live || false;
 
               return {
                 imageUrl: media.source_url,
                 caption: caption || "",
+                isLive: isLive,
                 // MainHero로 넘겨줄 데이터에 추가
                 buttonText: buttonText,
                 link: link,

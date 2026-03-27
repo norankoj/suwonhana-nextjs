@@ -30,6 +30,7 @@ export interface WPSlide {
   acf?: {
     link?: string;
     button_text?: string;
+    is_live?: boolean;
   };
   custom_meta?: {
     caption?: string;
