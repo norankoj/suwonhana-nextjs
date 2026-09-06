@@ -119,7 +119,7 @@ function SmallSectionTitle({ children }: { children: React.ReactNode }) {
 ───────────────────────────── */
 export default async function DiscipleshipPage() {
   const { heroImageUrl } = await fetchTrainingData();
-  const finalHeroImage = heroImageUrl ?? "/images/pastor_ko2.jpg";
+  const finalHeroImage = heroImageUrl ?? "";
 
   return (
     <div className="bg-white pb-32 font-sans">

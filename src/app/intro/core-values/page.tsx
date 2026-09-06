@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import CoreValueGrid from "./CoreValueGrid";
-import type { CoreValueItem } from "@/lib/types";
+import type { CoreValueItem, CoreValueFields } from "@/lib/types";
 import { fetchCoreValuesData } from "@/lib/wordpress";
 
 export const metadata: Metadata = {
@@ -12,18 +12,9 @@ export const metadata: Metadata = {
 export default async function CoreValuesPage() {
   const pageData = await fetchCoreValuesData();
 
-  if (!pageData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-slate-500">
-        워드프레스 데이터를 불러올 수 없습니다. GraphQL 설정을 확인해 주세요.
-      </div>
-    );
-  }
-
-  const fields = pageData.coreValueFields || {};
+  const fields: Partial<CoreValueFields> = pageData?.coreValueFields ?? {};
   const heroImageUrl =
-    (pageData as { heroImageUrl?: string | null }).heroImageUrl ??
-    "/images/worship01.png";
+    (pageData as { heroImageUrl?: string | null } | null)?.heroImageUrl ?? "";
 
   const valueStatementText = fields.valueStatement || "Core Values";
   const mainTitle = fields.mainTitle || "핵심가치들";
@@ -55,11 +46,13 @@ export default async function CoreValuesPage() {
     <div className="bg-white pb-32">
       {/* 1. 히어로 섹션 */}
       <section className="relative w-full h-screen md:h-[90vh] min-h-[500px] overflow-hidden bg-slate-900">
-        <img
-          src={heroImageUrl}
-          alt="수원하나교회 핵심가치"
-          className="w-full h-full object-cover object-center opacity-70"
-        />
+        {heroImageUrl && (
+          <img
+            src={heroImageUrl}
+            alt="수원하나교회 핵심가치"
+            className="w-full h-full object-cover object-center opacity-70"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-8 sm:px-12 lg:px-20 pb-14 md:pb-20 max-w-content">

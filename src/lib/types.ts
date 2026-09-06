@@ -31,11 +31,13 @@ export interface WPSlide {
     link?: string;
     button_text?: string;
     is_live?: boolean;
+    scripture?: string;
   };
   custom_meta?: {
     caption?: string;
     link?: string;
     button_text?: string;
+    scripture?: string;
   };
 }
 

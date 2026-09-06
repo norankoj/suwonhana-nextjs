@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Tag, Share2, User, Clock } from "lucide-react";
+import BulletinView from "@/components/BulletinView";
+import { parseBulletinHtml } from "@/lib/bulletin-parser";
 
 const WP_DOMAIN =
   process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
@@ -90,43 +92,84 @@ export default function NewsDetailPage() {
   const imgAlt =
     post._embedded?.["wp:featuredmedia"]?.[0]?.alt_text || post.title.rendered;
   const category = post._embedded?.["wp:term"]?.[0]?.[0]?.name;
+  const isBulletin = category === "주보";
 
+  // 주보 카테고리면 텍스트 파싱
+  const bulletinData = isBulletin
+    ? parseBulletinHtml(post.content.rendered)
+    : null;
+
+  // 공통 헤더 (목록 / URL 복사)
+  const NavBar = () => (
+    <div className="flex justify-between items-center mb-10">
+      <Link
+        href="/news"
+        className="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
+      >
+        <ArrowLeft size={16} /> 목록
+      </Link>
+      <div className="relative">
+        <button
+          onClick={handleCopyUrl}
+          className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 px-4 py-2 border border-slate-200 transition-colors"
+        >
+          <Share2 size={16} /> URL 복사
+        </button>
+        {showCopyAlert && (
+          <div className="absolute top-full mt-2 right-0 bg-slate-900 text-white text-xs font-bold px-3 py-1.5 whitespace-nowrap animate-fade-in">
+            복사되었습니다!
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  /* ── 주보 전용 레이아웃 ── */
+  if (isBulletin) {
+    return (
+      <div className="bg-white min-h-screen animate-fade-in">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <NavBar />
+
+          {/* 주보 헤더 */}
+          <div className="mb-10">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-2">
+              주보
+            </p>
+            <h1
+              className="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight mb-4 break-keep tracking-tight"
+              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+            />
+            <div className="flex items-center gap-4 text-sm font-semibold text-slate-400">
+              <span className="flex items-center gap-1.5">
+                <Clock size={14} /> {getFullDate(post.date)}
+              </span>
+            </div>
+          </div>
+
+          <div className="border-t-2 border-slate-900 mb-12" />
+
+          {/* 구조화된 주보 내용 */}
+          <BulletinView data={bulletinData} isLoading={false} />
+
+          <div className="mt-20 pt-10 border-t border-slate-200 flex justify-center">
+            <Link
+              href="/news"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 text-white font-bold hover:bg-slate-800 transition-colors"
+            >
+              <ArrowLeft size={18} /> 목록으로 돌아가기
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── 일반 게시물 레이아웃 ── */
   return (
     <div className="bg-white min-h-screen animate-fade-in selection:bg-blue-100 selection:text-blue-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        {/* 상단 네비게이션 & 공유 버튼 */}
-        <div className="flex justify-between items-center mb-10">
-          <Link
-            href="/news"
-            className="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
-          >
-            <ArrowLeft size={16} /> 목록
-          </Link>
-          <div className="relative">
-            <button
-              onClick={handleCopyUrl}
-              className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 px-4 py-2 border border-slate-200 transition-colors"
-            >
-              <Share2 size={16} /> URL 복사
-            </button>
-            {showCopyAlert && (
-              <div className="absolute top-full mt-2 right-0 bg-slate-900 text-white text-xs font-bold px-3 py-1.5 whitespace-nowrap animate-fade-in">
-                복사되었습니다!
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* 대표 이미지 (풀사이즈 엣지 처리) */}
-        {/* {imgUrl && (
-          <div className="aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-slate-100 mb-12 border border-slate-200">
-            <img
-              src={imgUrl}
-              alt={imgAlt}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )} */}
+        <NavBar />
 
         <div className="mb-6">
           {category && (
@@ -134,31 +177,24 @@ export default function NewsDetailPage() {
               {category}
             </p>
           )}
-
-          <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
-            {/* 타이틀 */}
-            <div>
-              <h1
-                className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight mb-6 break-keep tracking-tight"
-                dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-              />
-              {/* 상세 메타 (작성자, 시간) */}
-              <div className="flex items-center gap-4 text-sm font-semibold text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <User size={14} /> 수원하나교회
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Clock size={14} /> {getFullDate(post.date)}
-                </span>
-              </div>
-            </div>
+          <h1
+            className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight mb-6 break-keep tracking-tight"
+            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+          />
+          <div className="flex items-center gap-4 text-sm font-semibold text-slate-400">
+            <span className="flex items-center gap-1.5">
+              <User size={14} /> 수원하나교회
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Clock size={14} /> {getFullDate(post.date)}
+            </span>
           </div>
         </div>
 
         <div className="border-t-2 border-slate-900 mb-12 mt-0 pt-0" />
 
         <div
-          className="prose prose-lg md:prose-xl prose-slate max-w-none 
+          className="prose prose-lg md:prose-xl prose-slate max-w-none
                      prose-img:w-full prose-img:border prose-img:border-slate-100
                      prose-a:text-blue-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
                      prose-headings:font-extrabold prose-headings:tracking-tight
@@ -167,7 +203,6 @@ export default function NewsDetailPage() {
           dangerouslySetInnerHTML={{ __html: post.content.rendered }}
         />
 
-        {/* 하단 뒤로가기 */}
         <div className="mt-20 pt-10 border-t border-slate-200 flex justify-center">
           <Link
             href="/news"

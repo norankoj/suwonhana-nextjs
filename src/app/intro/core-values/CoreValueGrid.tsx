@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, ArrowLeft } from "lucide-react";
 
 interface CoreValueItem {
@@ -136,7 +137,7 @@ function Modal({
 
   if (!item || index === null) return null;
 
-  return (
+  return createPortal(
     <>
       <style>{`
         @keyframes slideUp {
@@ -152,7 +153,7 @@ function Modal({
       `}</style>
 
       {/* ── 모바일: 전체화면 슬라이드업 (새 페이지처럼) ── */}
-      <div className="md:hidden fixed inset-0 bg-white z-50 overflow-y-auto modal-slide-up">
+      <div className="md:hidden fixed inset-0 bg-white z-[60] overflow-y-auto modal-slide-up">
         {/* 상단 네비 바 */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100 sticky top-0 bg-white z-10">
           <button
@@ -176,7 +177,7 @@ function Modal({
       </div>
 
       {/* ── 데스크탑: 중앙 팝업 모달 ── */}
-      <div className="hidden md:flex fixed inset-0 z-50 items-center justify-center p-6">
+      <div className="hidden md:flex fixed inset-0 z-[60] items-center justify-center p-6">
         {/* 백드롭 */}
         <div
           className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -227,7 +228,8 @@ function Modal({
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
 

@@ -4,16 +4,16 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Calendar, Tag, ArrowRight } from "lucide-react";
 import { HeroSub } from "@/components/Common";
-
 const WP_DOMAIN =
   process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
 
 const CATEGORIES = [
   { label: "전체", slug: "" },
-  { label: "공지사항", slug: "notice" },
-  { label: "행사", slug: "event" },
-  { label: "예배", slug: "worship" },
-  { label: "수양회", slug: "retreat" },
+  { label: "공지사항", slug: "공지사항" },
+  { label: "행사", slug: "행사" },
+  { label: "예배", slug: "예배" },
+  { label: "수양회", slug: "수양회" },
+  { label: "주보", slug: "주보" },
 ];
 
 interface WPPost {
@@ -37,7 +37,7 @@ const FALLBACK_POSTS = [
       "할렐루야! 2026년 전반기 제자훈련 과정을 다음과 같이 모집합니다. 많은 참여 바랍니다.",
     date: "2026-03-10",
     category: "공지사항",
-    image: "/images/background02.jpg",
+    image: "",
   },
   {
     id: 2,
@@ -46,7 +46,7 @@ const FALLBACK_POSTS = [
       "부활하신 주님을 함께 기념하는 연합예배에 초대합니다. 가족들과 함께 은혜 나누시길 바랍니다.",
     date: "2026-03-05",
     category: "예배",
-    image: "/images/background03.jpg",
+    image: "",
   },
   {
     id: 3,
@@ -55,7 +55,7 @@ const FALLBACK_POSTS = [
       "하나님과 더 깊이 만나는 봄 수양회를 안내드립니다. 자연 속에서 영적 쉼을 누리세요.",
     date: "2026-02-28",
     category: "수양회",
-    image: "/images/background02.jpg",
+    image: "",
   },
 ];
 
@@ -75,22 +75,39 @@ export default function NewsPage() {
   const [useFallback, setUseFallback] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [categoryMap, setCategoryMap] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    fetch(`${WP_DOMAIN}/wp-json/wp/v2/categories?per_page=100`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((cats: { id: number; slug: string; name: string }[]) => {
+        const map: Record<string, number> = {};
+        cats.forEach((c) => {
+          map[c.slug] = c.id;
+          if (c.name) map[c.name] = c.id;
+        });
+        setCategoryMap(map);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     setCurrentPage(1);
     fetchPosts(1);
-  }, [activeCategory]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCategory, categoryMap]);
 
   useEffect(() => {
     fetchPosts(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const fetchPosts = async (page: number) => {
     setIsLoading(true);
     try {
       let url = `${WP_DOMAIN}/wp-json/wp/v2/posts?_embed&per_page=9&page=${page}&orderby=date&order=desc`;
-      if (activeCategory) {
-        url += `&categories_slug=${activeCategory}`;
+      if (activeCategory && categoryMap[activeCategory]) {
+        url += `&categories=${categoryMap[activeCategory]}`;
       }
       const res = await fetch(url);
       if (!res.ok) throw new Error("API Error");
@@ -161,12 +178,28 @@ export default function NewsPage() {
                 key={post.id}
                 className="group flex flex-col border border-slate-200 bg-white hover:border-slate-900 hover:shadow-lg transition-all duration-300"
               >
-                <div className="aspect-[4/3] overflow-hidden bg-slate-100 cursor-pointer">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  />
+                <div className="aspect-[4/3] overflow-hidden bg-slate-200 cursor-pointer flex items-center justify-center">
+                  {post.image ? (
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    />
+                  ) : (
+                    <svg
+                      className="w-10 h-10 text-slate-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  )}
                 </div>
                 <div className="p-6 md:p-8 flex flex-col flex-1">
                   <div className="flex items-center gap-3 mb-4">
@@ -205,6 +238,11 @@ export default function NewsPage() {
               {posts.map((post) => {
                 const imgUrl =
                   post._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+                const categoryLabel = getCategoryLabel(post);
+                const isBulletin = categoryLabel === "주보";
+                const displayImg =
+                  imgUrl ||
+                  (isBulletin ? "/images/jubo-default-2026.jpg" : null);
                 const excerpt = stripHtml(post.excerpt.rendered);
                 return (
                   <Link
@@ -213,9 +251,9 @@ export default function NewsPage() {
                     className="overflow-hidden border border-slate-100 bg-white flex flex-col"
                   >
                     <div className="aspect-[4/3] overflow-hidden bg-slate-100 group">
-                      {imgUrl ? (
+                      {displayImg ? (
                         <img
-                          src={imgUrl}
+                          src={displayImg}
                           alt={post.title.rendered}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale-[10%] group-hover:grayscale-0"
                         />
@@ -229,7 +267,7 @@ export default function NewsPage() {
                     <div className="p-4 md:p-6 flex flex-col flex-1">
                       <div className="flex items-center gap-3 mb-4">
                         <span className="text-[11px] font-bold px-2.5 py-1 bg-slate-100 text-slate-700 tracking-wider">
-                          {getCategoryLabel(post)}
+                          {categoryLabel}
                         </span>
                         <span className="text-sm font-semibold text-slate-400">
                           {formatDate(post.date)}

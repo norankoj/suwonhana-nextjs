@@ -48,7 +48,7 @@ const navItems = [
     path: "/news",
     sub: [
       { name: "교회소식", path: "/news" },
-      { name: "집회문의", path: "/news/inquiry" },
+      // { name: "집회문의", path: "/news/inquiry" },
       { name: "FAQ", path: "/news/faq" },
     ],
   },
@@ -57,7 +57,7 @@ const navItems = [
     path: "/appendages/counseling",
     sub: [
       { name: "하나 상담실", path: "/appendages/counseling" },
-      { name: "창업보육센터", path: "/appendages/entrepreneurship" },
+      // { name: "창업보육센터", path: "/appendages/entrepreneurship" },
       { name: "다니엘 아마츠", path: "/appendages/daniel-amatz" },
     ],
   },
@@ -257,7 +257,7 @@ export const Footer = () => {
             {/* SNS 아이콘 */}
             <div className="flex items-center gap-3 ml-1">
               <a
-                href="https://www.youtube.com/@suwonhana"
+                href="https://www.youtube.com/@%EC%88%98%EC%9B%90%ED%95%98%EB%82%98%EA%B5%90%ED%9A%8C"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors"

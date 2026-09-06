@@ -32,9 +32,15 @@ const ServiceCard = ({
   place?: string;
 }) => (
   <div>
-    <div className="w-full aspect-[4/3] overflow-hidden rounded-sm bg-slate-100 mb-4">
-      {image && (
+    <div className="w-full aspect-[4/3] overflow-hidden rounded-sm bg-slate-200 mb-4">
+      {image ? (
         <img src={image} alt={name} className="w-full h-full object-cover" />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
+          <svg className="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
       )}
     </div>
     <p className="font-bold text-slate-900 text-base leading-snug">{name}</p>
@@ -79,28 +85,28 @@ const NEXT_GEN_FALLBACK = [
     englishName: "Infant Ministry",
     schedule: "주일 오전 9시 30분",
     place: "NGC 지하예배실 · 36개월 미만 + 부모님",
-    image: "/images/temp01.jpg",
+    image: "",
   },
   {
     name: "유치부 (조이코너)",
     englishName: "Kids Corner",
     schedule: "주일 오후 1시",
     place: "본당 2층 · 36개월 이상 미취학 + 부모님",
-    image: "/images/temp02.jpg",
+    image: "",
   },
   {
     name: "초등부 (조이랜드)",
     englishName: "Joyland",
     schedule: "화요일 오후 7시",
     place: "NGC 지하예배실 · 초등학생",
-    image: "/images/temp03.jpg",
+    image: "",
   },
   {
     name: "중고등부 (YCM)",
     englishName: "Youth Church Ministry",
     schedule: "주일 오후 4시 30분",
     place: "본당 2층 · 청소년",
-    image: "/images/worship01.png",
+    image: "",
   },
 ];
 

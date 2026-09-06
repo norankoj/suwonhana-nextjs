@@ -89,6 +89,9 @@ async function wpRestGetAll<T>(endpoint: string): Promise<T[]> {
 // GraphQL 유틸리티
 // ==========================================
 
+// 마지막 성공 응답을 메모리에 보관 (WP 일시 장애 시 폴백)
+const _graphqlFallbackCache: Record<string, unknown> = {};
+
 async function wpGraphQL<T>(query: string): Promise<T | null> {
   try {
     const res = await fetch(WP_GRAPHQL_URL, {
@@ -97,11 +100,18 @@ async function wpGraphQL<T>(query: string): Promise<T | null> {
       body: JSON.stringify({ query }),
       next: { revalidate: 60 },
     });
-    if (!res.ok) throw new Error("Network response was not ok");
+    if (!res.ok) {
+      const fallback = _graphqlFallbackCache[query] as T | undefined;
+      if (fallback) return fallback;
+      return null;
+    }
     const json = await res.json();
-    return json.data as T;
+    if (json.errors) console.error("[GraphQL] errors:", json.errors);
+    const data = json.data as T;
+    _graphqlFallbackCache[query] = data;
+    return data;
   } catch (error) {
-    console.error("WPGraphQL Fetch Error:", error);
+    console.error("[GraphQL] fetch failed:", error);
     return null;
   }
 }

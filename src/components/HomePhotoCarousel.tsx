@@ -270,14 +270,22 @@ export default function HomePhotoCarousel({ images }: HomePhotoCarouselProps) {
                           : "opacity-50 scale-[0.97]"
                       }`}
                     >
-                      <img
-                        src={img.src}
-                        alt={img.label || `사진 ${realImageIdx + 1}`}
-                        className={`w-full aspect-[16/9] object-cover transition-transform duration-700 ${
-                          isCurrent ? "group-hover:scale-[1.02]" : ""
-                        }`}
-                        draggable={false}
-                      />
+                      {img.src ? (
+                        <img
+                          src={img.src}
+                          alt={img.label || `사진 ${realImageIdx + 1}`}
+                          className={`w-full aspect-[16/9] object-cover transition-transform duration-700 ${
+                            isCurrent ? "group-hover:scale-[1.02]" : ""
+                          }`}
+                          draggable={false}
+                        />
+                      ) : (
+                        <div className="w-full aspect-[16/9] bg-slate-200 flex items-center justify-center">
+                          <svg className="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
                   </button>
 

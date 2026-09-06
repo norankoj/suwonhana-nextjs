@@ -10,18 +10,19 @@ export interface MainHeroData {
   link?: string;
   buttonText?: string;
   isLive?: boolean;
+  scripture?: string;
 }
 
 const DEFAULT_DATA: MainHeroData[] = [
   {
-    imageUrl: "/images/background02.jpg",
+    imageUrl: "",
     caption: `<p>SUNDAY WORSHIP SERVICE</p><h1>수원하나교회 주일예배</h1>`,
     link: "/intro/vision",
     buttonText: "자세히 보기",
     isLive: true,
   },
   {
-    imageUrl: "/images/background03.jpg",
+    imageUrl: "",
     caption: `<p>WORD & SPIRIT RENEWAL</p><h1>말씀과 성령으로<br/>새로워지는 교회</h1>`,
     link: "/sermon",
     buttonText: "설교 말씀 듣기",
@@ -88,7 +89,6 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
      * ─────────────────────────────────────────────────────────────
      */
     <section className="relative w-full bg-slate-950 h-[75vh] min-h-[480px] md:h-[85vh] md:min-h-[600px] overflow-hidden selection:bg-blue-100 selection:text-blue-900">
-
       {/* ══════════════════════════════════════════
           이미지 크로스페이드 레이어 (절대 위치)
       ══════════════════════════════════════════ */}
@@ -98,15 +98,21 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           <div
             key={slide.id}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              isActive ? "opacity-100 z-[10]" : "opacity-0 z-[1] pointer-events-none"
+              isActive
+                ? "opacity-100 z-[10]"
+                : "opacity-0 z-[1] pointer-events-none"
             }`}
             aria-hidden={!isActive}
           >
-            <img
-              src={slide.imageUrl}
-              alt=""
-              className="w-full h-full object-cover object-[70%_50%] md:object-center"
-            />
+            {slide.imageUrl ? (
+              <img
+                src={slide.imageUrl}
+                alt=""
+                className="w-full h-full object-cover object-[77%] md:object-center"
+              />
+            ) : (
+              <div className="w-full h-full bg-slate-900" />
+            )}
           </div>
         );
       })}
@@ -141,26 +147,25 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
       <div className="absolute inset-0 z-[20] flex flex-col justify-end pointer-events-none">
         {/* PC: max-w-7xl 컨테이너로 좌측 여백 이전 버전과 동일하게 */}
         <div className="w-full md:max-w-7xl md:mx-auto px-5 pb-20 md:px-10 lg:px-14 md:pb-24">
-        <div className="flex flex-col max-w-2xl">
-
-          {/* LIVE 배지 */}
-          {currentSlide.isLive && (
-            <div className="mb-3 md:mb-4 flex items-center w-max">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-red-600 rounded-sm shadow-lg">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
-                </span>
-                <span className="text-white text-[11px] font-black tracking-widest leading-none mt-[1px]">
-                  LIVE
-                </span>
+          <div className="flex flex-col max-w-2xl">
+            {/* LIVE 배지 */}
+            {currentSlide.isLive && (
+              <div className="mb-3 md:mb-4 flex items-center w-max">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-red-600 rounded-sm shadow-lg">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+                  </span>
+                  <span className="text-white text-[11px] font-black tracking-widest leading-none mt-[1px]">
+                    LIVE
+                  </span>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* 캡션 + 제목 */}
-          <div
-            className="
+            {/* 캡션 + 제목 */}
+            <div
+              className="
               [&>p:first-child]:text-[10px] [&>p:first-child]:md:text-sm
               [&>p:first-child]:font-bold
               [&>p:first-child]:text-white/70 [&>p:first-child]:uppercase [&>p:first-child]:tracking-[0.18em] [&>p:first-child]:md:tracking-[0.22em]
@@ -170,26 +175,38 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
               [&>h1]:font-extrabold [&>h1]:text-white
               [&>h1]:tracking-tight [&>h1]:break-keep [&>h1]:leading-snug
             "
-            dangerouslySetInnerHTML={{ __html: currentSlide.caption }}
-          />
+              dangerouslySetInnerHTML={{ __html: currentSlide.caption }}
+            />
 
-          {/* 버튼 */}
-          {currentSlide.buttonText && (
-            <Link
-              href={currentSlide.link || "#"}
-              target={currentSlide.link?.startsWith("http") ? "_blank" : "_self"}
-              className="pointer-events-auto mt-3 md:mt-5 inline-flex items-center justify-center gap-2
+            {/* 성경 구절 */}
+            {currentSlide.scripture && (
+              <p className="mt-3 md:mt-4 text-[11px] md:text-sm text-white/60 leading-relaxed break-keep italic max-w-sm md:max-w-md">
+                {currentSlide.scripture}
+              </p>
+            )}
+
+            {/* 버튼 */}
+            {currentSlide.buttonText && (
+              <Link
+                href={currentSlide.link || "#"}
+                target={
+                  currentSlide.link?.startsWith("http") ? "_blank" : "_self"
+                }
+                className="pointer-events-auto mt-3 md:mt-5 inline-flex items-center justify-center gap-2
                          px-4 py-2 md:px-6 md:py-3 w-max rounded-full
                          border border-white/40 bg-white/10
                          backdrop-blur-sm text-white text-sm md:text-base font-bold
                          hover:bg-white hover:text-slate-900
                          transition-all duration-300 group/btn"
-            >
-              <span>{currentSlide.buttonText}</span>
-              <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform md:w-4 md:h-4" />
-            </Link>
-          )}
-        </div>
+              >
+                <span>{currentSlide.buttonText}</span>
+                <ArrowRight
+                  size={14}
+                  className="group-hover/btn:translate-x-1 transition-transform md:w-4 md:h-4"
+                />
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
@@ -221,7 +238,10 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
             {isPlaying ? (
               <Pause size={12} className="fill-current md:w-3.5 md:h-3.5" />
             ) : (
-              <Play size={12} className="fill-current ml-0.5 md:w-3.5 md:h-3.5" />
+              <Play
+                size={12}
+                className="fill-current ml-0.5 md:w-3.5 md:h-3.5"
+              />
             )}
           </button>
         </div>

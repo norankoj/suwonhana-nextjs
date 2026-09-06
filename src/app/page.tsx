@@ -2,12 +2,22 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronRight, Copy, X, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronRight, Copy, X, ChevronDown, Tag } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
 import WelcomeSection from "@/components/WelcomeSection";
 import HomePhotoCarousel from "@/components/HomePhotoCarousel";
-import BulletinFlipbook from "@/components/BulletinFlipbook";
 import type { WPSlide } from "@/lib/types";
+
+interface WPPost {
+  id: number;
+  title: { rendered: string };
+  date: string;
+  categories: number[];
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string }>;
+    "wp:term"?: Array<Array<{ name: string; slug: string }>>;
+  };
+}
 
 // =================================================================
 // [설정 영역] 워드프레스 연결 정보
@@ -27,9 +37,7 @@ export default function MainPage() {
   const [wpHomeData, setWpHomeData] = useState<Record<string, string> | null>(
     null,
   );
-  const [bulletinImages, setBulletinImages] = useState<
-    { url: string; alt?: string }[] | null
-  >(null);
+  const [latestNews, setLatestNews] = useState<WPPost[] | null>(null);
 
   // =================================================================
   // [API 연동] 홈페이지 ACF 데이터 (Bento Grid 이미지)
@@ -146,14 +154,16 @@ export default function MainPage() {
               // 버튼 텍스트 — 빈값이면 버튼 미표시
               const buttonText = item.acf?.button_text || "";
               const isLive = item.acf?.is_live || false;
+              const scripture =
+                item.acf?.scripture || item.custom_meta?.scripture || "";
 
               return {
                 imageUrl: media.source_url,
                 caption: caption || "",
                 isLive: isLive,
-                // MainHero로 넘겨줄 데이터에 추가
                 buttonText: buttonText,
                 link: link,
+                ...(scripture && { scripture }),
               };
             }
             return null;
@@ -174,53 +184,22 @@ export default function MainPage() {
   }, []);
 
   // =================================================================
-  // [API 연동] 온라인 주보 이미지 (jubo 페이지 첨부 미디어)
+  // [API 연동] 교회소식 최신 글 3개
   // =================================================================
   useEffect(() => {
-    const loadBulletin = async () => {
+    const loadLatestNews = async () => {
       try {
-        const ts = Date.now();
-        const pageRes = await fetch(
-          `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=content&_=${ts}`,
-          { cache: "no-store" },
+        const res = await fetch(
+          `${WP_DOMAIN}/wp-json/wp/v2/posts?_embed&per_page=3&orderby=date&order=desc`,
         );
-        if (!pageRes.ok) {
-          setBulletinImages([]);
-          return;
-        }
-        const pages: { content: { rendered: string } }[] = await pageRes.json();
-        if (!pages.length) {
-          setBulletinImages([]);
-          return;
-        }
-
-        // 페이지 본문 HTML에서 이미지 URL 추출
-        const html = pages[0].content.rendered;
-        const images: { url: string }[] = [];
-        const seen = new Set<string>();
-        const addImage = (url: string) => {
-          const clean = url.split("?")[0];
-          if (clean && !seen.has(clean)) {
-            seen.add(clean);
-            images.push({ url: clean });
-          }
-        };
-
-        // src에서 -NxN suffix 제거 → 원본 URL 복원 (srcset은 크롭 썸네일만 포함)
-        const imgTagRegex = /<img[^>]+>/gi;
-        let tag;
-        while ((tag = imgTagRegex.exec(html)) !== null) {
-          const srcMatch = /src="([^"]+)"/.exec(tag[0]);
-          if (srcMatch) {
-            addImage(srcMatch[1].replace(/-\d+x\d+(\.[^.?]+)$/, "$1"));
-          }
-        }
-        setBulletinImages(images);
+        if (!res.ok) throw new Error();
+        const data: WPPost[] = await res.json();
+        setLatestNews(data);
       } catch {
-        setBulletinImages([]);
+        setLatestNews([]);
       }
     };
-    loadBulletin();
+    loadLatestNews();
   }, []);
 
   return (
@@ -321,12 +300,12 @@ export default function MainPage() {
             /* ── 로딩 완료: 실제 캐러셀 ── */
             <HomePhotoCarousel
               images={[
-                { src: wpHomeData.bento_image_1 || "/images/worship01.png" },
-                { src: wpHomeData.bento_image_2 || "/images/temp01.jpg" },
-                { src: wpHomeData.bento_image_3 || "/images/temp02.jpg" },
-                { src: wpHomeData.bento_image_4 || "/images/pastor_ko2.jpg" },
-                { src: wpHomeData.bento_image_5 || "/images/corner.jpg" },
-                { src: wpHomeData.bento_image_6 || "/images/background01.jpg" },
+                { src: wpHomeData.bento_image_1 || "" },
+                { src: wpHomeData.bento_image_2 || "" },
+                { src: wpHomeData.bento_image_3 || "" },
+                { src: wpHomeData.bento_image_4 || "" },
+                { src: wpHomeData.bento_image_5 || "" },
+                { src: wpHomeData.bento_image_6 || "" },
               ]}
             />
           )}
@@ -343,7 +322,7 @@ export default function MainPage() {
           <div className="w-full max-w-7xl mx-auto px-0 md:px-6 lg:px-8">
             <div className="relative w-full aspect-video overflow-hidden shadow-2xl shadow-slate-900/15">
               <iframe
-                src="https://www.youtube.com/embed/a6vpGcSwX-o?autoplay=1&mute=1&loop=1&playlist=a6vpGcSwX-o&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&vq=hd1080"
+                src="https://www.youtube.com/embed/ke0jfCzUqa4?autoplay=1&mute=1&loop=1&playlist=ke0jfCzUqa4&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&vq=hd1080"
                 title="수원하나교회 영상"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 className="absolute w-[110%] h-[110%] -top-[5%] -left-[5%]"
@@ -354,34 +333,116 @@ export default function MainPage() {
         </section>
         {/* <RecentSermons /> */}
 
-        {/* 7. 온라인 주보 */}
+        {/* 7. 교회소식 */}
         <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* 헤더 */}
-            <div className="text-center mb-10 md:mb-14">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-3">
-                Weekly Bulletin
-              </p>
-              <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
-                온라인 주보
-              </h2>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-end justify-between mb-10 md:mb-14">
+              <div>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-2">
+                  Church News
+                </p>
+                <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                  교회소식
+                </h2>
+              </div>
+              <Link
+                href="/news"
+                className="flex items-center gap-1 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
+              >
+                더보기 <ArrowRight size={14} />
+              </Link>
             </div>
 
-            {/* 플립북 or 로딩 */}
-            {bulletinImages === null ? (
-              /* 로딩 중 */
-              <div className="flex flex-col items-center gap-3 py-20 text-slate-300">
-                <div className="w-48 h-64 bg-slate-200 rounded animate-pulse" />
-                <p className="text-sm">주보를 불러오는 중...</p>
+            {latestNews === null ? (
+              /* 로딩 스켈레톤 */
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="overflow-hidden bg-slate-100 animate-pulse">
+                    <div className="aspect-[4/3] bg-slate-200" />
+                    <div className="p-5 space-y-3">
+                      <div className="h-3 bg-slate-200 rounded w-1/4" />
+                      <div className="h-5 bg-slate-200 rounded w-3/4" />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ) : bulletinImages.length > 0 ? (
-              <BulletinFlipbook images={bulletinImages} />
+            ) : latestNews.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {latestNews.map((post) => {
+                  const imgUrl = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+                  const category = post._embedded?.["wp:term"]?.[0]?.[0]?.name ?? "공지사항";
+                  const isBulletin = category === "주보";
+                  const displayImg = imgUrl || (isBulletin ? "/images/jubo-default-2026.jpg" : null);
+                  const d = new Date(post.date);
+                  const dateStr = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+                  return (
+                    <Link
+                      key={post.id}
+                      href={`/news/${post.id}`}
+                      className="group overflow-hidden border border-slate-100 bg-white flex flex-col hover:border-slate-300 transition-colors"
+                    >
+                      <div className="aspect-[4/3] overflow-hidden bg-slate-100">
+                        {displayImg ? (
+                          <img
+                            src={displayImg}
+                            alt={post.title.rendered}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Tag size={32} className="text-slate-200" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-4 md:p-5 flex flex-col flex-1">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-[11px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 tracking-wider">
+                            {category}
+                          </span>
+                          <span className="text-xs text-slate-400">{dateStr}</span>
+                        </div>
+                        <h3
+                          className="font-bold text-base text-slate-900 line-clamp-2 leading-snug"
+                          dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                        />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             ) : (
-              /* 이미지 없음 */
-              <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
-                <p className="text-slate-400 text-sm">
-                  아직 업로드된 주보가 없습니다.
-                </p>
+              /* fallback */
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  { id: 1, title: "2026년 전반기 제자훈련 신청 안내", date: "2026-03-10", category: "공지사항" },
+                  { id: 2, title: "부활절 연합예배 안내", date: "2026-03-05", category: "예배" },
+                  { id: 3, title: "봄 수양회 신청 모집", date: "2026-02-28", category: "수양회" },
+                ].map((post) => {
+                  const d = new Date(post.date);
+                  const dateStr = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+                  return (
+                    <Link
+                      key={post.id}
+                      href="/news"
+                      className="group overflow-hidden border border-slate-100 bg-white flex flex-col hover:border-slate-300 transition-colors"
+                    >
+                      <div className="aspect-[4/3] bg-slate-100 flex items-center justify-center">
+                        <Tag size={32} className="text-slate-200" />
+                      </div>
+                      <div className="p-4 md:p-5 flex flex-col flex-1">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-[11px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 tracking-wider">
+                            {post.category}
+                          </span>
+                          <span className="text-xs text-slate-400">{dateStr}</span>
+                        </div>
+                        <h3 className="font-bold text-base text-slate-900 line-clamp-2 leading-snug">
+                          {post.title}
+                        </h3>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>

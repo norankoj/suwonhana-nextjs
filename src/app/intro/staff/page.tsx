@@ -16,11 +16,19 @@ export const metadata: Metadata = {
 const StaffCard = ({ staff }: { staff: StaffMember }) => (
   <div className="bg-white border border-slate-100 overflow-hidden font-sans shadow-sm group flex flex-col h-full w-full max-w-[250px] mx-auto">
     <div className="aspect-[4/5] relative overflow-hidden bg-slate-50 shrink-0">
-      <img
-        src={staff.img || "/images/temp01.jpg"}
-        alt={staff.name}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-      />
+      {staff.img ? (
+        <img
+          src={staff.img}
+          alt={staff.name}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-slate-200">
+          <svg className="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
+      )}
     </div>
 
     <div className="px-3 pt-5 pb-4 text-center h-[120px] flex flex-col justify-start items-center bg-white">
@@ -46,8 +54,7 @@ export default async function PastorPage() {
   const pastorHistoryArray = (fields.pastorHistory || "")
     .split("\n")
     .filter((line: string) => line.trim() !== "");
-  const spastorImageUrl =
-    fields.pastorImage?.node?.sourceUrl || "/images/pastor_ko2.jpg";
+  const spastorImageUrl = fields.pastorImage?.node?.sourceUrl || "";
 
   let bookList: BookItem[] = [];
   if (fields.booksJson) {
@@ -113,12 +120,20 @@ export default async function PastorPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 lg:mb-24">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
           <div className="w-full lg:w-[45%] shrink-0">
-            <div className="aspect-[4/5] lg:aspect-[3.5/4.5] w-full bg-[#EAEBEF] rounded-[2rem] overflow-hidden shadow-sm relative">
-              <img
-                src={spastorImageUrl}
-                alt={`${pastorName} 담임목사`}
-                className="w-full h-full object-cover object-top transition-all duration-700"
-              />
+            <div className="aspect-[4/5] lg:aspect-[3.5/4.5] w-full bg-slate-200 rounded-[2rem] overflow-hidden shadow-sm relative">
+              {spastorImageUrl ? (
+                <img
+                  src={spastorImageUrl}
+                  alt={`${pastorName} 담임목사`}
+                  className="w-full h-full object-cover object-top transition-all duration-700"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <svg className="w-16 h-16 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+              )}
             </div>
           </div>
           <div className="w-full lg:w-[55%] pt-2">

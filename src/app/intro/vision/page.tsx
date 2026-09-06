@@ -22,21 +22,14 @@ export default async function VisionPage() {
 
   const fields = pageData.visionFields || {};
   const heroImageUrl =
-    (pageData as { heroImageUrl?: string | null }).heroImageUrl ??
-    "/images/pastor_ko2.jpg";
+    (pageData as { heroImageUrl?: string | null }).heroImageUrl ?? "";
 
   const mainTitleText =
     fields.mainTitle || "하나님을 즐거워하고\n그 분의 목적에 헌신하는 공동체";
   const visionStatementText = fields.visionStatement || "Vision Statement";
 
-  const getImageUrl = (imageField: WPImageField | undefined, fallbackIndex: number) => {
-    if (imageField?.node?.sourceUrl) return imageField.node.sourceUrl;
-    const fallbacks = [
-      "https://images.unsplash.com/photo-1529070538774-1843cb3265df?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    ];
-    return fallbacks[fallbackIndex];
+  const getImageUrl = (imageField: WPImageField | undefined) => {
+    return imageField?.node?.sourceUrl ?? "";
   };
 
   const vision: VisionItem[] = [
@@ -44,19 +37,19 @@ export default async function VisionPage() {
       title: fields.value1Title || "",
       desc: fields.value1Desc || "",
       verse: fields.value1Verse,
-      image: getImageUrl(fields.value1Image, 0),
+      image: getImageUrl(fields.value1Image),
     },
     {
       title: fields.value2Title || "",
       desc: fields.value2Desc || "",
       verse: fields.value2Verse,
-      image: getImageUrl(fields.value2Image, 1),
+      image: getImageUrl(fields.value2Image),
     },
     {
       title: fields.value3Title || "",
       desc: fields.value3Desc || "",
       verse: fields.value3Verse,
-      image: getImageUrl(fields.value3Image, 2),
+      image: getImageUrl(fields.value3Image),
     },
   ].filter((item) => item.title);
 
@@ -64,11 +57,13 @@ export default async function VisionPage() {
     <div className="bg-white pb-32">
       {/* 히어로 섹션 - 단체 사진 풀블리드 */}
       <section className="relative w-full h-screen md:h-[90vh] min-h-[500px] overflow-hidden bg-slate-900">
-        <img
-          src={heroImageUrl}
-          alt="수원하나교회 공동체"
-          className="w-full h-full object-cover object-center opacity-70"
-        />
+        {heroImageUrl && (
+          <img
+            src={heroImageUrl}
+            alt="수원하나교회 공동체"
+            className="w-full h-full object-cover object-center opacity-70"
+          />
+        )}
         {/* 그라데이션: 하단 왼쪽 강조 */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
@@ -107,12 +102,20 @@ export default async function VisionPage() {
                 className={`flex flex-col md:flex-row gap-10 md:gap-16 items-center ${isEven ? "" : "md:flex-row-reverse"}`}
               >
                 {/* 이미지 */}
-                <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden bg-slate-100 shrink-0">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
+                <div className="w-full md:w-1/2 aspect-[4/3] overflow-hidden bg-slate-200 shrink-0">
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <svg className="w-12 h-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
 
                 {/* 텍스트 패널 */}

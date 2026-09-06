@@ -34,7 +34,6 @@ export default function WelcomeSection() {
     <section className="py-20 md:py-28 bg-slate-50">
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-20">
-
           {/* 왼쪽: 타이틀 + 담당자 + 질문 버튼 */}
           <div className="lg:w-2/5 flex flex-col justify-center">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-4">
@@ -54,9 +53,7 @@ export default function WelcomeSection() {
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 새가족 담당
               </p>
-              <p className="text-base font-bold text-slate-900">
-                신상철 목사
-              </p>
+              <p className="text-base font-bold text-slate-900">신상철 목사</p>
               <a
                 href="tel:010-2484-0776"
                 className="text-base text-slate-500 hover:text-slate-900 transition-colors"
@@ -90,7 +87,7 @@ export default function WelcomeSection() {
                 <div
                   key={idx}
                   className={`group flex flex-col items-start py-8 md:py-10 ${
-                    idx < 2 ? "border-b border-slate-200" : ""
+                    idx < 2 ? "" : ""
                   }`}
                 >
                   {/* 숫자 — 고정 높이로 타이틀 시작 위치 통일 */}
@@ -107,7 +104,6 @@ export default function WelcomeSection() {
               ))}
             </div>
           </div>
-
         </div>
       </div>
     </section>

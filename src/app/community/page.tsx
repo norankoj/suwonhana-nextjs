@@ -76,7 +76,7 @@ export default async function CommunityPage({
 
   // 표시 데이터 병합: WP 우선, 정적 fallback
   const heroImg =
-    wpData?.featuredImageUrl || staticItem?.img || "/images/temp01.jpg";
+    wpData?.featuredImageUrl || staticItem?.img || "";
   const galleryImages = wpData?.galleryImages ?? [];
 
   // ACF 필드
@@ -118,12 +118,20 @@ export default async function CommunityPage({
         </div>
 
         {/* 히어로 이미지 */}
-        <div className="mb-8 relative w-full aspect-video md:aspect-[21/9] overflow-hidden bg-slate-100">
-          <img
-            src={heroImg}
-            alt={`${displayName} 대표 사진`}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105"
-          />
+        <div className="mb-8 relative w-full aspect-video md:aspect-[21/9] overflow-hidden bg-slate-200">
+          {heroImg ? (
+            <img
+              src={heroImg}
+              alt={`${displayName} 대표 사진`}
+              className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <svg className="w-12 h-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
           {displayGroupName && (
             <div className="absolute bottom-0 left-0 p-6 md:p-8">
