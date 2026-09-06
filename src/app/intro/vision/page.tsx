@@ -92,7 +92,7 @@ export default async function VisionPage() {
       </section>
 
       {/* Vision 항목들 */}
-      <section className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+      <section className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <div className="flex flex-col gap-20 md:gap-32">
           {vision.map((item, idx) => {
             const isEven = idx % 2 === 0;

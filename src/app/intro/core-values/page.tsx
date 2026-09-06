@@ -76,7 +76,7 @@ export default async function CoreValuesPage() {
       </section>
 
       {/* 2. 핵심가치 그리드 */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <CoreValueGrid
           part1Title={part1Title}
           part2Title={part2Title}

@@ -177,7 +177,7 @@ export default async function PastorPage() {
       </section>
 
       {/* [섹션 3] 저서 소개 */}
-      <section className="bg-[#F8F9FA] py-16 md:py-20 border-t border-b border-slate-100">
+      <section className="bg-[#F8F9FA] py-16 md:py-24 border-t border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-10 lg:mb-12 px-1">
             <h3 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
@@ -229,7 +229,7 @@ export default async function PastorPage() {
       </section>
 
       {/* [섹션 4] 섬기는 이들 */}
-      <section className="py-16 md:py-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {staffTeams.ministry.length > 0 && (
           <div className="mb-16 md:mb-20">
             <div className="mb-10 text-center">

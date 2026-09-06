@@ -87,7 +87,7 @@ export default async function JuboPage() {
       </section>
 
       {/* 플립북 */}
-      <section className="py-12 md:py-20">
+      <section className="py-16 md:py-24">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           {images.length > 0 ? (
             <BulletinFlipbook images={images} />

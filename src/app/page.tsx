@@ -212,7 +212,7 @@ export default function MainPage() {
         />
 
         {/* 2. 환영 메시지 (Welcome) - 중앙 정렬 타이포그래피 집중형 */}
-        <section className="py-24 md:py-32 bg-white flex items-center justify-center">
+        <section className="py-16 md:py-24 bg-white flex items-center justify-center">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* 거대한 메인 타이틀 */}
             <h2
@@ -262,7 +262,7 @@ export default function MainPage() {
         </section>
 
         {/* 3. 교회 소개 이미지 — 캐러셀 */}
-        <section className="pb-20 md:pb-28 bg-white">
+        <section className="pb-16 md:pb-24 bg-white">
           {wpHomeData === null ? (
             /* ── 로딩 스켈레톤 ── */
             <div className="flex flex-col items-center gap-5">
@@ -318,7 +318,7 @@ export default function MainPage() {
         {/* <EventBanner slidesData={heroSlides} /> */}
 
         {/* 6. 교회 영상 */}
-        <section className="py-8 md:py-16 bg-white">
+        <section className="py-16 md:py-24 bg-white">
           <div className="w-full max-w-content mx-auto px-0 md:px-6 lg:px-8">
             <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-slate-200">
               <iframe
@@ -449,7 +449,7 @@ export default function MainPage() {
         </section>
 
         {/* 8. 온라인 헌금 안내 */}
-        <section className="py-12 md:py-16 bg-white border-t border-slate-100">
+        <section className="py-16 md:py-24 bg-white border-t border-slate-100">
           <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
             <div className="border border-slate-200 rounded-lg p-6 md:p-8">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">

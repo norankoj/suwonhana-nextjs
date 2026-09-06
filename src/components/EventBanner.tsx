@@ -29,7 +29,7 @@ export const EventBanner = ({ slidesData }: EventBannerProps) => {
   const currentSlide = slidesData[safeIndex];
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-16 md:py-24 bg-white">
       <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         {/* 둥근 모서리 컨테이너 */}
         <div className="relative rounded-lg overflow-hidden h-[320px] md:h-[450px] shadow-sm border border-slate-100 group bg-slate-50">
