@@ -105,7 +105,7 @@ const SermonCard = ({
     return (
       <div
         onClick={() => onClick(item)}
-        className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-slate-100 cursor-pointer flex flex-col sm:flex-row gap-0 sm:gap-6 transition-all duration-300 hover:bg-slate-50/50"
+        className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-sm border border-slate-100 cursor-pointer flex flex-col sm:flex-row gap-0 sm:gap-6 transition-all duration-300 hover:bg-slate-50/50"
       >
         <div className="w-full sm:w-64 shrink-0 relative aspect-video bg-slate-200 overflow-hidden">
           {imgSrc ? (
@@ -125,7 +125,7 @@ const SermonCard = ({
           )}
           <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors" />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-md backdrop-blur-sm">
+            <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-sm backdrop-blur-sm">
               <Play
                 size={16}
                 className="text-slate-900 fill-slate-900 ml-1"
@@ -139,7 +139,7 @@ const SermonCard = ({
             {tags.slice(0, 5).map((tag, i) => (
               <span
                 key={i}
-                className={`text-[11px] font-bold px-1.5 py-0.5 rounded-md border ${getTagColor(tag)}`}
+                className={`text-[11px] font-bold px-1.5 py-0.5 rounded-lg border ${getTagColor(tag)}`}
               >
                 {tag}
               </span>
@@ -167,7 +167,7 @@ const SermonCard = ({
   return (
     <div
       onClick={() => onClick(item)}
-      className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer h-full flex flex-col"
+      className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer h-full flex flex-col"
     >
       <div className="relative aspect-video bg-slate-200 overflow-hidden">
         {imgSrc ? (
@@ -200,7 +200,7 @@ const SermonCard = ({
           {tags.slice(0, 3).map((tag, i) => (
             <span
               key={i}
-              className={`text-[11px] font-bold px-1.5 py-0.5 rounded-md border ${getTagColor(tag)}`}
+              className={`text-[11px] font-bold px-1.5 py-0.5 rounded-lg border ${getTagColor(tag)}`}
             >
               {tag}
             </span>
@@ -577,13 +577,13 @@ export default function SermonClient({
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           <aside className={getAsideClassName()}>
             {selectedSermon ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col gap-4 animate-fade-in">
+              <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm flex flex-col gap-4 animate-fade-in">
                 <button
                   onClick={() => {
                     setSelectedSermon(null);
                     router.push("/sermon", { scroll: false });
                   }}
-                  className="w-full py-3 bg-white border border-slate-300 text-slate-700 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-sm"
+                  className="w-full py-3 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-sm"
                 >
                   <List size={18} /> 목록으로 돌아가기
                 </button>
@@ -650,7 +650,7 @@ export default function SermonClient({
                       size={16}
                     />
                   </form>
-                  <div className="bg-white rounded-2xl border border-slate-200 px-5 py-1 shadow-sm">
+                  <div className="bg-white rounded-lg border border-slate-200 px-5 py-1 shadow-sm">
                     <Accordion title="예배" defaultOpen={true}>
                       <div className="flex flex-col gap-2">
                         {SERVICE_TAGS.map((tag) => (
@@ -708,7 +708,7 @@ export default function SermonClient({
                             onClick={() =>
                               setSelectedYear(year === selectedYear ? "" : year)
                             }
-                            className={`py-2 text-xs rounded border text-center transition-all ${selectedYear === year ? "bg-indigo-600 text-white border-indigo-600 font-bold shadow-md" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-800"}`}
+                            className={`py-2 text-xs rounded border text-center transition-all ${selectedYear === year ? "bg-indigo-600 text-white border-indigo-600 font-bold shadow-sm" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-800"}`}
                           >
                             {year}
                           </button>
@@ -723,7 +723,7 @@ export default function SermonClient({
 
           <div className="flex-1 min-w-0">
             {isLoadingDetail ? (
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-xl overflow-hidden animate-pulse">
+              <div className="bg-white rounded-lg border border-slate-100 shadow-lg overflow-hidden animate-pulse">
                 <div className="aspect-video bg-slate-200 w-full" />
                 <div className="p-6 md:p-10 space-y-4">
                   <div className="h-8 bg-slate-200 rounded w-3/4" />
@@ -733,7 +733,7 @@ export default function SermonClient({
                 </div>
               </div>
             ) : selectedSermon ? (
-              <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-slate-100 animate-fade-in">
+              <div className="bg-white rounded-lg overflow-hidden shadow-lg border border-slate-100 animate-fade-in">
                 <div className="lg:hidden p-4 border-b border-slate-100">
                   <button
                     onClick={() => {
@@ -864,14 +864,14 @@ export default function SermonClient({
                   <div className="bg-white p-1 rounded-lg border border-slate-200 flex items-center">
                     <button
                       onClick={() => setViewMode("grid")}
-                      className={`p-2 rounded-md transition-all ${viewMode === "grid" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                      className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
                       aria-label="그리드 보기"
                     >
                       <LayoutGrid size={18} />
                     </button>
                     <button
                       onClick={() => setViewMode("list")}
-                      className={`p-2 rounded-md transition-all ${viewMode === "list" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                      className={`p-2 rounded-lg transition-all ${viewMode === "list" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
                       aria-label="리스트 보기"
                     >
                       <AlignJustify size={18} />
@@ -882,7 +882,7 @@ export default function SermonClient({
                 {(selectedBooks.length > 0 ||
                   selectedTopics.length > 0 ||
                   selectedYear) && (
-                  <div className="flex flex-wrap gap-2 mb-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="flex flex-wrap gap-2 mb-6 p-4 bg-slate-50 rounded-lg border border-slate-100">
                     {selectedBooks.map((book) => (
                       <span
                         key={book}
@@ -1000,7 +1000,7 @@ export default function SermonClient({
                                 }
                                 className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-sm transition-all ${
                                   currentPage === pageNum
-                                    ? "bg-slate-900 text-white shadow-md transform scale-105"
+                                    ? "bg-slate-900 text-white shadow-sm transform scale-105"
                                     : "bg-white border border-slate-200 text-slate-500 hover:bg-slate-50"
                                 }`}
                               >

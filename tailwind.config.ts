@@ -56,9 +56,6 @@ const config: Config = {
       maxWidth: {
         content: "1280px",
       },
-      borderRadius: {
-        pill: "9999px",
-      },
       animation: {
         "fade-in": "fadeIn 0.8s ease-out forwards",
         "fade-in-up": "fadeInUp 0.8s ease-out 0.2s forwards",

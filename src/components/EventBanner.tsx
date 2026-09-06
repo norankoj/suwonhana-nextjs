@@ -30,9 +30,9 @@ export const EventBanner = ({ slidesData }: EventBannerProps) => {
 
   return (
     <section className="py-12 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         {/* 둥근 모서리 컨테이너 */}
-        <div className="relative rounded-[2.5rem] overflow-hidden h-[320px] md:h-[450px] shadow-sm border border-slate-100 group bg-slate-50">
+        <div className="relative rounded-lg overflow-hidden h-[320px] md:h-[450px] shadow-sm border border-slate-100 group bg-slate-50">
           {/* 1. 우측 상단 페이지 카운터 (Badge) - 유지 */}
           <div className="absolute top-6 right-6 z-20 bg-slate-900/20 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-xs font-bold font-mono tracking-wider pointer-events-none transition-opacity group-hover:bg-slate-900/40">
             {safeIndex + 1} / {slidesData.length}

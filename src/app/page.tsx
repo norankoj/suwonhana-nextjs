@@ -249,7 +249,7 @@ export default function MainPage() {
             <div className="flex justify-center">
               <a
                 href="/intro/vision"
-                className="group inline-flex items-center gap-1.5 px-5 py-2.5 md:px-8 md:py-4 bg-slate-900 text-white rounded-full font-bold text-sm md:text-base hover:bg-slate-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/20"
+                className="group inline-flex items-center gap-1.5 px-5 py-2.5 md:px-8 md:py-4 bg-slate-900 text-white rounded-full font-bold text-sm md:text-base hover:bg-slate-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-900/20"
               >
                 교회 소개 더보기
                 <ChevronRight
@@ -319,8 +319,8 @@ export default function MainPage() {
 
         {/* 6. 교회 영상 */}
         <section className="py-8 md:py-16 bg-white">
-          <div className="w-full max-w-7xl mx-auto px-0 md:px-6 lg:px-8">
-            <div className="relative w-full aspect-video overflow-hidden shadow-2xl shadow-slate-900/15">
+          <div className="w-full max-w-content mx-auto px-0 md:px-6 lg:px-8">
+            <div className="relative w-full aspect-video overflow-hidden shadow-lg shadow-slate-900/15">
               <iframe
                 src="https://www.youtube.com/embed/ke0jfCzUqa4?autoplay=1&mute=1&loop=1&playlist=ke0jfCzUqa4&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&vq=hd1080"
                 title="수원하나교회 영상"
@@ -335,7 +335,7 @@ export default function MainPage() {
 
         {/* 7. 교회소식 */}
         <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-end justify-between mb-10 md:mb-14">
               <div>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-2">
@@ -451,7 +451,7 @@ export default function MainPage() {
         {/* 8. 온라인 헌금 안내 */}
         <section className="py-12 md:py-16 bg-white border-t border-slate-100">
           <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="border border-slate-200 rounded-2xl p-6 md:p-8">
+            <div className="border border-slate-200 rounded-lg p-6 md:p-8">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
 
                 {/* 텍스트 영역 */}
@@ -473,7 +473,7 @@ export default function MainPage() {
                     href={RECEIPT_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors whitespace-nowrap"
+                    className="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 bg-slate-900 text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors whitespace-nowrap"
                   >
                     영수증 신청 <ArrowRight size={14} />
                   </a>
@@ -481,7 +481,7 @@ export default function MainPage() {
                   {/* PC: 모달 */}
                   <button
                     onClick={() => setShowAccountInfo(true)}
-                    className="hidden md:inline-flex flex-1 md:flex-none items-center justify-center gap-1.5 bg-slate-50 text-slate-700 border border-slate-200 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-100 transition-colors whitespace-nowrap"
+                    className="hidden md:inline-flex flex-1 md:flex-none items-center justify-center gap-1.5 bg-slate-50 text-slate-700 border border-slate-200 px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-100 transition-colors whitespace-nowrap"
                   >
                     계좌 안내 <ChevronDown size={14} />
                   </button>
@@ -489,7 +489,7 @@ export default function MainPage() {
                   {/* 모바일: 페이지 이동 */}
                   <Link
                     href="/donation"
-                    className="md:hidden flex-1 inline-flex items-center justify-center gap-1.5 bg-slate-50 text-slate-700 border border-slate-200 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-100 transition-colors whitespace-nowrap"
+                    className="md:hidden flex-1 inline-flex items-center justify-center gap-1.5 bg-slate-50 text-slate-700 border border-slate-200 px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-100 transition-colors whitespace-nowrap"
                   >
                     계좌 안내 <ArrowRight size={14} />
                   </Link>
@@ -508,7 +508,7 @@ export default function MainPage() {
           onClick={() => setShowAccountInfo(false)}
         >
           <div
-            className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative"
+            className="bg-white w-full max-w-lg rounded-lg shadow-lg overflow-hidden relative"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6 sm:p-8">
@@ -531,7 +531,7 @@ export default function MainPage() {
               </div>
 
               {/* 예금주 */}
-              <div className="mb-5 flex items-center justify-between bg-slate-50 px-5 py-3 rounded-2xl">
+              <div className="mb-5 flex items-center justify-between bg-slate-50 px-5 py-3 rounded-lg">
                 <span className="text-sm text-slate-500">예금주</span>
                 <span className="font-bold text-slate-900">수원하나교회</span>
               </div>
@@ -553,10 +553,10 @@ export default function MainPage() {
                       navigator.clipboard.writeText(item.num);
                       alert(`${item.label} 계좌번호가 복사되었습니다.`);
                     }}
-                    className="group w-full flex items-center justify-between py-3.5 px-1 hover:bg-slate-50 rounded-xl transition-colors text-left"
+                    className="group w-full flex items-center justify-between py-3.5 px-1 hover:bg-slate-50 rounded-lg transition-colors text-left"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="inline-flex items-center justify-center w-10 h-6 rounded-md bg-slate-100 group-hover:bg-slate-200 text-[10px] font-bold text-slate-500 transition-colors shrink-0">
+                      <span className="inline-flex items-center justify-center w-10 h-6 rounded-lg bg-slate-100 group-hover:bg-slate-200 text-[10px] font-bold text-slate-500 transition-colors shrink-0">
                         {item.bank}
                       </span>
                       <span className="text-sm font-bold text-slate-700">

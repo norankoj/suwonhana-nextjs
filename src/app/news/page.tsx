@@ -137,7 +137,7 @@ export default function NewsPage() {
         desc="수원하나교회의 소식과 행사 안내를 확인하세요."
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <div className="flex flex-nowrap gap-2 overflow-x-auto pb-4 mb-12 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] border-b border-slate-200">
           {CATEGORIES.map((cat) => (
             <button

@@ -21,7 +21,7 @@ export default function CounselingApplyPage() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-        <div className="bg-white p-8 rounded-3xl shadow-lg text-center max-w-md w-full">
+        <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md w-full">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
             <CheckCircle size={40} />
           </div>
@@ -33,7 +33,7 @@ export default function CounselingApplyPage() {
           </p>
           <button
             onClick={() => router.push("/")}
-            className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors"
+            className="w-full py-3 bg-slate-900 text-white rounded-lg font-bold hover:bg-slate-800 transition-colors"
           >
             홈으로 돌아가기
           </button>
@@ -44,7 +44,7 @@ export default function CounselingApplyPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 py-20 px-6 animate-fade-in">
-      <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm border border-slate-100 overflow-hidden">
         <div className="bg-slate-900 p-8 text-white text-center">
           <h2 className="text-3xl font-bold mb-2">상담 예약 신청</h2>
           <p className="text-slate-300">
@@ -61,7 +61,7 @@ export default function CounselingApplyPage() {
                 required
                 type="text"
                 placeholder="홍길동"
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-sky-500 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-sky-500 transition-colors"
               />
             </div>
             <div>
@@ -72,7 +72,7 @@ export default function CounselingApplyPage() {
                 required
                 type="tel"
                 placeholder="010-1234-5678"
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-sky-500 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-sky-500 transition-colors"
               />
             </div>
             <div>
@@ -82,20 +82,20 @@ export default function CounselingApplyPage() {
               <textarea
                 rows={4}
                 placeholder="상담받고 싶은 내용을 간략하게 적어주세요."
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-sky-500 transition-colors resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-sky-500 transition-colors resize-none"
               ></textarea>
             </div>
             <div className="pt-4 flex gap-4">
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="flex-1 py-4 rounded-xl border border-slate-200 font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+                className="flex-1 py-4 rounded-lg border border-slate-200 font-bold text-slate-600 hover:bg-slate-50 transition-colors"
               >
                 취소
               </button>
               <button
                 type="submit"
-                className="flex-[2] py-4 rounded-xl bg-sky-600 text-white font-bold hover:bg-sky-700 transition-colors shadow-lg shadow-sky-200"
+                className="flex-[2] py-4 rounded-lg bg-sky-600 text-white font-bold hover:bg-sky-700 transition-colors shadow-lg shadow-sky-200"
               >
                 예약 신청하기
               </button>

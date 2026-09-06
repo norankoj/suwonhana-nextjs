@@ -120,7 +120,7 @@ export default async function PastorPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 lg:mb-24">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
           <div className="w-full lg:w-[45%] shrink-0">
-            <div className="aspect-[4/5] lg:aspect-[3.5/4.5] w-full bg-slate-200 rounded-[2rem] overflow-hidden shadow-sm relative">
+            <div className="aspect-[4/5] lg:aspect-[3.5/4.5] w-full bg-slate-200 rounded-lg overflow-hidden shadow-sm relative">
               {spastorImageUrl ? (
                 <img
                   src={spastorImageUrl}
@@ -197,7 +197,7 @@ export default async function PastorPage() {
                   rel="noopener noreferrer"
                   className="group flex flex-col"
                 >
-                  <div className="relative aspect-[1/1.45] w-full bg-white rounded-lg overflow-hidden shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 mb-5 border border-slate-200/50">
+                  <div className="relative aspect-[1/1.45] w-full bg-white rounded-lg overflow-hidden shadow-sm group-hover:shadow-lg group-hover:-translate-y-2 transition-all duration-500 mb-5 border border-slate-200/50">
                     <Image
                       src={book.image}
                       alt={book.title}

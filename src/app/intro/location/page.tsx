@@ -12,7 +12,7 @@ export default function LocationPage() {
       <div className="animate-fade-in max-w-content mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* 지도 */}
         <section className="mb-10">
-          <div className="w-full h-[350px] md:h-[450px] rounded-md overflow-hidden border border-slate-200">
+          <div className="w-full h-[350px] md:h-[450px] rounded-lg overflow-hidden border border-slate-200">
             <iframe
               width="100%"
               height="100%"

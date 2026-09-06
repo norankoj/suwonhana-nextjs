@@ -32,7 +32,7 @@ const ServiceCard = ({
   place?: string;
 }) => (
   <div>
-    <div className="w-full aspect-[4/3] overflow-hidden rounded-sm bg-slate-200 mb-4">
+    <div className="w-full aspect-[4/3] overflow-hidden rounded-lg bg-slate-200 mb-4">
       {image ? (
         <img src={image} alt={name} className="w-full h-full object-cover" />
       ) : (

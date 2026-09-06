@@ -131,7 +131,7 @@ export const Header = () => {
 
                 {item.sub.length > 0 && (
                   <div className="absolute left-1/2 -translate-x-1/2 top-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 w-max min-w-[160px] z-50">
-                    <div className="bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden p-1.5 mt-[-10px]">
+                    <div className="bg-white rounded-lg shadow-lg border border-slate-100 overflow-hidden p-1.5 mt-[-10px]">
                       {item.sub.map((subItem) => (
                         <Link
                           key={subItem.name}
@@ -154,7 +154,7 @@ export const Header = () => {
 
           {/* 모바일 메뉴 버튼 */}
           <button
-            className={`md:hidden p-2 rounded-md -mr-2 transition-colors ${
+            className={`md:hidden p-2 rounded-lg -mr-2 transition-colors ${
               isTransparent
                 ? "text-white hover:bg-white/10"
                 : "text-slate-900 hover:bg-slate-50"
@@ -181,7 +181,7 @@ export const Header = () => {
         />
         {/* 드로워 패널 */}
         <div
-          className={`absolute top-0 right-0 w-[280px] h-full bg-white shadow-2xl transition-transform duration-300 ease-out ${
+          className={`absolute top-0 right-0 w-[280px] h-full bg-white shadow-lg transition-transform duration-300 ease-out ${
             isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >

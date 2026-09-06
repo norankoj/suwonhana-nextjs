@@ -266,7 +266,7 @@ export default function HomePhotoCarousel({ images }: HomePhotoCarouselProps) {
                     <div
                       className={`overflow-hidden transition-all duration-500 ${
                         isCurrent
-                          ? "shadow-2xl shadow-black/20"
+                          ? "shadow-lg shadow-black/20"
                           : "opacity-50 scale-[0.97]"
                       }`}
                     >
@@ -298,7 +298,7 @@ export default function HomePhotoCarousel({ images }: HomePhotoCarouselProps) {
 
                   {/* 라벨 */}
                   {img.label && isCurrent && (
-                    <span className="absolute bottom-3 left-3 text-[10px] font-bold tracking-[0.2em] text-white/80 uppercase bg-black/30 px-2 py-1 rounded-sm backdrop-blur-sm pointer-events-none">
+                    <span className="absolute bottom-3 left-3 text-[10px] font-bold tracking-[0.2em] text-white/80 uppercase bg-black/30 px-2 py-1 rounded-lg backdrop-blur-sm pointer-events-none">
                       {img.label}
                     </span>
                   )}

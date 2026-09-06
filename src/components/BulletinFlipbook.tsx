@@ -119,7 +119,7 @@ export default function BulletinFlipbook({ images }: Props) {
           usePortrait={true} /* 모바일: 한 장씩 */
           drawShadow={true}
           flippingTime={600}
-          className="shadow-2xl shadow-slate-900/20"
+          className="shadow-lg shadow-slate-900/20"
           onFlip={handleFlip}
         >
           {images.map((img, i) => (

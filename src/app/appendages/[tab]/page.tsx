@@ -73,7 +73,7 @@ export default function AppendagesContentPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
             {/* 타이틀 */}
-            <div className="relative z-10 w-full max-w-content mx-auto px-6 pb-14 md:pb-20">
+            <div className="relative z-10 w-full max-w-content mx-auto px-4 sm:px-6 lg:px-8 pb-14 md:pb-20">
               <p className="text-white/60 text-sm font-medium tracking-[0.2em] uppercase mb-3">
                 Hana Counseling Center
               </p>
@@ -84,7 +84,7 @@ export default function AppendagesContentPage() {
           </div>
 
           {/* ── 2. 본문 ── */}
-          <div className="max-w-content mx-auto px-6 py-16 md:py-24 space-y-20">
+          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-20">
             {/* 사명 및 목표 */}
             <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-10">
               <Quote size={36} className="text-slate-200 fill-slate-100" />
@@ -110,7 +110,7 @@ export default function AppendagesContentPage() {
                 성장을 경험하는 과정들을 함께 할 것입니다.
               </p>
 
-              <div className="flex items-start gap-4 bg-slate-50 p-6 rounded-xl text-left w-full border border-slate-100">
+              <div className="flex items-start gap-4 bg-slate-50 p-6 rounded-lg text-left w-full border border-slate-100">
                 <Info size={20} className="text-slate-400 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-bold text-slate-900 mb-1">
@@ -171,7 +171,7 @@ export default function AppendagesContentPage() {
                 </p>
               </div>
 
-              <div className="w-full h-[400px] bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 relative group">
+              <div className="w-full h-[400px] bg-slate-100 rounded-lg overflow-hidden border border-slate-200 relative group">
                 <iframe
                   width="100%"
                   height="100%"
@@ -181,7 +181,7 @@ export default function AppendagesContentPage() {
                   title="counseling-map"
                   className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
                 />
-                <div className="absolute bottom-5 left-5 bg-white/90 backdrop-blur-sm px-4 py-2.5 rounded-xl shadow-md border border-slate-100">
+                <div className="absolute bottom-5 left-5 bg-white/90 backdrop-blur-sm px-4 py-2.5 rounded-lg shadow-sm border border-slate-100">
                   <p className="font-bold text-slate-900 text-sm">
                     하나 상담실 (교육관 1층)
                   </p>
@@ -208,10 +208,10 @@ export default function AppendagesContentPage() {
           </div>
 
           {/* 소개 */}
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100">
+          <div className="bg-white rounded-lg p-8 md:p-12 shadow-lg border border-slate-100">
             <div className="max-w-3xl mx-auto space-y-8">
               <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center">
+                <div className="w-16 h-16 bg-amber-50 rounded-lg flex items-center justify-center">
                   <Lightbulb size={32} className="text-amber-500" />
                 </div>
                 <p className="text-slate-600 leading-loose break-keep text-base">
@@ -241,7 +241,7 @@ export default function AppendagesContentPage() {
                 ].map((item, i) => (
                   <div
                     key={i}
-                    className="flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl border border-slate-100"
+                    className="flex flex-col items-center text-center p-6 bg-slate-50 rounded-lg border border-slate-100"
                   >
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-700 mb-4">
                       {item.icon}
@@ -259,7 +259,7 @@ export default function AppendagesContentPage() {
           </div>
 
           {/* 안내 */}
-          <div className="bg-slate-50 rounded-2xl p-8 border border-slate-100 text-center">
+          <div className="bg-slate-50 rounded-lg p-8 border border-slate-100 text-center">
             <p className="text-slate-500 text-base">
               창업보육센터에 대한 자세한 내용은 곧 업데이트될 예정입니다.
             </p>
@@ -289,10 +289,10 @@ export default function AppendagesContentPage() {
           </div>
 
           {/* 다니엘 선교원 */}
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100">
+          <div className="bg-white rounded-lg p-8 md:p-12 shadow-lg border border-slate-100">
             <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
               <div className="lg:w-1/4 flex flex-col items-center lg:items-start text-center lg:text-left shrink-0">
-                <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-rose-50 rounded-lg flex items-center justify-center mb-4">
                   <Heart size={32} className="text-rose-500" />
                 </div>
                 <span className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">
@@ -319,7 +319,7 @@ export default function AppendagesContentPage() {
                   ].map((info, i) => (
                     <div
                       key={i}
-                      className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100"
+                      className="flex gap-3 p-4 bg-slate-50 rounded-lg border border-slate-100"
                     >
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">
                         {info.label}
@@ -331,7 +331,7 @@ export default function AppendagesContentPage() {
                   ))}
                 </div>
 
-                <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-sm text-amber-700">
+                <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 text-sm text-amber-700">
                   자세한 프로그램 안내는 곧 업데이트될 예정입니다.
                 </div>
               </div>
@@ -339,10 +339,10 @@ export default function AppendagesContentPage() {
           </div>
 
           {/* 다니엘 훈련센터 */}
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100">
+          <div className="bg-white rounded-lg p-8 md:p-12 shadow-lg border border-slate-100">
             <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
               <div className="lg:w-1/4 flex flex-col items-center lg:items-start text-center lg:text-left shrink-0">
-                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-indigo-50 rounded-lg flex items-center justify-center mb-4">
                   <BookOpen size={32} className="text-indigo-500" />
                 </div>
                 <span className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">
@@ -369,7 +369,7 @@ export default function AppendagesContentPage() {
                   ].map((info, i) => (
                     <div
                       key={i}
-                      className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100"
+                      className="flex gap-3 p-4 bg-slate-50 rounded-lg border border-slate-100"
                     >
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">
                         {info.label}
@@ -381,7 +381,7 @@ export default function AppendagesContentPage() {
                   ))}
                 </div>
 
-                <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-sm text-amber-700">
+                <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 text-sm text-amber-700">
                   자세한 프로그램 안내는 곧 업데이트될 예정입니다.
                 </div>
               </div>

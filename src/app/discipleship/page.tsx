@@ -136,7 +136,7 @@ export default async function DiscipleshipPage() {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
-        <div className="relative z-10 w-full max-w-content mx-auto px-6 pb-14 md:pb-20">
+        <div className="relative z-10 w-full max-w-content mx-auto px-4 sm:px-6 lg:px-8 pb-14 md:pb-20">
           <p className="text-white/60 text-sm font-medium tracking-[0.2em] uppercase mb-3">
             Discipleship Training
           </p>
@@ -154,7 +154,7 @@ export default async function DiscipleshipPage() {
             {JOURNEY.map((item, i) => (
               <React.Fragment key={item.name}>
                 <div className="flex-1 py-8 md:py-0 md:px-4 first:md:pl-0 last:md:pr-0">
-                  <div className="border border-slate-200 rounded-2xl px-6 py-7 h-full hover:border-slate-400 hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-default">
+                  <div className="border border-slate-200 rounded-lg px-6 py-7 h-full hover:border-slate-400 hover:shadow-sm hover:-translate-y-1 transition-all duration-200 cursor-default">
                     <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3 leading-tight">
                       {item.name}
                     </h3>
@@ -257,7 +257,7 @@ export default async function DiscipleshipPage() {
             {COURSES.map((course) => (
               <div
                 key={course.title}
-                className="flex flex-col bg-white border border-slate-200 rounded-2xl p-6 hover:border-slate-300 hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-default"
+                className="flex flex-col bg-white border border-slate-200 rounded-lg p-6 hover:border-slate-300 hover:shadow-sm hover:-translate-y-1 transition-all duration-300 cursor-default"
               >
                 {/* 수강요건 변경 공지 */}
                 {course.reqNote && (

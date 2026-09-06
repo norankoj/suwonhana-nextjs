@@ -145,13 +145,13 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           pointer-events-none → 버튼만 auto 복원
       ══════════════════════════════════════════ */}
       <div className="absolute inset-0 z-[20] flex flex-col justify-end pointer-events-none">
-        {/* PC: max-w-7xl 컨테이너로 좌측 여백 이전 버전과 동일하게 */}
-        <div className="w-full md:max-w-7xl md:mx-auto px-5 pb-20 md:px-10 lg:px-14 md:pb-24">
+        {/* PC: max-w-content 컨테이너로 좌측 여백 이전 버전과 동일하게 */}
+        <div className="w-full md:max-w-content md:mx-auto px-5 pb-20 md:px-10 lg:px-14 md:pb-24">
           <div className="flex flex-col max-w-2xl">
             {/* LIVE 배지 */}
             {currentSlide.isLive && (
               <div className="mb-3 md:mb-4 flex items-center w-max">
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-red-600 rounded-sm shadow-lg">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-red-600 rounded-lg shadow-lg">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />

@@ -67,7 +67,7 @@ export default function PrivacyPage() {
               개인정보 보호에 관한 문의사항은 아래 연락처로 문의해 주시기
               바랍니다.
             </p>
-            <div className="bg-slate-50 p-4 rounded-xl mt-3">
+            <div className="bg-slate-50 p-4 rounded-lg mt-3">
               <p className="text-sm text-slate-600">
                 수원하나교회
                 <br />

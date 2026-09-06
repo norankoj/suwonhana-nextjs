@@ -31,10 +31,10 @@ function ValueCard({
   return (
     <button
       onClick={onClick}
-      className={`text-center px-4 md:px-5 pt-5 pb-4 md:pt-6 md:pb-5 rounded-xl border transition-all duration-200 w-full bg-white ${
+      className={`text-center px-4 md:px-5 pt-5 pb-4 md:pt-6 md:pb-5 rounded-lg border transition-all duration-200 w-full bg-white ${
         isSelected
-          ? "border-slate-900 shadow-md"
-          : "border-slate-200 hover:border-slate-400 hover:shadow-md"
+          ? "border-slate-900 shadow-sm"
+          : "border-slate-200 hover:border-slate-400 hover:shadow-sm"
       }`}
     >
       <h3 className="text-lg md:text-xl font-extrabold tracking-tight leading-snug break-keep text-slate-900">
@@ -184,7 +184,7 @@ function Modal({
           onClick={onClose}
         />
         {/* 모달 패널 */}
-        <div className="relative bg-[#F8F9FA] border border-slate-100 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl modal-fade-in">
+        <div className="relative bg-[#F8F9FA] border border-slate-100 rounded-lg w-full max-w-2xl max-h-[85vh] flex flex-col shadow-lg modal-fade-in">
           {/* 고정 헤더 */}
           <div className="flex items-start justify-between px-8 md:px-10 pt-8 md:pt-10 pb-6 shrink-0">
             <div>
