@@ -320,7 +320,7 @@ export default function MainPage() {
         {/* 6. 교회 영상 */}
         <section className="py-8 md:py-16 bg-white">
           <div className="w-full max-w-content mx-auto px-0 md:px-6 lg:px-8">
-            <div className="relative w-full aspect-video overflow-hidden shadow-lg shadow-slate-900/15">
+            <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-slate-200">
               <iframe
                 src="https://www.youtube.com/embed/ke0jfCzUqa4?autoplay=1&mute=1&loop=1&playlist=ke0jfCzUqa4&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&vq=hd1080"
                 title="수원하나교회 영상"
