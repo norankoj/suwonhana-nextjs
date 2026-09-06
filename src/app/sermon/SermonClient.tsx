@@ -105,7 +105,7 @@ const SermonCard = ({
     return (
       <div
         onClick={() => onClick(item)}
-        className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-sm border border-slate-100 cursor-pointer flex flex-col sm:flex-row gap-0 sm:gap-6 transition-all duration-300 hover:bg-slate-50/50"
+        className="group bg-white rounded-lg overflow-hidden border border-slate-200 hover:border-slate-400 cursor-pointer flex flex-col sm:flex-row gap-0 sm:gap-6 transition-all duration-300 hover:bg-slate-50/50"
       >
         <div className="w-full sm:w-64 shrink-0 relative aspect-video bg-slate-200 overflow-hidden">
           {imgSrc ? (
@@ -167,7 +167,7 @@ const SermonCard = ({
   return (
     <div
       onClick={() => onClick(item)}
-      className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer h-full flex flex-col"
+      className="group bg-white rounded-lg overflow-hidden hover:-translate-y-1 transition-all duration-300 border border-slate-200 hover:border-slate-400 cursor-pointer h-full flex flex-col"
     >
       <div className="relative aspect-video bg-slate-200 overflow-hidden">
         {imgSrc ? (
