@@ -71,7 +71,7 @@ export default function DonationPage() {
                   {item.num}
                 </span>
                 {copiedIdx === idx ? (
-                  <CheckCheck size={14} className="text-green-500 shrink-0" />
+                  <CheckCheck size={14} className="text-emerald-500 shrink-0" />
                 ) : (
                   <Copy size={14} className="text-slate-300 shrink-0" />
                 )}

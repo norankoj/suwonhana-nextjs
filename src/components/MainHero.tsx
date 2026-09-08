@@ -88,7 +88,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
      * [공통] 인디케이터 (하단 중앙 절대 위치)
      * ─────────────────────────────────────────────────────────────
      */
-    <section className="relative w-full bg-slate-950 h-[75vh] min-h-[480px] md:h-[85vh] md:min-h-[600px] overflow-hidden selection:bg-blue-100 selection:text-blue-900">
+    <section className="relative w-full bg-slate-950 h-[75vh] min-h-[480px] md:h-[85vh] md:min-h-[600px] overflow-hidden selection:bg-accent-100 selection:text-accent-900">
       {/* ══════════════════════════════════════════
           이미지 크로스페이드 레이어 (절대 위치)
       ══════════════════════════════════════════ */}

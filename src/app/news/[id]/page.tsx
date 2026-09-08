@@ -167,7 +167,7 @@ export default function NewsDetailPage() {
 
   /* ── 일반 게시물 레이아웃 ── */
   return (
-    <div className="bg-white min-h-screen animate-fade-in selection:bg-blue-100 selection:text-blue-900">
+    <div className="bg-white min-h-screen animate-fade-in selection:bg-accent-100 selection:text-accent-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <NavBar />
 
@@ -196,7 +196,7 @@ export default function NewsDetailPage() {
         <div
           className="prose prose-lg md:prose-xl prose-slate max-w-none
                      prose-img:w-full prose-img:border prose-img:border-slate-100
-                     prose-a:text-blue-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
+                     prose-a:text-accent-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
                      prose-headings:font-extrabold prose-headings:tracking-tight
                      prose-p:leading-relaxed prose-p:break-keep
                      prose-li:marker:text-slate-400"

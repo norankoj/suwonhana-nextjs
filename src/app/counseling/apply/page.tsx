@@ -22,7 +22,7 @@ export default function CounselingApplyPage() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md w-full">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
+          <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6 text-emerald-600">
             <CheckCircle size={40} />
           </div>
           <h2 className="text-2xl font-bold text-slate-900 mb-2">신청 완료</h2>
@@ -61,7 +61,7 @@ export default function CounselingApplyPage() {
                 required
                 type="text"
                 placeholder="홍길동"
-                className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-sky-500 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-accent-600 transition-colors"
               />
             </div>
             <div>
@@ -72,7 +72,7 @@ export default function CounselingApplyPage() {
                 required
                 type="tel"
                 placeholder="010-1234-5678"
-                className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-sky-500 transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-accent-600 transition-colors"
               />
             </div>
             <div>
@@ -82,7 +82,7 @@ export default function CounselingApplyPage() {
               <textarea
                 rows={4}
                 placeholder="상담받고 싶은 내용을 간략하게 적어주세요."
-                className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-sky-500 transition-colors resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-accent-600 transition-colors resize-none"
               ></textarea>
             </div>
             <div className="pt-4 flex gap-4">
@@ -95,7 +95,7 @@ export default function CounselingApplyPage() {
               </button>
               <button
                 type="submit"
-                className="flex-[2] py-4 rounded-lg bg-sky-600 text-white font-bold hover:bg-sky-700 transition-colors shadow-lg shadow-sky-200"
+                className="flex-[2] py-4 rounded-lg bg-accent-600 text-white font-bold hover:bg-accent-700 transition-colors shadow-lg shadow-accent-200"
               >
                 예약 신청하기
               </button>

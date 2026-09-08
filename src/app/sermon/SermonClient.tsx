@@ -63,7 +63,7 @@ const getTagColor = (tag: string) => {
     tag.includes("예배") ||
     tag.includes("기도회")
   )
-    return "bg-blue-50 text-blue-600 border-blue-100";
+    return "bg-accent-50 text-accent-600 border-accent-100";
   if (SERIES_TOPICS.includes(tag))
     return "bg-emerald-50 text-emerald-600 border-emerald-100";
   if (BIBLE_BOOKS.includes(tag))
@@ -146,7 +146,7 @@ const SermonCard = ({
             ))}
           </div>
           <h3
-            className="font-bold text-lg text-slate-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors"
+            className="font-bold text-lg text-slate-900 mb-2 line-clamp-1 group-hover:text-accent-600 transition-colors"
             dangerouslySetInnerHTML={{ __html: cleanTitle }}
           />
           <div className="flex items-center gap-3 text-xs text-slate-500 mt-auto">
@@ -207,7 +207,7 @@ const SermonCard = ({
           ))}
         </div>
         <h3
-          className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors"
+          className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug group-hover:text-accent-600 transition-colors"
           dangerouslySetInnerHTML={{ __html: cleanTitle }}
         />
         <div className="flex items-center justify-between text-xs text-slate-400 mt-auto pt-3">
@@ -237,7 +237,7 @@ function Accordion({
       <button
         onClick={() => setIsOpen(!isOpen)}
         type="button"
-        className="flex items-center justify-between w-full text-slate-900 font-extrabold text-[15px] hover:text-blue-600 transition-colors"
+        className="flex items-center justify-between w-full text-slate-900 font-extrabold text-[15px] hover:text-accent-600 transition-colors"
       >
         <span>{title}</span>
         {isOpen ? (
@@ -597,7 +597,7 @@ export default function SermonClient({
                       <button
                         key={i}
                         onClick={() => handleTagClick(tag)}
-                        className="px-2 py-1 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-500 font-medium hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors"
+                        className="px-2 py-1 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-500 font-medium hover:bg-accent-50 hover:text-accent-600 hover:border-accent-200 transition-colors"
                       >
                         #{tag}
                       </button>
@@ -629,7 +629,7 @@ export default function SermonClient({
                     </h3>
                     <button
                       onClick={resetFilters}
-                      className="text-xs text-slate-500 hover:text-blue-600 flex items-center gap-1 bg-slate-200 px-2 py-1 rounded hover:bg-slate-300 transition-colors font-bold"
+                      className="text-xs text-slate-500 hover:text-accent-600 flex items-center gap-1 bg-slate-200 px-2 py-1 rounded hover:bg-slate-300 transition-colors font-bold"
                     >
                       <RotateCcw size={10} /> 초기화
                     </button>
@@ -663,10 +663,10 @@ export default function SermonClient({
                               name="service"
                               checked={activeTab === tag}
                               onChange={() => setActiveTab(tag)}
-                              className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer accent-blue-600"
+                              className="w-4 h-4 text-accent-600 border-slate-300 focus:ring-accent-500 cursor-pointer accent-current"
                             />
                             <span
-                              className={`text-sm ${activeTab === tag ? "font-bold text-blue-700" : "text-slate-600 group-hover:text-slate-900"}`}
+                              className={`text-sm ${activeTab === tag ? "font-bold text-accent-700" : "text-slate-600 group-hover:text-slate-900"}`}
                             >
                               {tag}
                             </span>
@@ -680,7 +680,7 @@ export default function SermonClient({
                           <button
                             key={book}
                             onClick={() => toggleBook(book)}
-                            className={`py-2 text-[11px] rounded border transition-all ${selectedBooks.includes(book) ? "bg-blue-50 text-blue-700 border-blue-600 font-bold" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300"}`}
+                            className={`py-2 text-[11px] rounded border transition-all ${selectedBooks.includes(book) ? "bg-accent-50 text-accent-700 border-accent-600 font-bold" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300"}`}
                           >
                             {book}
                           </button>
@@ -708,7 +708,7 @@ export default function SermonClient({
                             onClick={() =>
                               setSelectedYear(year === selectedYear ? "" : year)
                             }
-                            className={`py-2 text-xs rounded border text-center transition-all ${selectedYear === year ? "bg-indigo-600 text-white border-indigo-600 font-bold shadow-sm" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-800"}`}
+                            className={`py-2 text-xs rounded border text-center transition-all ${selectedYear === year ? "bg-slate-900 text-white border-slate-900 font-bold shadow-sm" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-800"}`}
                           >
                             {year}
                           </button>
@@ -740,7 +740,7 @@ export default function SermonClient({
                       setSelectedSermon(null);
                       router.push("/sermon", { scroll: false });
                     }}
-                    className="flex items-center text-sm font-bold text-slate-500 hover:text-blue-600"
+                    className="flex items-center text-sm font-bold text-slate-500 hover:text-accent-600"
                   >
                     <ChevronLeft size={16} /> 목록으로 돌아가기
                   </button>
@@ -886,7 +886,7 @@ export default function SermonClient({
                     {selectedBooks.map((book) => (
                       <span
                         key={book}
-                        className="px-3 py-1.5 bg-white text-blue-700 border border-blue-200 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm"
+                        className="px-3 py-1.5 bg-white text-slate-700 border border-slate-300 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm"
                       >
                         {book}{" "}
                         <button
@@ -912,7 +912,7 @@ export default function SermonClient({
                       </span>
                     ))}
                     {selectedYear && (
-                      <span className="px-3 py-1.5 bg-white text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                      <span className="px-3 py-1.5 bg-white text-slate-700 border border-slate-300 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm">
                         {selectedYear}년{" "}
                         <button
                           onClick={() => setSelectedYear("")}
@@ -928,7 +928,7 @@ export default function SermonClient({
                 {isLoading ? (
                   <div className="flex flex-col items-center justify-center py-32 opacity-80 min-h-[400px]">
                     <Loader2
-                      className="animate-spin text-blue-600 mb-4"
+                      className="animate-spin text-accent-600 mb-4"
                       size={48}
                     />
                     <p className="text-slate-500 font-bold text-base animate-pulse">

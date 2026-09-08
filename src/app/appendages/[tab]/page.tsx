@@ -292,8 +292,8 @@ export default function AppendagesContentPage() {
           <div className="bg-white rounded-lg p-8 md:p-12 shadow-lg border border-slate-100">
             <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
               <div className="lg:w-1/4 flex flex-col items-center lg:items-start text-center lg:text-left shrink-0">
-                <div className="w-16 h-16 bg-rose-50 rounded-lg flex items-center justify-center mb-4">
-                  <Heart size={32} className="text-rose-500" />
+                <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
+                  <Heart size={32} className="text-slate-400" />
                 </div>
                 <span className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">
                   Daniel Missionary School
@@ -342,8 +342,8 @@ export default function AppendagesContentPage() {
           <div className="bg-white rounded-lg p-8 md:p-12 shadow-lg border border-slate-100">
             <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
               <div className="lg:w-1/4 flex flex-col items-center lg:items-start text-center lg:text-left shrink-0">
-                <div className="w-16 h-16 bg-indigo-50 rounded-lg flex items-center justify-center mb-4">
-                  <BookOpen size={32} className="text-indigo-500" />
+                <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
+                  <BookOpen size={32} className="text-slate-400" />
                 </div>
                 <span className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">
                   Daniel Training Center

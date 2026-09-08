@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
 
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
@@ -6,20 +7,15 @@ const config: Config = {
     extend: {
       // 1. 모노크롬 기반 컬러 시스템
       colors: {
-        brand: {
-          DEFAULT: "#0f172a", // slate-900 (메인 CTA)
-          light: "#f1f5f9", // slate-100 (배경용 연한색)
-          dark: "#020617", // slate-950 (호버용)
-        },
+        // 본문 텍스트 위계 (globals.css의 h1~p 기본 스타일이 사용)
         dark: {
           DEFAULT: "#0f172a", // slate-900 (진한 제목)
           medium: "#334155", // slate-700 (본문)
           light: "#64748b", // slate-500 (설명글)
         },
-        accent: {
-          DEFAULT: "#2563eb", // blue-600 (active 상태 최소 accent)
-          light: "#eff6ff", // blue-50 (active 배경)
-        },
+        // 브랜드 액센트 — 교회 상징색을 바꾸려면 이 한 줄만 교체하면
+        // accent-50 ~ accent-900 전체가 따라 바뀜 (예: colors.sky)
+        accent: colors.blue,
       },
       // 2. 폰트 설정
       fontFamily: {

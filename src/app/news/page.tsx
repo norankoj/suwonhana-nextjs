@@ -131,7 +131,7 @@ export default function NewsPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen animate-fade-in selection:bg-blue-100 selection:text-blue-900">
+    <div className="bg-white min-h-screen animate-fade-in selection:bg-accent-100 selection:text-accent-900">
       <HeroSub
         title="교회소식"
         desc="수원하나교회의 소식과 행사 안내를 확인하세요."
@@ -210,7 +210,7 @@ export default function NewsPage() {
                       {formatDate(post.date)}
                     </span>
                   </div>
-                  <h3 className="font-extrabold text-xl md:text-2xl text-slate-900 mb-3 line-clamp-2 leading-snug tracking-tight group-hover:text-blue-600 transition-colors">
+                  <h3 className="font-extrabold text-xl md:text-2xl text-slate-900 mb-3 line-clamp-2 leading-snug tracking-tight group-hover:text-accent-600 transition-colors">
                     {post.title}
                   </h3>
                   <p className="text-base text-slate-500 line-clamp-2 leading-relaxed flex-1">
@@ -274,7 +274,7 @@ export default function NewsPage() {
                         </span>
                       </div>
                       <h3
-                        className="font-extrabold text-xl md:text-2xl text-slate-900 mb-3 line-clamp-2 leading-snug tracking-tight group-hover:text-blue-600 transition-colors"
+                        className="font-extrabold text-xl md:text-2xl text-slate-900 mb-3 line-clamp-2 leading-snug tracking-tight group-hover:text-accent-600 transition-colors"
                         dangerouslySetInnerHTML={{
                           __html: post.title.rendered,
                         }}

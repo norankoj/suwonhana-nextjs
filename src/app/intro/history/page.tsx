@@ -39,7 +39,7 @@ export default async function HistoryPage() {
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-gradient-to-br from-blue-700 via-cyan-600 to-teal-500 selection:bg-white selection:text-blue-900">
+    <div className="relative w-full min-h-screen bg-gradient-to-br from-accent-700 via-cyan-600 to-teal-500 selection:bg-white selection:text-accent-900">
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute -top-32 -left-32 w-96 h-96 bg-white/10 rounded-full mix-blend-overlay filter blur-3xl"></div>
         <div className="absolute top-40 -left-10 w-72 h-72 bg-white/10 rounded-full mix-blend-overlay filter blur-3xl"></div>
