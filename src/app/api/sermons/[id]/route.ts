@@ -3,9 +3,9 @@
 // ==========================================
 
 import { NextRequest, NextResponse } from "next/server";
+import { wpBase } from "@/lib/wp-base";
 
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 
 export async function GET(
   _request: NextRequest,

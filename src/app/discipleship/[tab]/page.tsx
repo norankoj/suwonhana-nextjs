@@ -1,11 +1,12 @@
 "use client";
 
 import { getBackgroundEmbedUrl } from "@/utils/youtube";
+import { wpBase } from "@/lib/wp-base";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-const WP = process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP = wpBase();
 
 export default function TrainingContentPage() {
   const params = useParams();

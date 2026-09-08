@@ -1,4 +1,5 @@
 import React from "react";
+import { wpBase } from "@/lib/wp-base";
 import { Calendar, MapPin, Phone, CreditCard, Heart, Baby } from "lucide-react";
 import IntroPageHeader from "@/components/IntroPageHeader";
 import {
@@ -9,8 +10,7 @@ import {
   type GeneralNewsItem,
 } from "@/lib/bulletin-parser";
 
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 
 async function fetchBulletinData(): Promise<string | null> {
   try {

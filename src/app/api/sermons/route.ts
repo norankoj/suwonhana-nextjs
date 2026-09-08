@@ -5,9 +5,9 @@
 // Next.js fetch 캐시(revalidate: 60) + Cache-Control 헤더로 이중 캐싱
 
 import { NextRequest, NextResponse } from "next/server";
+import { wpBase } from "@/lib/wp-base";
 
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;

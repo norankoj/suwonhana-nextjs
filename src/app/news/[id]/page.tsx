@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { wpBase } from "@/lib/wp-base";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Tag, Share2, User, Clock } from "lucide-react";
 import BulletinView from "@/components/BulletinView";
 import { parseBulletinHtml } from "@/lib/bulletin-parser";
 
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 
 interface WPPost {
   id: number;

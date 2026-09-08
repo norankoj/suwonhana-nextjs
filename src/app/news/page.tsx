@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { wpBase } from "@/lib/wp-base";
 import Link from "next/link";
 import { Calendar, Tag, ArrowRight } from "lucide-react";
 import { HeroSub } from "@/components/Common";
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 
 const CATEGORIES = [
   { label: "전체", slug: "" },

@@ -34,6 +34,13 @@ const nextConfig = {
       // { protocol: 'https', hostname: 'suwonhana.org' },
     ],
   },
+
+  // 스냅샷 배포용: /wp-json, /graphql 라우트가 런타임에 fs 로 읽는 디렉터리라
+  // 명시하지 않으면 Vercel 번들에 포함되지 않아 배포본이 빈 화면이 된다.
+  outputFileTracingIncludes: {
+    "/wp-json/[...path]": ["./fixtures/**/*"],
+    "/graphql": ["./fixtures/**/*"],
+  },
 };
 
 export default nextConfig;

@@ -17,12 +17,11 @@ import type {
   WPCommunityPage,
 } from "./types";
 import { parseAcfJson } from "@/utils/format";
+import { wpBase, wpGraphqlUrl } from "@/lib/wp-base";
 
-// --- 도메인 설정 (환경변수 우선, 폴백으로 로컬) ---
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
-const WP_GRAPHQL_URL =
-  process.env.NEXT_PUBLIC_WORDPRESS_API_URL || `${WP_DOMAIN}/graphql`;
+// --- 도메인 설정 (wp-base.ts 참조: 환경변수 → 브라우저 origin → Vercel → 로컬) ---
+const WP_DOMAIN = wpBase();
+const WP_GRAPHQL_URL = wpGraphqlUrl();
 
 // ==========================================
 // REST API 유틸리티

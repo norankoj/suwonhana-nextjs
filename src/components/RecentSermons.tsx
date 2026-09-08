@@ -6,9 +6,9 @@ import Link from "next/link";
 import type { WPSermon } from "@/lib/types";
 import { getYouTubeId } from "@/utils/youtube";
 import { formatDate, getCleanTitle } from "@/utils/format";
+import { wpBase } from "@/lib/wp-base";
 
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 
 export default function RecentSermons() {
   const [sermons, setSermons] = useState<WPSermon[]>([]);

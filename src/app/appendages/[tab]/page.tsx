@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { wpBase } from "@/lib/wp-base";
 import { useParams, useRouter } from "next/navigation";
 import {
   MapPin,
@@ -14,7 +15,7 @@ import {
   Users,
 } from "lucide-react";
 
-const WP = process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP = wpBase();
 
 interface CounselingWPData {
   heroImage: string;

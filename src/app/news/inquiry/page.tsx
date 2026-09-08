@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { wpBase } from "@/lib/wp-base";
 import Link from "next/link";
 import {
   ChevronLeft,
@@ -11,8 +12,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 
 interface InquiryPost {
   id: number;

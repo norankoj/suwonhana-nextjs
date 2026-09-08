@@ -1,4 +1,5 @@
 import React from "react";
+import { wpBase } from "@/lib/wp-base";
 import type { Metadata } from "next";
 import IntroPageHeader from "@/components/IntroPageHeader";
 import FaqAccordion from "./FaqAccordion";
@@ -8,8 +9,7 @@ export const metadata: Metadata = {
   description: "수원하나교회에 대해 자주 묻는 질문들을 모았습니다.",
 };
 
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 
 interface WPFaqPost {
   id: number;

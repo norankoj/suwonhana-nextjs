@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { wpBase } from "@/lib/wp-base";
 import Link from "next/link";
 import { ArrowRight, ChevronRight, Copy, X, ChevronDown, Tag } from "lucide-react";
 import { MainHero, MainHeroData } from "@/components/MainHero";
@@ -25,8 +26,7 @@ interface WPPost {
 // [설정 영역] 워드프레스 연결 정보
 // =================================================================
 
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 const SLIDE_POST_TYPE = "risen_slide";
 
 const RECEIPT_URL =

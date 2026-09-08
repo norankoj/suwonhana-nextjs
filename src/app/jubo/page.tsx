@@ -1,12 +1,12 @@
 import React from "react";
+import { wpBase } from "@/lib/wp-base";
 import BulletinFlipbook from "@/components/BulletinFlipbook";
 import { BookOpen } from "lucide-react";
 
 // 항상 동적 렌더링 (캐시 완전 차단)
 export const dynamic = "force-dynamic";
 
-const WP_DOMAIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_DOMAIN || "http://suwonhana.local";
+const WP_DOMAIN = wpBase();
 
 interface WPPage {
   id: number;

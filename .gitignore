@@ -42,3 +42,6 @@ next-env.d.ts
 
 # claude code worktrees
 .claude/worktrees/
+
+# 스냅샷 갱신 중 생기는 임시 목록
+fixtures/_media-urls.txt
