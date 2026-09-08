@@ -58,7 +58,7 @@ const navItems = [
     sub: [
       { name: "하나 상담실", path: "/appendages/counseling" },
       // { name: "창업보육센터", path: "/appendages/entrepreneurship" },
-      { name: "다니엘 아마츠", path: "/appendages/daniel-amatz" },
+      // { name: "다니엘 아마츠", path: "/appendages/daniel-amatz" },
     ],
   },
 ];
@@ -116,7 +116,7 @@ export const Header = () => {
               >
                 <Link
                   href={item.path}
-                  className={`flex items-center px-2 transition-all duration-200 text-[15px] font-semibold ${
+                  className={`flex items-center px-2 transition-all duration-200 text-[17px] font-semibold ${
                     pathname.startsWith(item.path)
                       ? isTransparent
                         ? "text-white"
@@ -136,7 +136,7 @@ export const Header = () => {
                         <Link
                           key={subItem.name}
                           href={subItem.path}
-                          className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
+                          className={`block px-4 py-2.5 text-[15px] font-medium rounded-lg transition-colors cursor-pointer ${
                             pathname === subItem.path
                               ? "bg-slate-50 text-slate-900 font-bold"
                               : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
@@ -212,7 +212,7 @@ export const Header = () => {
                       <Link
                         key={sub.name}
                         href={sub.path}
-                        className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                        className={`px-3 py-2 text-[15px] rounded-lg transition-colors ${
                           pathname === sub.path
                             ? "text-slate-900 font-bold bg-slate-50"
                             : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"

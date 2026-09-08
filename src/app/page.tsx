@@ -139,14 +139,14 @@ export default function MainPage() {
               item._embedded["wp:featuredmedia"][0]
             ) {
               const media = item._embedded["wp:featuredmedia"][0];
-              // [수정] 캡션 가져오기 로직 (Code Snippets에서 만든 custom_meta 사용)
-              // 1순위: Slide Options에 적은 캡션 (custom_meta)
-              let caption = item.custom_meta?.caption;
 
-              // 2순위: 그게 없으면 글 제목 사용
-              if (!caption) {
-                caption = item.title?.rendered;
-              }
+              // 슬라이드 문구는 ACF 평문 필드에서만 읽는다.
+              // (예전 custom_meta.caption 은 Tailwind 클래스가 박힌 HTML이라
+              //  dangerouslySetInnerHTML 로 주입해야 했고, 관리자가 태그를
+              //  잘못 넣으면 레이아웃이 깨졌다. eyebrow/title/scripture 로 분리함)
+              const eyebrow = item.acf?.eyebrow?.trim() || "";
+              const title = item.acf?.title?.trim() || "";
+              const scripture = item.acf?.scripture?.trim() || "";
 
               // Click URL 연결 — 없으면 빈값
               const link = item.acf?.link || "";
@@ -154,15 +154,14 @@ export default function MainPage() {
               // 버튼 텍스트 — 빈값이면 버튼 미표시
               const buttonText = item.acf?.button_text || "";
               const isLive = item.acf?.is_live || false;
-              const scripture =
-                item.acf?.scripture || item.custom_meta?.scripture || "";
 
               return {
                 imageUrl: media.source_url,
-                caption: caption || "",
-                isLive: isLive,
-                buttonText: buttonText,
-                link: link,
+                isLive,
+                buttonText,
+                link,
+                ...(eyebrow && { eyebrow }),
+                ...(title && { title }),
                 ...(scripture && { scripture }),
               };
             }

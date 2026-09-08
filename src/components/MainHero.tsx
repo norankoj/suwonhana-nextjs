@@ -6,7 +6,10 @@ import { Play, Pause, ArrowRight } from "lucide-react";
 
 export interface MainHeroData {
   imageUrl: string;
-  caption: string;
+  /** 제목 위 작은 영문 문구. 비우면 미표시 */
+  eyebrow?: string;
+  /** 큰 제목(평문). 줄바꿈은 \n. 이미지에 제목이 그려져 있으면 비움 */
+  title?: string;
   link?: string;
   buttonText?: string;
   isLive?: boolean;
@@ -16,14 +19,16 @@ export interface MainHeroData {
 const DEFAULT_DATA: MainHeroData[] = [
   {
     imageUrl: "",
-    caption: `<p>SUNDAY WORSHIP SERVICE</p><h1>수원하나교회 주일예배</h1>`,
+    eyebrow: "SUNDAY WORSHIP SERVICE",
+    title: "수원하나교회\n주일예배",
     link: "/intro/vision",
     buttonText: "자세히 보기",
     isLive: true,
   },
   {
     imageUrl: "",
-    caption: `<p>WORD & SPIRIT RENEWAL</p><h1>말씀과 성령으로<br/>새로워지는 교회</h1>`,
+    eyebrow: "WORD & SPIRIT RENEWAL",
+    title: "말씀과 성령으로\n새로워지는 교회",
     link: "/sermon",
     buttonText: "설교 말씀 듣기",
     isLive: false,
@@ -75,6 +80,12 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
   const currentSlide = displaySlides[currentIndex];
   if (!currentSlide) return null;
 
+  const hasOverlayText = Boolean(
+    currentSlide.eyebrow?.trim() ||
+      currentSlide.title?.trim() ||
+      currentSlide.scripture?.trim(),
+  );
+
   return (
     /*
      * 레이아웃 전략 (모바일/PC 통합 오버레이)
@@ -88,7 +99,7 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
      * [공통] 인디케이터 (하단 중앙 절대 위치)
      * ─────────────────────────────────────────────────────────────
      */
-    <section className="relative w-full bg-slate-950 h-[75vh] min-h-[480px] md:h-[85vh] md:min-h-[600px] overflow-hidden selection:bg-accent-100 selection:text-accent-900">
+    <section className="relative w-full bg-slate-950 h-[72vh] min-h-[460px] md:h-auto md:aspect-video md:max-h-[86vh] md:min-h-0 overflow-hidden selection:bg-accent-100 selection:text-accent-900">
       {/* ══════════════════════════════════════════
           이미지 크로스페이드 레이어 (절대 위치)
       ══════════════════════════════════════════ */}
@@ -122,10 +133,19 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           모바일: 하단 진하게 (오버레이 텍스트)
           PC:     좌측 + 하단 이중 그라디언트
       ══════════════════════════════════════════ */}
-      {/* 공통: 하단 그라디언트 */}
-      <div className="absolute inset-0 z-[11] bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-      {/* PC 전용: 좌측 그라디언트 */}
-      <div className="hidden md:block absolute inset-0 z-[11] bg-gradient-to-r from-black/50 via-black/10 to-transparent" />
+      {/* 텍스트가 있을 때만 스크림을 깐다.
+          디자인 완성본 슬라이드(제목이 이미지에 그려진 경우)는
+          그라디언트가 밝은 이미지를 회색으로 죽이므로 씌우지 않는다. */}
+      {hasOverlayText && (
+        <>
+          {/* 공통: 하단 그라디언트 */}
+          <div className="absolute inset-0 z-[11] bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+          {/* PC 전용: 좌측 그라디언트 */}
+          <div className="hidden md:block absolute inset-0 z-[11] bg-gradient-to-r from-black/40 to-transparent to-60%" />
+        </>
+      )}
+      {/* 인디케이터/버튼 가독성용 최소 스크림 (항상, 아주 옅게) */}
+      <div className="absolute inset-x-0 bottom-0 h-32 z-[11] bg-gradient-to-t from-black/35 to-transparent" />
 
       {/* ══════════════════════════════════════════
           이미지 클릭 → 링크 이동 (투명 레이어)
@@ -163,20 +183,19 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
               </div>
             )}
 
-            {/* 캡션 + 제목 */}
-            <div
-              className="
-              [&>p:first-child]:text-[10px] [&>p:first-child]:md:text-sm
-              [&>p:first-child]:font-bold
-              [&>p:first-child]:text-white/70 [&>p:first-child]:uppercase [&>p:first-child]:tracking-[0.18em] [&>p:first-child]:md:tracking-[0.22em]
-              [&>p:first-child]:mb-1.5 [&>p:first-child]:md:mb-3
+            {/* 윗줄 문구 — WP에서 평문으로 입력 */}
+            {currentSlide.eyebrow?.trim() && (
+              <p className="text-[10px] md:text-sm font-bold text-white/70 uppercase tracking-[0.18em] md:tracking-[0.22em] mb-1.5 md:mb-3 drop-shadow">
+                {currentSlide.eyebrow}
+              </p>
+            )}
 
-              [&>h1]:text-[1.7rem] [&>h1]:md:text-5xl [&>h1]:lg:text-6xl
-              [&>h1]:font-extrabold [&>h1]:text-white
-              [&>h1]:tracking-tight [&>h1]:break-keep [&>h1]:leading-snug
-            "
-              dangerouslySetInnerHTML={{ __html: currentSlide.caption }}
-            />
+            {/* 큰 제목 — 평문. 줄바꿈(\n)만 <br>로 바꿔 렌더 */}
+            {currentSlide.title?.trim() && (
+              <h1 className="text-[1.7rem] md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight break-keep leading-snug drop-shadow-lg whitespace-pre-line">
+                {currentSlide.title}
+              </h1>
+            )}
 
             {/* 성경 구절 */}
             {currentSlide.scripture && (
@@ -192,11 +211,14 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                 target={
                   currentSlide.link?.startsWith("http") ? "_blank" : "_self"
                 }
+                /* 밝은 디자인 이미지 위에서도 읽히도록 어두운 배경을 깐다.
+                   (스크림을 걷어낸 슬라이드에서는 흰 반투명 버튼이 묻힘) */
                 className="pointer-events-auto mt-3 md:mt-5 inline-flex items-center justify-center gap-2
                          px-4 py-2 md:px-6 md:py-3 w-max rounded-full
-                         border border-white/40 bg-white/10
+                         border border-white/25 bg-slate-900/75
                          backdrop-blur-sm text-white text-sm md:text-base font-bold
-                         hover:bg-white hover:text-slate-900
+                         shadow-lg
+                         hover:bg-white hover:text-slate-900 hover:border-white
                          transition-all duration-300 group/btn"
               >
                 <span>{currentSlide.buttonText}</span>
