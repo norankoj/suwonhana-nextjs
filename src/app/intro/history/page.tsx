@@ -4,6 +4,7 @@ import ScrollReveal from "./ScrollReveal";
 import BackToTopButton from "./BackToTopButton";
 import type { HistoryYear, HistoryEvent } from "@/lib/types";
 import { fetchHistoryData } from "@/lib/wordpress";
+import { parseAcfJson } from "@/utils/format";
 
 export const metadata: Metadata = {
   title: "교회연혁",
@@ -13,16 +14,11 @@ export const metadata: Metadata = {
 export default async function HistoryPage() {
   const pageData = await fetchHistoryData();
 
-  let parsedHistoryData: HistoryYear[] = [];
-  const rawJsonString = pageData?.historyFields?.historyJsonData;
-  if (rawJsonString) {
-    try {
-      parsedHistoryData = JSON.parse(rawJsonString);
-    } catch (e) {
-      console.error("JSON Parsing Error! 워드프레스 입력값을 확인하세요.", e);
-      parsedHistoryData = [];
-    }
-  }
+  const parsedHistoryData = parseAcfJson<HistoryYear[]>(
+    pageData?.historyFields?.historyJsonData,
+    [],
+    "교회 연혁",
+  );
 
   const formatPosterDate = (dateStr: string) => {
     if (!dateStr) return "";

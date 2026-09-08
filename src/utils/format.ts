@@ -35,3 +35,21 @@ export function decodeHtmlEntities(text: string): string {
     .replace(/&quot;/g, '"')
     .replace(/&#039;/g, "'");
 }
+
+/**
+ * ACF 텍스트 영역에 손으로 입력한 JSON을 파싱한다.
+ * 한글/워드에서 붙여넣으면 따옴표가 둥근 따옴표(" " ' ')로 바뀌어
+ * JSON.parse가 실패하므로 곧은 따옴표로 되돌린 뒤 파싱한다.
+ * 실패 시 예외 대신 fallback을 반환해 페이지가 죽지 않게 한다.
+ */
+export function parseAcfJson<T>(raw: string | null | undefined, fallback: T, label = "JSON"): T {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(
+      raw.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'"),
+    ) as T;
+  } catch (e) {
+    console.error(`[${label}] 파싱 실패 — WP 관리자에서 JSON 문법을 확인하세요:`, e);
+    return fallback;
+  }
+}

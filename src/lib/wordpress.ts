@@ -16,6 +16,7 @@ import type {
   WorshipFetchResult,
   WPCommunityPage,
 } from "./types";
+import { parseAcfJson } from "@/utils/format";
 
 // --- 도메인 설정 (환경변수 우선, 폴백으로 로컬) ---
 const WP_DOMAIN =
@@ -350,14 +351,11 @@ export async function fetchWorshipData(): Promise<WorshipFetchResult> {
   const fields = result?.page?.worshipFields;
 
   // JSON 파싱
-  let data: WorshipData | null = null;
-  if (fields?.worshipJsonData) {
-    try {
-      data = JSON.parse(fields.worshipJsonData) as WorshipData;
-    } catch {
-      console.error("fetchWorshipData: JSON 파싱 실패");
-    }
-  }
+  const data = parseAcfJson<WorshipData | null>(
+    fields?.worshipJsonData,
+    null,
+    "예배 안내",
+  );
 
   // ACF 이미지 필드 (순서: 1~4)
   const nextGenImages: (string | null)[] = [

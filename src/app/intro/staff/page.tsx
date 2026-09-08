@@ -6,7 +6,7 @@ import BackToTopButton from "../history/BackToTopButton";
 import IntroPageHeader from "@/components/IntroPageHeader";
 import type { StaffMember, BookItem, WPStaffNode, ServingFields } from "@/lib/types";
 import { fetchPastorAndStaffData } from "@/lib/wordpress";
-import { decodeHtmlEntities } from "@/utils/format";
+import { decodeHtmlEntities, parseAcfJson } from "@/utils/format";
 
 export const metadata: Metadata = {
   title: "섬기는 이들",
@@ -56,17 +56,7 @@ export default async function PastorPage() {
     .filter((line: string) => line.trim() !== "");
   const spastorImageUrl = fields.pastorImage?.node?.sourceUrl || "";
 
-  let bookList: BookItem[] = [];
-  if (fields.booksJson) {
-    try {
-      const safeJson = fields.booksJson
-        .replace(/[\u201C\u201D]/g, '"')
-        .replace(/[\u2018\u2019]/g, "'");
-      bookList = JSON.parse(safeJson);
-    } catch (e) {
-      console.error("저서 JSON 파싱 에러:", e);
-    }
-  }
+  const bookList = parseAcfJson<BookItem[]>(fields.booksJson, [], "담임목사 저서");
 
   const rawStaffs: WPStaffNode[] = wpData?.staffs?.nodes || [];
 
