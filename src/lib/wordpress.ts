@@ -18,6 +18,12 @@ import type {
 } from "./types";
 import { parseAcfJson } from "@/utils/format";
 import { wpBase, wpGraphqlUrl } from "@/lib/wp-base";
+import {
+  readServerFixture,
+  graphqlKey,
+  restKeyFromPath,
+  wpGetJson,
+} from "@/lib/fixtures";
 
 // --- 도메인 설정 (wp-base.ts 참조: 환경변수 → 브라우저 origin → Vercel → 로컬) ---
 const WP_DOMAIN = wpBase();
@@ -28,6 +34,9 @@ const WP_GRAPHQL_URL = wpGraphqlUrl();
 // ==========================================
 
 async function wpRestGet<T>(path: string): Promise<T | null> {
+  // 서버(빌드·SSR·ISR)에서는 HTTP 없이 스냅샷을 직접 읽는다 — fixtures.ts 주석 참고
+  const snap = readServerFixture<T>("rest", restKeyFromPath(`wp/v2/${path}`));
+  if (snap !== null) return snap;
   try {
     const res = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/${path}`, {
       next: { revalidate: 60 },
@@ -48,6 +57,8 @@ interface WPRestListResult<T> {
 async function wpRestGetList<T>(
   path: string,
 ): Promise<WPRestListResult<T>> {
+  const snap = readServerFixture<T[]>("rest", restKeyFromPath(`wp/v2/${path}`));
+  if (snap !== null) return { data: snap, totalPages: 1 };
   try {
     const res = await fetch(`${WP_DOMAIN}/wp-json/wp/v2/${path}`, {
       next: { revalidate: 60 },
@@ -68,6 +79,16 @@ async function wpRestGetAll<T>(endpoint: string): Promise<T[]> {
   let page = 1;
   let hasMore = true;
   while (hasMore) {
+    const snap = readServerFixture<T[]>(
+      "rest",
+      restKeyFromPath(`wp/v2/${endpoint}?per_page=100&page=${page}`),
+    );
+    if (snap !== null) {
+      allItems = [...allItems, ...snap];
+      if (snap.length < 100) break;
+      page++;
+      continue;
+    }
     const res = await fetch(
       `${WP_DOMAIN}/wp-json/wp/v2/${endpoint}?per_page=100&page=${page}`,
       { next: { revalidate: 60 } },
@@ -93,6 +114,8 @@ async function wpRestGetAll<T>(endpoint: string): Promise<T[]> {
 const _graphqlFallbackCache: Record<string, unknown> = {};
 
 async function wpGraphQL<T>(query: string): Promise<T | null> {
+  const snap = readServerFixture<{ data?: T }>("graphql", graphqlKey(query));
+  if (snap !== null) return (snap.data ?? null) as T | null;
   try {
     const res = await fetch(WP_GRAPHQL_URL, {
       method: "POST",
@@ -121,6 +144,11 @@ async function wpGraphQL<T>(query: string): Promise<T | null> {
 // ==========================================
 
 export async function fetchHomepageData(): Promise<Record<string, string> | null> {
+  const snap = readServerFixture<Array<{ acf?: Record<string, string> }>>(
+    "rest",
+    restKeyFromPath("wp/v2/pages?slug=homepage-settings&_fields=acf"),
+  );
+  if (snap !== null) return snap[0]?.acf ?? null;
   try {
     const res = await fetch(
       `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=homepage-settings&_fields=acf`,
@@ -389,13 +417,11 @@ export async function fetchCommunityPage(
 ): Promise<WPCommunityPage | null> {
   try {
     // 슬러그로 페이지 조회 (ACF + 피처드 이미지 포함)
-    const pageRes = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=${slug}&_embed`,
-      { next: { revalidate: 300 } },
-    );
-    if (!pageRes.ok) return null;
+    const pages = await wpGetJson<WPPageRaw[]>(`pages?slug=${slug}&_embed`, {
+      next: { revalidate: 300 },
+    });
+    if (!pages) return null;
 
-    const pages: WPPageRaw[] = await pageRes.json();
     const page = pages[0];
     if (!page) return null;
 
@@ -416,12 +442,11 @@ export async function fetchCommunityPage(
     if (attachmentIds.length > 0) {
       // ID로 원본 full-size URL 일괄 조회
       try {
-        const mediaRes = await fetch(
-          `${WP_DOMAIN}/wp-json/wp/v2/media?include=${attachmentIds.join(",")}&per_page=100&_fields=id,source_url`,
+        const mediaItems = await wpGetJson<{ id: number; source_url: string }[]>(
+          `media?include=${attachmentIds.join(",")}&per_page=100&_fields=id,source_url`,
           { next: { revalidate: 300 } },
         );
-        if (mediaRes.ok) {
-          const mediaItems: { id: number; source_url: string }[] = await mediaRes.json();
+        if (mediaItems) {
           galleryImages = attachmentIds
             .map((id) => mediaItems.find((m) => m.id === id)?.source_url ?? "")
             .filter(Boolean);

@@ -1,12 +1,11 @@
 import React from "react";
-import { wpBase } from "@/lib/wp-base";
+import { wpGetJson } from "@/lib/fixtures";
 import BulletinFlipbook from "@/components/BulletinFlipbook";
 import { BookOpen } from "lucide-react";
 
 // 항상 동적 렌더링 (캐시 완전 차단)
 export const dynamic = "force-dynamic";
 
-const WP_DOMAIN = wpBase();
 
 interface WPPage {
   id: number;
@@ -21,15 +20,11 @@ async function getBulletinImages(): Promise<{
   pageDate?: string;
 }> {
   try {
-    const ts = Date.now();
-    const res = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=jubo&_fields=id,title,date,content&_=${ts}`,
-      { cache: "no-store" }
+    const pages = await wpGetJson<WPPage[]>(
+      `pages?slug=jubo&_fields=id,title,date,content&_=${Date.now()}`,
+      { cache: "no-store" },
     );
-    if (!res.ok) return { images: [] };
-
-    const pages: WPPage[] = await res.json();
-    if (!pages.length) return { images: [] };
+    if (!pages?.length) return { images: [] };
 
     const page = pages[0];
 

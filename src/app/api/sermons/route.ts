@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { wpBase } from "@/lib/wp-base";
+import { readServerFixture, restKeyFromPath } from "@/lib/fixtures";
 
 const WP_DOMAIN = wpBase();
 
@@ -31,7 +32,18 @@ export async function GET(request: NextRequest) {
     if (val) wpParams.set(key, val);
   });
 
-  const wpUrl = `${WP_DOMAIN}/wp-json/wp/v2/risen_multimedia?${wpParams.toString()}`;
+  const wpPath = `risen_multimedia?${wpParams.toString()}`;
+
+  // 서버에서는 스냅샷을 바로 읽는다 (배포본이 자기 자신을 못 부르는 문제 회피)
+  const snap = readServerFixture<unknown[]>("rest", restKeyFromPath(`wp/v2/${wpPath}`));
+  if (snap !== null) {
+    return NextResponse.json(
+      { data: snap, totalPages: 1 },
+      { headers: { "Cache-Control": "public, s-maxage=60" } },
+    );
+  }
+
+  const wpUrl = `${WP_DOMAIN}/wp-json/wp/v2/${wpPath}`;
 
   try {
     const res = await fetch(wpUrl, {

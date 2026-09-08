@@ -11,6 +11,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 
 export const FIXTURE_DIR = path.join(process.cwd(), "fixtures");
 
@@ -67,6 +68,58 @@ export function writeFixture(kind: "rest" | "graphql", key: string, fx: Fixture)
     fs.writeFileSync(idx, JSON.stringify(map, null, 2), "utf8");
   } catch (e) {
     console.error("[fixtures] 저장 실패:", key, e);
+  }
+}
+
+/**
+ * 서버(빌드·SSR·ISR 재생성)에서 스냅샷을 HTTP 없이 바로 읽는다.
+ *
+ * 왜 필요한가 — 서버가 자기 자신의 /wp-json 을 fetch 하려면 절대 URL이
+ * 필요한데, Vercel 에서 그 값은 배포별 고유 주소(VERCEL_URL)가 되고
+ * 이 주소는 배포 보호(Deployment Protection)에 걸려 403 이 난다.
+ * 빌드 시점에는 아예 서빙 전이라 접속 자체가 불가능하다.
+ * 결과적으로 정적 페이지가 매번 빈 데이터로 생성됐다.
+ *
+ * 기록 모드(WP_UPSTREAM 설정)에서는 null 을 반환해 평소대로 HTTP 를 타게 한다.
+ */
+export function readServerFixture<T>(kind: "rest" | "graphql", key: string): T | null {
+  if (typeof window !== "undefined") return null; // 브라우저는 HTTP 로
+  if (WP_UPSTREAM) return null; // 기록 모드는 실제 WP 로
+  const fx = readFixture(kind, key);
+  return fx ? (fx.body as T) : null;
+}
+
+/** GraphQL 쿼리 → 스냅샷 키 (라우트 핸들러와 동일 규칙) */
+export function graphqlKey(query: string): string {
+  const norm = query.replace(/\s+/g, " ").trim();
+  return createHash("sha1").update(norm).digest("hex").slice(0, 16);
+}
+
+/** REST 경로 문자열(`pages?slug=x`) → 스냅샷 키 */
+export function restKeyFromPath(pathWithQuery: string): string {
+  const [p, q = ""] = pathWithQuery.split("?");
+  return restKey(p.split("/").filter(Boolean), new URLSearchParams(q));
+}
+
+/**
+ * WP REST GET 공통 진입점.
+ * 서버에서는 스냅샷을 바로 읽고, 없으면(또는 브라우저면) HTTP 로 간다.
+ * `pathWithQuery` 는 `wp/v2/` 이후 부분 — 예: `pages?slug=jubo&_fields=id`
+ */
+export async function wpGetJson<T>(
+  pathWithQuery: string,
+  init?: RequestInit & { next?: { revalidate?: number } },
+): Promise<T | null> {
+  const snap = readServerFixture<T>("rest", restKeyFromPath(`wp/v2/${pathWithQuery}`));
+  if (snap !== null) return snap;
+  try {
+    const { wpBase } = await import("@/lib/wp-base");
+    const res = await fetch(`${wpBase()}/wp-json/wp/v2/${pathWithQuery}`, init);
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch (e) {
+    console.error("[wpGetJson] 실패:", pathWithQuery, e);
+    return null;
   }
 }
 

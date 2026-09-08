@@ -1,5 +1,5 @@
 import React from "react";
-import { wpBase } from "@/lib/wp-base";
+import { wpGetJson } from "@/lib/fixtures";
 import type { Metadata } from "next";
 import IntroPageHeader from "@/components/IntroPageHeader";
 import FaqAccordion from "./FaqAccordion";
@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   description: "수원하나교회에 대해 자주 묻는 질문들을 모았습니다.",
 };
 
-const WP_DOMAIN = wpBase();
 
 interface WPFaqPost {
   id: number;
@@ -60,17 +59,11 @@ const FALLBACK: WPFaqPost[] = [
 ];
 
 async function fetchFaq(): Promise<WPFaqPost[]> {
-  try {
-    const res = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/faq?per_page=50&orderby=menu_order&order=asc&_fields=id,title,content`,
-      { next: { revalidate: 300 } },
-    );
-    if (!res.ok) return FALLBACK;
-    const data: WPFaqPost[] = await res.json();
-    return data.length > 0 ? data : FALLBACK;
-  } catch {
-    return FALLBACK;
-  }
+  const data = await wpGetJson<WPFaqPost[]>(
+    "faq?per_page=50&orderby=menu_order&order=asc&_fields=id,title,content",
+    { next: { revalidate: 300 } },
+  );
+  return data && data.length > 0 ? data : FALLBACK;
 }
 
 export default async function FAQPage() {

@@ -1,5 +1,5 @@
 import React from "react";
-import { wpBase } from "@/lib/wp-base";
+import { wpGetJson } from "@/lib/fixtures";
 import { Calendar, MapPin, Phone, CreditCard, Heart, Baby } from "lucide-react";
 import IntroPageHeader from "@/components/IntroPageHeader";
 import {
@@ -10,21 +10,13 @@ import {
   type GeneralNewsItem,
 } from "@/lib/bulletin-parser";
 
-const WP_DOMAIN = wpBase();
-
 async function fetchBulletinData(): Promise<string | null> {
-  try {
-    const res = await fetch(
-      `${WP_DOMAIN}/wp-json/wp/v2/pages?slug=bulletin-back&_fields=content`,
-      { next: { revalidate: 3600 } },
-    );
-    if (!res.ok) return null;
-    const pages: { content: { rendered: string } }[] = await res.json();
-    if (!pages.length) return null;
-    return extractTextFromHtml(pages[0].content.rendered);
-  } catch {
-    return null;
-  }
+  const pages = await wpGetJson<{ content: { rendered: string } }[]>(
+    "pages?slug=bulletin-back&_fields=content",
+    { next: { revalidate: 3600 } },
+  );
+  if (!pages?.length) return null;
+  return extractTextFromHtml(pages[0].content.rendered);
 }
 
 function AnnouncementCard({ item }: { item: BulletinAnnouncement }) {
