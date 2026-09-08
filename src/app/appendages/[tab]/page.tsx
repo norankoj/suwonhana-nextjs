@@ -70,30 +70,30 @@ export default function AppendagesContentPage() {
               <div className="absolute inset-0 bg-slate-800" />
             )}
             {/* 그라디언트 오버레이 */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
             {/* 타이틀 */}
             <div className="relative z-10 w-full max-w-content mx-auto px-4 sm:px-6 lg:px-8 pb-14 md:pb-20">
-              <p className="text-white/60 text-sm font-medium tracking-[0.2em] uppercase mb-3">
+              <p className="text-[10px] md:text-xs font-bold text-white/70 uppercase tracking-[0.3em] mb-4">
                 Hana Counseling Center
               </p>
-              <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+              <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
                 하나 상담실
               </h1>
             </div>
           </div>
 
           {/* ── 2. 본문 ── */}
-          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-20">
+          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-16">
             {/* 사명 및 목표 */}
             <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-10">
               <Quote size={36} className="text-slate-200 fill-slate-100" />
 
-              <blockquote className="text-xl md:text-2xl font-serif font-bold text-slate-800 leading-relaxed break-keep">
+              <blockquote className="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed break-keep">
                 "평강의 하나님이 친히 너희를 온전히 거룩하게 하시고 또 너희의 온
                 영과 혼과 몸이 우리 주 예수 그리스도께서 강림하실 때에 흠 없게
                 보전되기를 원하노라"
-                <cite className="block text-sm text-slate-400 font-sans font-normal mt-3 not-italic">
+                <cite className="block text-sm text-slate-400 font-normal mt-3 not-italic">
                   데살로니가전서 5:23
                 </cite>
               </blockquote>
@@ -130,7 +130,7 @@ export default function AppendagesContentPage() {
                   href={wpData.reservationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-3 px-10 py-5 bg-slate-900 text-white rounded-full font-bold text-lg hover:bg-slate-700 transition-all shadow-lg hover:-translate-y-1"
+                  className="group inline-flex items-center gap-3 px-5 py-2.5 md:px-8 md:py-4 bg-slate-900 text-white rounded-full font-bold text-sm md:text-base hover:bg-slate-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                 >
                   <CalendarCheck size={20} />
                   <span>상담 예약 신청하기</span>
@@ -142,7 +142,7 @@ export default function AppendagesContentPage() {
               ) : (
                 <button
                   onClick={() => router.push("/counseling/apply")}
-                  className="group inline-flex items-center gap-3 px-10 py-5 bg-slate-900 text-white rounded-full font-bold text-lg hover:bg-slate-700 transition-all shadow-lg hover:-translate-y-1"
+                  className="group inline-flex items-center gap-3 px-5 py-2.5 md:px-8 md:py-4 bg-slate-900 text-white rounded-full font-bold text-sm md:text-base hover:bg-slate-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                 >
                   <CalendarCheck size={20} />
                   <span>상담 예약 신청하기</span>
@@ -274,7 +274,7 @@ export default function AppendagesContentPage() {
           TAB: DANIEL AMATZ (다니엘 아마츠)
       ========================================================= */}
       {tab === "daniel-amatz" && (
-        <div className="animate-fade-in space-y-20">
+        <div className="animate-fade-in space-y-16">
           {/* 헤더 */}
           <div className="text-center space-y-4">
             <span className="inline-block py-1 px-3 rounded text-slate-500 bg-slate-100 text-xs font-bold tracking-widest uppercase">

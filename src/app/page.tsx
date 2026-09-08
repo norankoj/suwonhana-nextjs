@@ -7,6 +7,7 @@ import { MainHero, MainHeroData } from "@/components/MainHero";
 import WelcomeSection from "@/components/WelcomeSection";
 import HomePhotoCarousel from "@/components/HomePhotoCarousel";
 import type { WPSlide } from "@/lib/types";
+import { DONATION_ACCOUNTS } from "@/lib/donation";
 
 interface WPPost {
   id: number;
@@ -537,14 +538,7 @@ export default function MainPage() {
 
               {/* 계좌 목록 */}
               <div className="divide-y divide-slate-100">
-                {[
-                  { label: "십일조/감사", bank: "국민", num: "468001-01-318042" },
-                  { label: "선교헌금", bank: "국민", num: "422001-04-084939" },
-                  { label: "건축헌금", bank: "국민", num: "920301-01-563418" },
-                  { label: "DA", bank: "국민", num: "920301-01-563450" },
-                  { label: "난민사역후원", bank: "국민", num: "920301-01-512487" },
-                  { label: "구제헌금", bank: "국민", num: "920301-01-027154" },
-                ].map((item, idx) => (
+                {DONATION_ACCOUNTS.map((item, idx) => (
                   <button
                     key={idx}
                     type="button"

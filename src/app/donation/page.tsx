@@ -3,15 +3,8 @@
 import React, { useState } from "react";
 import { Copy, CheckCheck, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { DONATION_ACCOUNTS as ACCOUNTS } from "@/lib/donation";
 
-const ACCOUNTS = [
-  { label: "십일조/감사", bank: "국민", num: "468001-01-318042" },
-  { label: "선교헌금",    bank: "국민", num: "422001-04-084939" },
-  { label: "건축헌금",    bank: "국민", num: "920301-01-563418" },
-  { label: "DA",          bank: "국민", num: "920301-01-563450" },
-  { label: "난민사역후원", bank: "국민", num: "920301-01-512487" },
-  { label: "구제헌금",    bank: "국민", num: "920301-01-027154" },
-];
 
 export default function DonationPage() {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
