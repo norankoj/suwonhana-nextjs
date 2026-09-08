@@ -80,12 +80,6 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
   const currentSlide = displaySlides[currentIndex];
   if (!currentSlide) return null;
 
-  const hasOverlayText = Boolean(
-    currentSlide.eyebrow?.trim() ||
-      currentSlide.title?.trim() ||
-      currentSlide.scripture?.trim(),
-  );
-
   return (
     /*
      * 레이아웃 전략 (모바일/PC 통합 오버레이)
@@ -133,19 +127,12 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
           모바일: 하단 진하게 (오버레이 텍스트)
           PC:     좌측 + 하단 이중 그라디언트
       ══════════════════════════════════════════ */}
-      {/* 텍스트가 있을 때만 스크림을 깐다.
-          디자인 완성본 슬라이드(제목이 이미지에 그려진 경우)는
-          그라디언트가 밝은 이미지를 회색으로 죽이므로 씌우지 않는다. */}
-      {hasOverlayText && (
-        <>
-          {/* 공통: 하단 그라디언트 */}
-          <div className="absolute inset-0 z-[11] bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-          {/* PC 전용: 좌측 그라디언트 */}
-          <div className="hidden md:block absolute inset-0 z-[11] bg-gradient-to-r from-black/40 to-transparent to-60%" />
-        </>
-      )}
-      {/* 인디케이터/버튼 가독성용 최소 스크림 (항상, 아주 옅게) */}
-      <div className="absolute inset-x-0 bottom-0 h-32 z-[11] bg-gradient-to-t from-black/35 to-transparent" />
+      {/* 스크림은 모든 슬라이드에 동일하게 적용한다 (통일성).
+          제목이 이미지에 그려진 슬라이드도 예외 없이 같은 톤을 유지. */}
+      {/* 공통: 하단 그라디언트 */}
+      <div className="absolute inset-0 z-[11] bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+      {/* PC 전용: 좌측 그라디언트 */}
+      <div className="hidden md:block absolute inset-0 z-[11] bg-gradient-to-r from-black/50 via-black/10 to-transparent" />
 
       {/* ══════════════════════════════════════════
           이미지 클릭 → 링크 이동 (투명 레이어)
@@ -211,14 +198,11 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
                 target={
                   currentSlide.link?.startsWith("http") ? "_blank" : "_self"
                 }
-                /* 밝은 디자인 이미지 위에서도 읽히도록 어두운 배경을 깐다.
-                   (스크림을 걷어낸 슬라이드에서는 흰 반투명 버튼이 묻힘) */
                 className="pointer-events-auto mt-3 md:mt-5 inline-flex items-center justify-center gap-2
                          px-4 py-2 md:px-6 md:py-3 w-max rounded-full
-                         border border-white/25 bg-slate-900/75
+                         border border-white/40 bg-white/10
                          backdrop-blur-sm text-white text-sm md:text-base font-bold
-                         shadow-lg
-                         hover:bg-white hover:text-slate-900 hover:border-white
+                         hover:bg-white hover:text-slate-900
                          transition-all duration-300 group/btn"
               >
                 <span>{currentSlide.buttonText}</span>
