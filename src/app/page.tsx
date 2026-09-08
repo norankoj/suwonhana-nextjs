@@ -8,6 +8,7 @@ import WelcomeSection from "@/components/WelcomeSection";
 import HomePhotoCarousel from "@/components/HomePhotoCarousel";
 import type { WPSlide } from "@/lib/types";
 import { DONATION_ACCOUNTS } from "@/lib/donation";
+import { getBackgroundEmbedUrl } from "@/utils/youtube";
 
 interface WPPost {
   id: number;
@@ -322,10 +323,10 @@ export default function MainPage() {
           <div className="w-full max-w-content mx-auto px-0 md:px-6 lg:px-8">
             <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-slate-200">
               <iframe
-                src="https://www.youtube.com/embed/ke0jfCzUqa4?autoplay=1&mute=1&loop=1&playlist=ke0jfCzUqa4&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&vq=hd1080"
+                src={getBackgroundEmbedUrl("ke0jfCzUqa4", "&vq=hd1080")}
                 title="수원하나교회 영상"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                className="absolute w-[110%] h-[110%] -top-[5%] -left-[5%]"
+                className="absolute w-full h-[132%] -top-[16%] left-0"
                 style={{ border: "none", pointerEvents: "none" }}
               />
             </div>
