@@ -192,7 +192,7 @@ export default async function PastorPage() {
                       src={book.image}
                       alt={book.title}
                       fill
-                      unoptimized={true}
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/20 transition-colors duration-300 flex items-center justify-center">

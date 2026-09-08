@@ -6,9 +6,13 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "image.aladin.co.kr", // 알라딘 이미지 도메인 허용
+        hostname: "image.aladin.co.kr", // 알라딘 이미지 (담임목사 저서 표지)
         port: "",
         pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "img.godpeople.com", // 갓피플 이미지 (담임목사 저서 표지)
       },
       {
         protocol: "http",
