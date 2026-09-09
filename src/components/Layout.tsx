@@ -215,7 +215,7 @@ export const Header = () => {
                         className={`px-3 py-2 text-[15px] rounded-lg transition-colors ${
                           pathname === sub.path
                             ? "text-slate-900 font-bold bg-slate-50"
-                            : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"
+                            : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
                         }`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
@@ -249,7 +249,7 @@ export const Footer = () => {
                 alt="logo"
               />
             </Link>
-            <p className="ml-1 mb-6 leading-relaxed max-w-md text-sm text-slate-500">
+            <p className="ml-1 mb-6 leading-relaxed max-w-md text-sm text-slate-400">
               (17103) 경기도 용인시 기흥구 서그내로 16번길 11-6
               <br />
               Tel: 031-202-0697
@@ -292,14 +292,14 @@ export const Footer = () => {
             <h4 className="text-white font-bold mb-4 text-sm tracking-wide">
               예배안내
             </h4>
-            <p className="text-sm text-slate-500 leading-loose">
+            <p className="text-sm text-slate-400 leading-loose">
               주일예배 09:00 / 11:00 / 14:30
               <br />
               금요예배 21:00
             </p>
           </div>
         </div>
-        <div className="border-t border-slate-800/50 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+        <div className="border-t border-slate-800/50 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <span>© 2026 Suwon Hana Church. All rights reserved.</span>
           <Link
             href="/privacy"

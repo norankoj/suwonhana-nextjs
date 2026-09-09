@@ -75,7 +75,7 @@ function ModalContent({
         {showClose && (
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-700 transition-colors ml-4 mt-1 shrink-0"
+            className="text-slate-500 hover:text-slate-700 transition-colors ml-4 mt-1 shrink-0"
           >
             <X size={22} />
           </button>
@@ -195,7 +195,7 @@ function Modal({
             </div>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-700 transition-colors ml-4 mt-1 shrink-0"
+              className="text-slate-500 hover:text-slate-700 transition-colors ml-4 mt-1 shrink-0"
             >
               <X size={22} />
             </button>

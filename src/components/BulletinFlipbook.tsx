@@ -92,7 +92,7 @@ export default function BulletinFlipbook({ images }: Props) {
 
   if (images.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-slate-400">
+      <div className="flex items-center justify-center h-64 text-slate-500">
         주보 이미지를 불러올 수 없습니다.
       </div>
     );

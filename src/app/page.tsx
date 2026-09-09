@@ -241,7 +241,7 @@ export default function MainPage() {
                 하여 하나가 되어간다는 뜻입니다.
               </p>
               {/* 버튼 아래에 있던 캡션을 본문 바로 밑으로 이동! */}
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-slate-500">
                 * 수원하나교회는 기독교 한국 침례회 교단 소속입니다.
               </p>
             </div>
@@ -279,7 +279,7 @@ export default function MainPage() {
                 <div className="shrink-0 w-[12%] md:w-[16%] aspect-[16/9] bg-slate-100 rounded opacity-40" />
               </div>
               {/* 로딩 텍스트 + 점 애니메이션 */}
-              <div className="flex items-center gap-1.5 text-slate-400 text-sm">
+              <div className="flex items-center gap-1.5 text-slate-500 text-sm">
                 <span>사진을 불러오는 중</span>
                 <span className="flex gap-0.5">
                   <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce [animation-delay:0ms]" />
@@ -339,7 +339,7 @@ export default function MainPage() {
           <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-end justify-between mb-10 md:mb-14">
               <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-2">
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.3em] mb-2">
                   Church News
                 </p>
                 <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -348,7 +348,7 @@ export default function MainPage() {
               </div>
               <Link
                 href="/news"
-                className="flex items-center gap-1 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
+                className="flex items-center gap-1 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
               >
                 더보기 <ArrowRight size={14} />
               </Link>
@@ -400,7 +400,7 @@ export default function MainPage() {
                           <span className="text-[11px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 tracking-wider">
                             {category}
                           </span>
-                          <span className="text-xs text-slate-400">{dateStr}</span>
+                          <span className="text-xs text-slate-500">{dateStr}</span>
                         </div>
                         <h3
                           className="font-bold text-base text-slate-900 line-clamp-2 leading-snug"
@@ -435,7 +435,7 @@ export default function MainPage() {
                           <span className="text-[11px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 tracking-wider">
                             {post.category}
                           </span>
-                          <span className="text-xs text-slate-400">{dateStr}</span>
+                          <span className="text-xs text-slate-500">{dateStr}</span>
                         </div>
                         <h3 className="font-bold text-base text-slate-900 line-clamp-2 leading-snug">
                           {post.title}
@@ -457,7 +457,7 @@ export default function MainPage() {
 
                 {/* 텍스트 영역 */}
                 <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">
                     Online Offering
                   </p>
                   <h2 className="text-xl font-bold text-slate-900 mb-1.5">
@@ -516,7 +516,7 @@ export default function MainPage() {
               {/* 모달 헤더 */}
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">
                     Online Offering
                   </p>
                   <h3 className="text-2xl font-bold text-slate-900">
@@ -527,7 +527,7 @@ export default function MainPage() {
                   onClick={() => setShowAccountInfo(false)}
                   className="p-2 hover:bg-slate-100 rounded-full transition-colors"
                 >
-                  <X size={22} className="text-slate-400" />
+                  <X size={22} className="text-slate-500" />
                 </button>
               </div>
 
@@ -570,7 +570,7 @@ export default function MainPage() {
                 ))}
               </div>
 
-              <p className="text-center text-xs text-slate-400 mt-5 pt-4 border-t border-slate-100">
+              <p className="text-center text-xs text-slate-500 mt-5 pt-4 border-t border-slate-100">
                 계좌번호를 클릭하면 복사됩니다.
               </p>
             </div>

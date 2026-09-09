@@ -19,13 +19,13 @@ function Item({ item, index }: { item: FAQItem; index: number }) {
         className="w-full flex items-start justify-between gap-6 py-6 text-left"
       >
         <span className="font-bold text-base md:text-lg leading-snug text-slate-900 break-keep">
-          <span className="mr-2 text-slate-400 font-normal text-sm">Q.</span>
+          <span className="mr-2 text-slate-500 font-normal text-sm">Q.</span>
           {item.question}
         </span>
         {open ? (
-          <ChevronUp size={20} className="shrink-0 text-slate-400 mt-0.5" />
+          <ChevronUp size={20} className="shrink-0 text-slate-500 mt-0.5" />
         ) : (
-          <ChevronDown size={20} className="shrink-0 text-slate-400 mt-0.5" />
+          <ChevronDown size={20} className="shrink-0 text-slate-500 mt-0.5" />
         )}
       </button>
 
@@ -43,7 +43,7 @@ function Item({ item, index }: { item: FAQItem; index: number }) {
 
 export default function FaqAccordion({ items }: { items: FAQItem[] }) {
   if (items.length === 0) return (
-    <p className="text-center text-slate-400 py-20">등록된 FAQ가 없습니다.</p>
+    <p className="text-center text-slate-500 py-20">등록된 FAQ가 없습니다.</p>
   );
 
   return (

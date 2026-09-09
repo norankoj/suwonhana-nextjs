@@ -36,7 +36,7 @@ export default function LocationPage() {
                 (17103) 경기도 용인시 기흥구 서그내로 16번길 11-6
               </p>
               <p className="text-slate-500 text-sm flex items-center gap-1.5">
-                <Phone size={13} className="text-slate-400" />
+                <Phone size={13} className="text-slate-500" />
                 031-202-0697
               </p>
             </div>
@@ -125,7 +125,7 @@ export default function LocationPage() {
                   이용해 주시기 바랍니다.
                 </p>
                 <p className="flex items-center gap-1.5 text-slate-500">
-                  <Navigation size={13} className="text-slate-400 shrink-0" />
+                  <Navigation size={13} className="text-slate-500 shrink-0" />
                   경기 용인시 기흥구 서그내로53번길 30
                 </p>
               </div>

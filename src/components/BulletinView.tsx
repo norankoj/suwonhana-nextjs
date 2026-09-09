@@ -41,11 +41,11 @@ function PastorRow({ pastor }: { pastor: PastorEntry }) {
     <div className="py-4 border-b border-slate-100 last:border-0 space-y-2">
       <p className="text-base font-bold text-slate-900">
         {pastor.name}
-        <span className="font-normal text-slate-400 text-sm ml-3">{pastor.intro}</span>
+        <span className="font-normal text-slate-500 text-sm ml-3">{pastor.intro}</span>
       </p>
       {pastor.schedules.map((s, i) => (
         <p key={i} className="text-base text-slate-500">
-          <span className="tabular-nums mr-4 text-base text-slate-400">{s.date}</span>
+          <span className="tabular-nums mr-4 text-base text-slate-500">{s.date}</span>
           {s.event}
         </p>
       ))}
@@ -58,7 +58,7 @@ function GeneralRow({ item }: { item: GeneralNewsItem }) {
     item.type === "birth" ? (
       <Baby size={15} className="text-pink-400 shrink-0 mt-0.5" />
     ) : item.type === "death" ? (
-      <span className="text-sm text-slate-400 font-bold shrink-0 mt-0.5">✝</span>
+      <span className="text-sm text-slate-500 font-bold shrink-0 mt-0.5">✝</span>
     ) : item.type === "marriage" ? (
       <span className="text-sm shrink-0 mt-0.5">💐</span>
     ) : (

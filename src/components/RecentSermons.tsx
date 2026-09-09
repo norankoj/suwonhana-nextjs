@@ -39,7 +39,7 @@ export default function RecentSermons() {
         {/* 섹션 헤더 */}
         <div className="flex items-end justify-between mb-6">
           <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-1.5">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mb-1.5">
               Message
             </p>
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
@@ -48,7 +48,7 @@ export default function RecentSermons() {
           </div>
           <Link
             href="/sermon"
-            className="flex items-center gap-1 text-sm font-semibold text-slate-400 hover:text-slate-900 transition-colors"
+            className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
           >
             전체보기 <ChevronRight size={14} />
           </Link>
@@ -75,7 +75,7 @@ export default function RecentSermons() {
             </div>
           </div>
         ) : sermons.length === 0 ? (
-          <div className="text-center py-16 text-slate-400">
+          <div className="text-center py-16 text-slate-500">
             <Play size={40} className="mx-auto mb-4 opacity-30" />
             <p className="font-medium">최근 설교를 불러올 수 없습니다.</p>
           </div>
@@ -190,14 +190,14 @@ export default function RecentSermons() {
                       </div>
                       <div className="pt-2.5 flex flex-col gap-1">
                         {tags[0] && (
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                             {tags[0]}
                           </span>
                         )}
                         <h3 className="font-bold text-sm text-slate-900 leading-snug line-clamp-2">
                           {title}
                         </h3>
-                        <span className="text-[11px] text-slate-400 font-medium">
+                        <span className="text-[11px] text-slate-500 font-medium">
                           {formatDate(item.date)}
                         </span>
                       </div>

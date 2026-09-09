@@ -36,7 +36,7 @@ export default function WelcomeSection() {
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-20">
           {/* 왼쪽: 타이틀 + 담당자 + 질문 버튼 */}
           <div className="lg:w-2/5 flex flex-col justify-center">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-4">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.3em] mb-4">
               New Family
             </p>
             <h2 className="text-2xl md:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight mb-5 break-keep">
@@ -50,7 +50,7 @@ export default function WelcomeSection() {
 
             {/* 담당자 — 심플 텍스트 */}
             <div className="mb-8 pt-6 border-t border-slate-200">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
                 새가족 담당
               </p>
               <p className="text-base font-bold text-slate-900">신상철 목사</p>
@@ -60,7 +60,7 @@ export default function WelcomeSection() {
               >
                 010-2484-0776
               </a>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 전화 또는 문자로 문의 가능합니다
               </p>
             </div>

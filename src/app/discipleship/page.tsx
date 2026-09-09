@@ -249,7 +249,7 @@ export default async function DiscipleshipPage() {
         {/* ── 훈련 과목 ── */}
         <section>
           <BigSectionTitle>훈련 과목</BigSectionTitle>
-          <p className="text-sm text-slate-400 text-center -mt-6 mb-12">
+          <p className="text-sm text-slate-500 text-center -mt-6 mb-12">
             매 학기 개설 과목은 교회 공지를 통해 안내됩니다.
           </p>
 
@@ -271,7 +271,7 @@ export default async function DiscipleshipPage() {
                 </h4>
                 {/* 라벨 (초신자 과정 등) */}
                 {course.label && (
-                  <p className="text-xs text-slate-400 mb-2">{course.label}</p>
+                  <p className="text-xs text-slate-500 mb-2">{course.label}</p>
                 )}
                 {/* 설명 */}
                 {course.desc && (
@@ -282,7 +282,7 @@ export default async function DiscipleshipPage() {
                 {/* 수강요건 태그 */}
                 {course.req && (
                   <div className="mt-4 pt-3 border-t border-slate-100">
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-slate-500">
                       <span className="font-semibold text-slate-600">
                         수강요건
                       </span>{" "}

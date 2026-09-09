@@ -210,7 +210,7 @@ const SermonCard = ({
           className="font-bold text-base text-slate-900 mb-2 line-clamp-2 leading-snug group-hover:text-accent-600 transition-colors"
           dangerouslySetInnerHTML={{ __html: cleanTitle }}
         />
-        <div className="flex items-center justify-between text-xs text-slate-400 mt-auto pt-3">
+        <div className="flex items-center justify-between text-xs text-slate-500 mt-auto pt-3">
           <span className="text-slate-600 font-medium">
             {item.sermon_meta?.speaker || "담임목사"}
           </span>
@@ -241,9 +241,9 @@ function Accordion({
       >
         <span>{title}</span>
         {isOpen ? (
-          <ChevronUp size={18} className="text-slate-400" />
+          <ChevronUp size={18} className="text-slate-500" />
         ) : (
-          <ChevronDown size={18} className="text-slate-400" />
+          <ChevronDown size={18} className="text-slate-500" />
         )}
       </button>
       {isOpen && <div className="animate-fade-in mt-3">{children}</div>}
@@ -589,7 +589,7 @@ export default function SermonClient({
                 </button>
                 <div className="w-full h-px bg-slate-100 my-2"></div>
                 <div className="mt-2">
-                  <p className="text-xs font-bold text-slate-400 mb-3 flex items-center gap-1">
+                  <p className="text-xs font-bold text-slate-500 mb-3 flex items-center gap-1">
                     <Tag size={12} /> 관련 키워드
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -643,10 +643,10 @@ export default function SermonClient({
                       placeholder="검색어 입력"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-9 pr-3 py-3 bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all text-sm text-slate-800 placeholder:text-slate-400 shadow-sm"
+                      className="w-full pl-9 pr-3 py-3 bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all text-sm text-slate-800 placeholder:text-slate-500 shadow-sm"
                     />
                     <Search
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-slate-900 transition-colors"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-slate-900 transition-colors"
                       size={16}
                     />
                   </form>
@@ -799,21 +799,21 @@ export default function SermonClient({
                     return (
                       <div className="flex flex-wrap items-center gap-4 py-4 border-t border-b border-slate-100 text-sm md:text-base text-slate-600">
                         <div className="flex items-center gap-2">
-                          <Users size={18} className="text-slate-400" />
+                          <Users size={18} className="text-slate-500" />
                           <span className="font-bold">
                             {selectedSermon.sermon_meta?.speaker || "담임목사"}
                           </span>
                         </div>
                         {selectedSermon.sermon_meta?.scripture && (
                           <div className="flex items-center gap-2">
-                            <BookOpen size={18} className="text-slate-400" />
+                            <BookOpen size={18} className="text-slate-500" />
                             <span>
                               {selectedSermon.sermon_meta?.scripture}
                             </span>
                           </div>
                         )}
                         <div className="flex items-center gap-2">
-                          <Calendar size={18} className="text-slate-400" />
+                          <Calendar size={18} className="text-slate-500" />
                           <span>{formatDate(selectedSermon.date)}</span>
                         </div>
                         {audioUrl && (
@@ -864,14 +864,14 @@ export default function SermonClient({
                   <div className="bg-white p-1 rounded-lg border border-slate-200 flex items-center">
                     <button
                       onClick={() => setViewMode("grid")}
-                      className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                      className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-600"}`}
                       aria-label="그리드 보기"
                     >
                       <LayoutGrid size={18} />
                     </button>
                     <button
                       onClick={() => setViewMode("list")}
-                      className={`p-2 rounded-lg transition-all ${viewMode === "list" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-400 hover:text-slate-600"}`}
+                      className={`p-2 rounded-lg transition-all ${viewMode === "list" ? "bg-slate-100 text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-600"}`}
                       aria-label="리스트 보기"
                     >
                       <AlignJustify size={18} />
@@ -943,7 +943,7 @@ export default function SermonClient({
                     <p className="text-slate-900 font-bold text-lg mb-2">
                       검색 결과가 없습니다
                     </p>
-                    <p className="text-slate-400 text-sm mb-6">
+                    <p className="text-slate-500 text-sm mb-6">
                       다른 검색어나 필터를 시도해보세요.
                     </p>
                     <button
@@ -990,7 +990,7 @@ export default function SermonClient({
                         {getPageNumbers().map((pageNum, index) => (
                           <React.Fragment key={index}>
                             {pageNum === "..." ? (
-                              <span className="w-10 h-10 flex items-center justify-center text-slate-400 font-bold tracking-widest">
+                              <span className="w-10 h-10 flex items-center justify-center text-slate-500 font-bold tracking-widest">
                                 ...
                               </span>
                             ) : (

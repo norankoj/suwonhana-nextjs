@@ -146,7 +146,7 @@ export default function NewsPage() {
               className={`shrink-0 px-6 py-1 text-[15px] font-bold transition-all duration-200 -mb-[1px] ${
                 activeCategory === cat.slug
                   ? "border-slate-900 text-slate-900"
-                  : "border-transparent text-slate-400 hover:text-slate-900"
+                  : "border-transparent text-slate-500 hover:text-slate-900"
               }`}
             >
               {cat.label}
@@ -187,7 +187,7 @@ export default function NewsPage() {
                     />
                   ) : (
                     <svg
-                      className="w-10 h-10 text-slate-400"
+                      className="w-10 h-10 text-slate-500"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -206,7 +206,7 @@ export default function NewsPage() {
                     <span className="text-[11px] font-bold px-2.5 py-1 bg-slate-100 text-slate-700 tracking-wider">
                       {post.category}
                     </span>
-                    <span className="text-sm font-semibold text-slate-400">
+                    <span className="text-sm font-semibold text-slate-500">
                       {formatDate(post.date)}
                     </span>
                   </div>
@@ -228,7 +228,7 @@ export default function NewsPage() {
             <p className="text-slate-900 font-bold text-lg mb-2">
               소식이 없습니다
             </p>
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-500 text-sm">
               다른 카테고리를 선택해보세요.
             </p>
           </div>
@@ -269,7 +269,7 @@ export default function NewsPage() {
                         <span className="text-[11px] font-bold px-2.5 py-1 bg-slate-100 text-slate-700 tracking-wider">
                           {categoryLabel}
                         </span>
-                        <span className="text-sm font-semibold text-slate-400">
+                        <span className="text-sm font-semibold text-slate-500">
                           {formatDate(post.date)}
                         </span>
                       </div>
@@ -279,7 +279,7 @@ export default function NewsPage() {
                           __html: post.title.rendered,
                         }}
                       />
-                      <div className="mt-6 flex items-center gap-1 text-sm font-bold text-slate-400 group-hover:text-slate-900 transition-colors">
+                      <div className="mt-6 flex items-center gap-1 text-sm font-bold text-slate-500 group-hover:text-slate-900 transition-colors">
                         자세히 보기 <ArrowRight size={16} />
                       </div>
                     </div>

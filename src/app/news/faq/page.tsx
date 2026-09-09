@@ -82,7 +82,7 @@ export default async function FAQPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <FaqAccordion items={items} />
 
-        <p className="mt-16 text-center text-sm text-slate-400">
+        <p className="mt-16 text-center text-sm text-slate-500">
           찾으시는 답변이 없으신가요?{" "}
           <a
             href="tel:031-202-0697"

@@ -104,7 +104,7 @@ export default function NewsDetailPage() {
     <div className="flex justify-between items-center mb-10">
       <Link
         href="/news"
-        className="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-900 transition-colors"
+        className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
       >
         <ArrowLeft size={16} /> 목록
       </Link>
@@ -133,14 +133,14 @@ export default function NewsDetailPage() {
 
           {/* 주보 헤더 */}
           <div className="mb-10">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-2">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.3em] mb-2">
               주보
             </p>
             <h1
               className="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight mb-4 break-keep tracking-tight"
               dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             />
-            <div className="flex items-center gap-4 text-sm font-semibold text-slate-400">
+            <div className="flex items-center gap-4 text-sm font-semibold text-slate-500">
               <span className="flex items-center gap-1.5">
                 <Clock size={14} /> {getFullDate(post.date)}
               </span>
@@ -181,7 +181,7 @@ export default function NewsDetailPage() {
             className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight mb-6 break-keep tracking-tight"
             dangerouslySetInnerHTML={{ __html: post.title.rendered }}
           />
-          <div className="flex items-center gap-4 text-sm font-semibold text-slate-400">
+          <div className="flex items-center gap-4 text-sm font-semibold text-slate-500">
             <span className="flex items-center gap-1.5">
               <User size={14} /> 수원하나교회
             </span>
@@ -199,7 +199,7 @@ export default function NewsDetailPage() {
                      prose-a:text-accent-600 prose-a:font-bold prose-a:no-underline hover:prose-a:underline
                      prose-headings:font-extrabold prose-headings:tracking-tight
                      prose-p:leading-relaxed prose-p:break-keep
-                     prose-li:marker:text-slate-400"
+                     prose-li:marker:text-slate-500"
           dangerouslySetInnerHTML={{ __html: post.content.rendered }}
         />
 

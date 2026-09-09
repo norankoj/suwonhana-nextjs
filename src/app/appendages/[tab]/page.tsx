@@ -94,7 +94,7 @@ export default function AppendagesContentPage() {
                 "평강의 하나님이 친히 너희를 온전히 거룩하게 하시고 또 너희의 온
                 영과 혼과 몸이 우리 주 예수 그리스도께서 강림하실 때에 흠 없게
                 보전되기를 원하노라"
-                <cite className="block text-sm text-slate-400 font-normal mt-3 not-italic">
+                <cite className="block text-sm text-slate-500 font-normal mt-3 not-italic">
                   데살로니가전서 5:23
                 </cite>
               </blockquote>
@@ -112,7 +112,7 @@ export default function AppendagesContentPage() {
               </p>
 
               <div className="flex items-start gap-4 bg-slate-50 p-6 rounded-lg text-left w-full border border-slate-100">
-                <Info size={20} className="text-slate-400 shrink-0 mt-0.5" />
+                <Info size={20} className="text-slate-500 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-bold text-slate-900 mb-1">
                     상담 신청 대상
@@ -153,7 +153,7 @@ export default function AppendagesContentPage() {
                   />
                 </button>
               )}
-              <p className="mt-4 text-sm text-slate-400">
+              <p className="mt-4 text-sm text-slate-500">
                 * 상담은 사전 예약제로 운영됩니다.
               </p>
             </div>
@@ -264,7 +264,7 @@ export default function AppendagesContentPage() {
             <p className="text-slate-500 text-base">
               창업보육센터에 대한 자세한 내용은 곧 업데이트될 예정입니다.
             </p>
-            <p className="text-slate-400 text-sm mt-2">
+            <p className="text-slate-500 text-sm mt-2">
               문의: 교회 사무실 031-202-0697
             </p>
           </div>
@@ -294,9 +294,9 @@ export default function AppendagesContentPage() {
             <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
               <div className="lg:w-1/4 flex flex-col items-center lg:items-start text-center lg:text-left shrink-0">
                 <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
-                  <Heart size={32} className="text-slate-400" />
+                  <Heart size={32} className="text-slate-500" />
                 </div>
-                <span className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">
+                <span className="text-xs font-bold tracking-widest text-slate-500 uppercase mb-2 block">
                   Daniel Missionary School
                 </span>
                 <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 leading-tight">
@@ -322,7 +322,7 @@ export default function AppendagesContentPage() {
                       key={i}
                       className="flex gap-3 p-4 bg-slate-50 rounded-lg border border-slate-100"
                     >
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider w-12 shrink-0 pt-0.5">
                         {info.label}
                       </span>
                       <span className="text-sm font-bold text-slate-700">
@@ -344,9 +344,9 @@ export default function AppendagesContentPage() {
             <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
               <div className="lg:w-1/4 flex flex-col items-center lg:items-start text-center lg:text-left shrink-0">
                 <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
-                  <BookOpen size={32} className="text-slate-400" />
+                  <BookOpen size={32} className="text-slate-500" />
                 </div>
-                <span className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">
+                <span className="text-xs font-bold tracking-widest text-slate-500 uppercase mb-2 block">
                   Daniel Training Center
                 </span>
                 <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 leading-tight">
@@ -372,7 +372,7 @@ export default function AppendagesContentPage() {
                       key={i}
                       className="flex gap-3 p-4 bg-slate-50 rounded-lg border border-slate-100"
                     >
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider w-12 shrink-0 pt-0.5">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider w-12 shrink-0 pt-0.5">
                         {info.label}
                       </span>
                       <span className="text-sm font-bold text-slate-700">

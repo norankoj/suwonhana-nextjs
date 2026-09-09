@@ -68,7 +68,7 @@ export default async function JuboPage() {
       {/* 헤더 */}
       <section className="bg-white border-b border-slate-100 py-10 md:py-14">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-[0.3em] mb-4">
+          <div className="inline-flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-[0.3em] mb-4">
             <BookOpen size={14} />
             Weekly Bulletin
           </div>
@@ -76,7 +76,7 @@ export default async function JuboPage() {
             {pageTitle || "온라인 주보"}
           </h1>
           {pageDate && (
-            <p className="mt-2 text-slate-400 text-sm">{pageDate}</p>
+            <p className="mt-2 text-slate-500 text-sm">{pageDate}</p>
           )}
         </div>
       </section>
@@ -90,11 +90,11 @@ export default async function JuboPage() {
             <div className="flex flex-col items-center justify-center py-24 text-center gap-5">
               <BookOpen size={48} className="text-slate-200" />
               <div>
-                <p className="text-slate-400 text-base font-medium mb-1">
+                <p className="text-slate-500 text-base font-medium mb-1">
                   아직 업로드된 주보가 없습니다.
                 </p>
                 <p className="text-slate-300 text-sm leading-relaxed">
-                  워드프레스 관리자 → <strong className="text-slate-400">페이지 &gt; 주보</strong>에서
+                  워드프레스 관리자 → <strong className="text-slate-500">페이지 &gt; 주보</strong>에서
                   <br />이미지 블록을 추가해 주세요.
                 </p>
               </div>

@@ -24,7 +24,7 @@ const StaffCard = ({ staff }: { staff: StaffMember }) => (
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center bg-slate-200">
-          <svg className="w-10 h-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-10 h-10 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
         </div>
@@ -119,7 +119,7 @@ export default async function PastorPage() {
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <svg className="w-16 h-16 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-16 h-16 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
@@ -173,7 +173,7 @@ export default async function PastorPage() {
             <h3 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
               저서
             </h3>
-            <span className="hidden md:block text-slate-400 text-sm font-medium tracking-widest uppercase">
+            <span className="hidden md:block text-slate-500 text-sm font-medium tracking-widest uppercase">
               Books by Senior Pastor
             </span>
           </div>
@@ -210,7 +210,7 @@ export default async function PastorPage() {
                 </a>
               ))
             ) : (
-              <div className="col-span-full text-center text-slate-400 py-10">
+              <div className="col-span-full text-center text-slate-500 py-10">
                 워드프레스에서 저서 JSON 데이터를 입력해 주세요.
               </div>
             )}
@@ -225,7 +225,7 @@ export default async function PastorPage() {
             <div className="mb-10 text-center">
               <h4 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center justify-center gap-2">
                 사역팀{" "}
-                <span className="text-sm font-light text-slate-400 uppercase tracking-widest">
+                <span className="text-sm font-light text-slate-500 uppercase tracking-widest">
                   Ministry Team
                 </span>
               </h4>
@@ -243,7 +243,7 @@ export default async function PastorPage() {
             <div className="mb-10 text-center">
               <h4 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center justify-center gap-2">
                 행정팀{" "}
-                <span className="text-sm font-light text-slate-400 uppercase tracking-widest">
+                <span className="text-sm font-light text-slate-500 uppercase tracking-widest">
                   Administration Team
                 </span>
               </h4>
@@ -261,7 +261,7 @@ export default async function PastorPage() {
             <div className="mb-10 text-center">
               <h4 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center justify-center gap-2">
                 미디어팀{" "}
-                <span className="text-sm font-light text-slate-400 uppercase tracking-widest">
+                <span className="text-sm font-light text-slate-500 uppercase tracking-widest">
                   Media Team
                 </span>
               </h4>

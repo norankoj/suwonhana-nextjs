@@ -38,7 +38,7 @@ export default function DonationPage() {
         </div>
 
         {/* 안내 문구 */}
-        <p className="text-xs text-slate-400 text-center mb-5">
+        <p className="text-xs text-slate-500 text-center mb-5">
           계좌번호를 탭하면 복사됩니다
         </p>
 
@@ -78,7 +78,7 @@ export default function DonationPage() {
 
         {/* 기부금 영수증 */}
         <div className="bg-white rounded-lg shadow-sm px-5 py-5">
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">
             Tax Deduction
           </p>
           <h2 className="text-base font-bold text-slate-900 mb-1">

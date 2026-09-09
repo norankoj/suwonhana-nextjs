@@ -50,7 +50,7 @@ function AnnouncementCard({ item }: { item: BulletinAnnouncement }) {
           <div className="border-t border-slate-100 pt-4 space-y-2 mt-auto">
             {dateBullets.map((b, i) => (
               <div key={i} className="flex items-start gap-2 text-xs">
-                <Calendar size={13} className="text-slate-400 mt-0.5 shrink-0" />
+                <Calendar size={13} className="text-slate-500 mt-0.5 shrink-0" />
                 <span className="text-slate-600">
                   {b.replace(/^(일정|일시):?\s*/, "")}
                 </span>
@@ -58,7 +58,7 @@ function AnnouncementCard({ item }: { item: BulletinAnnouncement }) {
             ))}
             {venueBullets.map((b, i) => (
               <div key={i} className="flex items-start gap-2 text-xs">
-                <MapPin size={13} className="text-slate-400 mt-0.5 shrink-0" />
+                <MapPin size={13} className="text-slate-500 mt-0.5 shrink-0" />
                 <span className="text-slate-600">
                   {b.replace(/^.*장소:?\s*/, "")}
                 </span>
@@ -66,7 +66,7 @@ function AnnouncementCard({ item }: { item: BulletinAnnouncement }) {
             ))}
             {accountBullets.map((b, i) => (
               <div key={i} className="flex items-start gap-2 text-xs">
-                <CreditCard size={13} className="text-slate-400 mt-0.5 shrink-0" />
+                <CreditCard size={13} className="text-slate-500 mt-0.5 shrink-0" />
                 <span className="text-slate-600 font-mono text-[11px]">
                   {b.replace(/^.*후원 계좌:?\s*/, "").replace(/^.*계좌:?\s*/, "")}
                 </span>
@@ -81,7 +81,7 @@ function AnnouncementCard({ item }: { item: BulletinAnnouncement }) {
             {contactBullets.map((b, i) => (
               <div key={i} className="flex items-center gap-2 text-xs mt-1">
                 <Phone size={11} className="text-slate-300 shrink-0" />
-                <span className="text-slate-400">
+                <span className="text-slate-500">
                   {b.replace(/\[문의:?\s*/, "").replace(/\]$/, "")}
                 </span>
               </div>
@@ -109,7 +109,7 @@ function PastorCard({ pastor }: { pastor: PastorEntry }) {
         <div className="ml-11 space-y-1.5 border-t border-slate-100 pt-3">
           {pastor.schedules.map((s, i) => (
             <div key={i} className="flex items-start gap-3 text-xs">
-              <span className="text-slate-400 w-20 shrink-0 tabular-nums">
+              <span className="text-slate-500 w-20 shrink-0 tabular-nums">
                 {s.date}
               </span>
               <span className="text-slate-600">{s.event}</span>
@@ -126,10 +126,10 @@ function NewsIcon({ type }: { type: GeneralNewsItem["type"] }) {
     return <Baby size={15} className="text-pink-400 shrink-0 mt-0.5" />;
   if (type === "death")
     return (
-      <span className="text-slate-400 text-xs shrink-0 mt-0.5 font-bold">✝</span>
+      <span className="text-slate-500 text-xs shrink-0 mt-0.5 font-bold">✝</span>
     );
   if (type === "prayer")
-    return <Heart size={15} className="text-slate-400 shrink-0 mt-0.5" />;
+    return <Heart size={15} className="text-slate-500 shrink-0 mt-0.5" />;
   return <span className="text-slate-300 shrink-0 mt-0.5">●</span>;
 }
 
@@ -190,7 +190,7 @@ export default async function BulletinPage() {
               {/* 목사 기도 카드 */}
               {data.pastors.length > 0 && (
                 <div className="space-y-3">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
                     기도 요청
                   </p>
                   {data.pastors.map((pastor, i) => (
@@ -202,7 +202,7 @@ export default async function BulletinPage() {
               {/* 일반 교인동정 */}
               {data.generalNews.length > 0 && (
                 <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
                     소식
                   </p>
                   <div className="space-y-4">

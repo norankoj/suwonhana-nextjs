@@ -142,7 +142,7 @@ export default function InquiryPage() {
       {/* 상단 헤더 */}
       <div className="border-b border-slate-100 pt-36 pb-10">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
             Story
           </p>
           <h1 className="text-4xl font-extrabold text-slate-900">집회문의</h1>
@@ -164,7 +164,7 @@ export default function InquiryPage() {
                     className={`block py-1.5 text-sm transition-colors ${
                       isActive
                         ? "font-bold text-slate-900 border-l-2 border-slate-900 pl-3"
-                        : "text-slate-400 hover:text-slate-700 pl-3"
+                        : "text-slate-500 hover:text-slate-700 pl-3"
                     }`}
                   >
                     {link.label}
@@ -203,7 +203,7 @@ export default function InquiryPage() {
                   </div>
                 ) : posts.length === 0 ? (
                   <div className="border-t border-slate-100 py-20 text-center">
-                    <p className="text-slate-400 text-sm mb-3">
+                    <p className="text-slate-500 text-sm mb-3">
                       아직 문의글이 없습니다.
                     </p>
                     <button
@@ -230,12 +230,12 @@ export default function InquiryPage() {
                             {post.title.rendered || "비밀글입니다"}
                           </p>
                           {post.meta?.author_name && (
-                            <p className="text-xs text-slate-400 mt-0.5">
+                            <p className="text-xs text-slate-500 mt-0.5">
                               {post.meta.author_name}
                             </p>
                           )}
                         </div>
-                        <span className="text-xs text-slate-400 shrink-0 tabular-nums">
+                        <span className="text-xs text-slate-500 shrink-0 tabular-nums">
                           {formatDate(post.date)}
                         </span>
                       </button>
@@ -262,7 +262,7 @@ export default function InquiryPage() {
               <div>
                 <button
                   onClick={() => setViewMode("list")}
-                  className="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-900 mb-8 transition-colors"
+                  className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 mb-8 transition-colors"
                 >
                   <ChevronLeft size={15} /> 목록으로
                 </button>
@@ -331,7 +331,7 @@ export default function InquiryPage() {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
                       >
                         {showPassword ? (
                           <EyeOff size={17} />
@@ -340,7 +340,7 @@ export default function InquiryPage() {
                         )}
                       </button>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1.5">
+                    <p className="text-xs text-slate-500 mt-1.5">
                       게시글 열람 시 필요하니 꼭 기억해주세요.
                     </p>
                   </div>
@@ -380,7 +380,7 @@ export default function InquiryPage() {
                     setViewPassword("");
                     setPasswordError("");
                   }}
-                  className="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-900 mb-8 transition-colors"
+                  className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-900 mb-8 transition-colors"
                 >
                   <ChevronLeft size={15} /> 목록으로
                 </button>
@@ -388,12 +388,12 @@ export default function InquiryPage() {
                 {isPasswordProtected(selectedPost) ? (
                   <div className="flex flex-col items-center justify-center py-16 text-center">
                     <div className="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mb-6">
-                      <Lock size={24} className="text-slate-400" />
+                      <Lock size={24} className="text-slate-500" />
                     </div>
                     <h3 className="text-lg font-bold text-slate-900 mb-1">
                       비밀 게시글입니다
                     </h3>
-                    <p className="text-slate-400 text-sm mb-6">
+                    <p className="text-slate-500 text-sm mb-6">
                       작성 시 설정한 비밀번호를 입력하세요.
                     </p>
                     <div className="w-full max-w-xs space-y-3">
@@ -411,7 +411,7 @@ export default function InquiryPage() {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
                         >
                           {showPassword ? (
                             <EyeOff size={17} />
@@ -437,7 +437,7 @@ export default function InquiryPage() {
                       <h2 className="text-xl font-bold text-slate-900 mb-3">
                         {selectedPost.title.rendered}
                       </h2>
-                      <div className="flex items-center gap-3 text-sm text-slate-400">
+                      <div className="flex items-center gap-3 text-sm text-slate-500">
                         {selectedPost.meta?.author_name && (
                           <span>{selectedPost.meta.author_name}</span>
                         )}
