@@ -487,7 +487,7 @@ export default function MainPage() {
         open={showAccountInfo}
         onClose={() => setShowAccountInfo(false)}
         aria-labelledby="donation-modal-title"
-        className="w-[calc(100%-2rem)] max-w-lg"
+        className="w-[calc(100%-2rem)] max-w-md"
       >
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="p-6 sm:p-8">

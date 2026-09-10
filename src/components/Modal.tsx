@@ -65,7 +65,9 @@ export default function Modal({
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
-      className={`m-auto max-w-none bg-transparent p-0 overscroll-contain backdrop:bg-black/60 backdrop:backdrop-blur-sm ${className}`}
+      /* 폭/높이는 전부 호출부가 정한다. 여기서 max-w-* 를 하나라도 박아 두면
+         Tailwind 출력 순서에 따라 호출부 클래스를 이겨 버린다. */
+      className={`m-auto bg-transparent p-0 overscroll-contain backdrop:bg-black/60 backdrop:backdrop-blur-sm ${className}`}
       {...rest}
     >
       {children}

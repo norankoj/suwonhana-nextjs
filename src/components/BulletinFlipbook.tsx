@@ -166,7 +166,7 @@ export default function BulletinFlipbook({ images }: Props) {
         open={lightboxIdx !== null}
         onClose={() => setLightboxIdx(null)}
         aria-label="주보 크게 보기"
-        className="w-screen h-screen max-h-none"
+        className="w-screen h-screen max-w-none max-h-none"
       >
         {lightboxIdx !== null && (
           <div
