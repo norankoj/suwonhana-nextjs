@@ -217,10 +217,12 @@ export default function MainPage() {
         <section className="py-16 md:py-24 bg-white flex items-center justify-center">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* 거대한 메인 타이틀 */}
-            <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-10 tracking-normal break-keep"
-              style={{ lineHeight: '1.2' }}
-            >
+            {/* 한글은 라틴 문자와 달리 디센더가 없는 정사각 글자라
+                같은 크기에서 행간을 더 줘야 답답해 보이지 않는다.
+                text-* 유틸은 자기 line-height 를 같이 들고 오는데 md:/lg: 는
+                미디어쿼리라 뒤에 깔린다. 따로 쓴 leading-* 는 그래서 무시된다.
+                크기/행간을 한 유틸에 묶는 `text-6xl/[1.4]` 형태로 지정한다. */}
+            <h2 className="text-4xl/[1.4] md:text-5xl/[1.4] lg:text-6xl/[1.4] font-extrabold text-slate-900 mb-10 tracking-normal break-keep">
               하나님을 즐거워하고
               <br />그 분의 목적에 헌신하는 공동체
             </h2>

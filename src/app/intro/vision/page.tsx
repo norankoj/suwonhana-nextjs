@@ -73,7 +73,7 @@ export default async function VisionPage() {
           <p className="text-[11px] md:text-xs font-bold tracking-[0.35em] text-white/60 uppercase mb-4">
             Vision
           </p>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight break-keep">
+          <h1 className="text-3xl/[1.4] md:text-5xl/[1.4] lg:text-6xl/[1.4] font-extrabold text-white break-keep">
             {mainTitleText
               .split(/<br\s*\/?>|\n/i)
               .map((line: string, i: number, array: string[]) => (

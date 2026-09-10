@@ -47,7 +47,7 @@ export default async function HistoryPage() {
           <p className="text-xs md:text-sm font-bold text-white/80 uppercase tracking-widest md:tracking-[0.2em] mb-8 whitespace-nowrap">
             SUWON HANA BAPTIST CHURCH
           </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-[2] mb-10 tracking-wide">
+          <h2 className="text-4xl/[2] md:text-5xl/[2] lg:text-6xl/[2] font-extrabold text-white mb-10 tracking-wide">
             하나님이
             <br />
             인도하신 길
