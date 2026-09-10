@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { wpBase } from "@/lib/wp-base";
-import Link from "next/link";
-import { Calendar, Tag, ArrowRight } from "lucide-react";
+import { Tag } from "lucide-react";
 import { HeroSub } from "@/components/Common";
+import NewsCard from "@/components/NewsCard";
+import { formatDate } from "@/utils/format";
 const WP_DOMAIN = wpBase();
 
 const CATEGORIES = [
@@ -58,15 +59,6 @@ const FALLBACK_POSTS = [
     image: "",
   },
 ];
-
-function formatDate(dateString: string): string {
-  const d = new Date(dateString);
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
-}
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>?/gm, "").trim();
-}
 
 export default function NewsPage() {
   const [activeCategory, setActiveCategory] = useState("");
@@ -124,12 +116,6 @@ export default function NewsPage() {
     }
   };
 
-  const getCategoryLabel = (post: WPPost) => {
-    const terms = post._embedded?.["wp:term"]?.[0];
-    if (terms && terms.length > 0) return terms[0].name;
-    return "공지사항";
-  };
-
   return (
     <div className="bg-white min-h-screen animate-fade-in selection:bg-accent-100 selection:text-accent-900">
       <HeroSub
@@ -156,17 +142,17 @@ export default function NewsPage() {
 
         {/* 카드 그리드 */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          /* 스켈레톤도 실제 카드와 같은 모양이어야 로딩 후 화면이 안 튄다 */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="overflow-hidden bg-slate-100 animate-pulse"
+                className="overflow-hidden bg-slate-100 animate-pulse flex flex-row sm:flex-col"
               >
-                <div className="aspect-[4/3] bg-slate-200" />
-                <div className="p-5 space-y-3">
+                <div className="w-24 shrink-0 aspect-square sm:w-auto sm:aspect-[4/3] bg-slate-200" />
+                <div className="flex-1 p-3.5 sm:p-5 space-y-3 flex flex-col justify-center">
                   <div className="h-3 bg-slate-200 rounded w-1/4" />
                   <div className="h-5 bg-slate-200 rounded w-3/4" />
-                  <div className="h-3 bg-slate-200 rounded w-full" />
                 </div>
               </div>
             ))}
@@ -234,58 +220,11 @@ export default function NewsPage() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post) => {
-                const imgUrl =
-                  post._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
-                const categoryLabel = getCategoryLabel(post);
-                const isBulletin = categoryLabel === "주보";
-                const displayImg =
-                  imgUrl ||
-                  (isBulletin ? "/images/jubo-default-2026.jpg" : null);
-                const excerpt = stripHtml(post.excerpt.rendered);
-                return (
-                  <Link
-                    key={post.id}
-                    href={`/news/${post.id}`}
-                    className="overflow-hidden border border-slate-100 bg-white flex flex-col"
-                  >
-                    <div className="aspect-[4/3] overflow-hidden bg-slate-100 group">
-                      {displayImg ? (
-                        <img
-                          src={displayImg}
-                          alt={post.title.rendered}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale-[10%] group-hover:grayscale-0"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Tag size={40} className="text-slate-200" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-4 md:p-6 flex flex-col flex-1">
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="text-[11px] font-bold px-2.5 py-1 bg-slate-100 text-slate-700 tracking-wider">
-                          {categoryLabel}
-                        </span>
-                        <span className="text-sm font-semibold text-slate-500">
-                          {formatDate(post.date)}
-                        </span>
-                      </div>
-                      <h3
-                        className="font-extrabold text-xl md:text-2xl text-slate-900 mb-3 line-clamp-2 leading-snug tracking-tight group-hover:text-accent-600 transition-colors"
-                        dangerouslySetInnerHTML={{
-                          __html: post.title.rendered,
-                        }}
-                      />
-                      <div className="mt-6 flex items-center gap-1 text-sm font-bold text-slate-500 group-hover:text-slate-900 transition-colors">
-                        자세히 보기 <ArrowRight size={16} />
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
+            {/* 모바일은 가로 목록(gap 좁게), sm 이상은 카드 그리드 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+              {posts.map((post) => (
+                <NewsCard key={post.id} post={post} />
+              ))}
             </div>
 
             {/* 🔥 각진 페이지네이션 */}

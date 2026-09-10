@@ -7,6 +7,7 @@ import { ArrowRight, ChevronRight, Copy, X, ChevronDown, Tag } from "lucide-reac
 import { MainHero, MainHeroData } from "@/components/MainHero";
 import WelcomeSection from "@/components/WelcomeSection";
 import HomePhotoCarousel from "@/components/HomePhotoCarousel";
+import NewsCard from "@/components/NewsCard";
 import Modal from "@/components/Modal";
 import type { WPSlide } from "@/lib/types";
 import { DONATION_ACCOUNTS } from "@/lib/donation";
@@ -359,11 +360,15 @@ export default function MainPage() {
 
             {latestNews === null ? (
               /* 로딩 스켈레톤 */
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              /* 스켈레톤도 실제 카드와 같은 모양이어야 로딩 후 화면이 안 튄다 */
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                 {[...Array(3)].map((_, i) => (
-                  <div key={i} className="overflow-hidden bg-slate-100 animate-pulse">
-                    <div className="aspect-[4/3] bg-slate-200" />
-                    <div className="p-5 space-y-3">
+                  <div
+                    key={i}
+                    className="overflow-hidden bg-slate-100 animate-pulse flex flex-row sm:flex-col"
+                  >
+                    <div className="w-24 shrink-0 aspect-square sm:w-auto sm:aspect-[4/3] bg-slate-200" />
+                    <div className="flex-1 p-3.5 sm:p-5 space-y-3 flex flex-col justify-center">
                       <div className="h-3 bg-slate-200 rounded w-1/4" />
                       <div className="h-5 bg-slate-200 rounded w-3/4" />
                     </div>
@@ -371,48 +376,11 @@ export default function MainPage() {
                 ))}
               </div>
             ) : latestNews.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {latestNews.map((post) => {
-                  const imgUrl = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
-                  const category = post._embedded?.["wp:term"]?.[0]?.[0]?.name ?? "공지사항";
-                  const isBulletin = category === "주보";
-                  const displayImg = imgUrl || (isBulletin ? "/images/jubo-default-2026.jpg" : null);
-                  const d = new Date(post.date);
-                  const dateStr = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
-                  return (
-                    <Link
-                      key={post.id}
-                      href={`/news/${post.id}`}
-                      className="group overflow-hidden border border-slate-100 bg-white flex flex-col hover:border-slate-300 transition-colors"
-                    >
-                      <div className="aspect-[4/3] overflow-hidden bg-slate-100">
-                        {displayImg ? (
-                          <img
-                            src={displayImg}
-                            alt={post.title.rendered}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Tag size={32} className="text-slate-200" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-4 md:p-5 flex flex-col flex-1">
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="text-[11px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 tracking-wider">
-                            {category}
-                          </span>
-                          <span className="text-xs text-slate-500">{dateStr}</span>
-                        </div>
-                        <h3
-                          className="font-bold text-base text-slate-900 line-clamp-2 leading-snug"
-                          dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                        />
-                      </div>
-                    </Link>
-                  );
-                })}
+              // 모바일은 가로 목록(gap 좁게), sm 이상은 카드 그리드
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+                {latestNews.map((post) => (
+                  <NewsCard key={post.id} post={post} />
+                ))}
               </div>
             ) : (
               /* 빈 상태 — 예전엔 가짜 공지 3건을 넣었는데, 있지도 않은
