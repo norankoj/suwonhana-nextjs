@@ -194,11 +194,23 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
               </h1>
             )}
 
-            {/* 성경 구절 */}
+            {/* 성경 구절 / 본문 출처.
+                "갈라디아서" 처럼 짧은 라벨이 들어오면 11px 로는 제목(최대 72px)
+                옆에서 눌려 버려서, 앞에 짧은 룰을 두고 크기를 키웠다.
+                긴 구절이 들어와도 medium 굵기라 무겁지 않다. */}
             {currentSlide.scripture && (
-              <p className="mt-4 md:mt-6 text-[11px] md:text-base text-white/70 leading-relaxed break-keep max-w-sm md:max-w-xl">
-                {currentSlide.scripture}
-              </p>
+              <div className="mt-5 md:mt-7 flex items-start gap-3 md:gap-5">
+                <span
+                  aria-hidden
+                  className="block w-7 md:w-14 h-px bg-white/55 shrink-0 mt-[0.72em]"
+                />
+                <p
+                  className="font-medium text-white/85 leading-relaxed break-keep max-w-sm md:max-w-xl drop-shadow"
+                  style={{ fontSize: "clamp(0.95rem, 1.55vw, 1.5rem)" }}
+                >
+                  {currentSlide.scripture}
+                </p>
+              </div>
             )}
 
             {/* 버튼 */}
