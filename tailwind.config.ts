@@ -20,6 +20,9 @@ const config: Config = {
       // 2. 폰트 설정
       fontFamily: {
         sans: ["Pretendard Variable", "Pretendard", "sans-serif"],
+        // 히어로·헤드라인 전용. Outfit 에는 한글 글리프가 없어서
+        // 영문만 Outfit 으로 잡히고 한글은 Pretendard 로 자연스럽게 넘어간다.
+        display: ["Outfit", "Pretendard Variable", "Pretendard", "sans-serif"],
       },
       // 3. Fluid 타이포그래피
       fontSize: {

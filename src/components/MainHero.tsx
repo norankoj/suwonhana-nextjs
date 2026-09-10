@@ -141,9 +141,13 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
         <Link
           href={currentSlide.link}
           target={currentSlide.link.startsWith("http") ? "_blank" : "_self"}
-          className="absolute inset-0 z-[12] cursor-pointer"
-          aria-label="슬라이드 자세히 보기"
-          tabIndex={-1}
+          className="absolute inset-0 z-[12] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-white"
+          aria-label={
+            currentSlide.title?.replace(/\n/g, " ") || "슬라이드 자세히 보기"
+          }
+          /* 버튼이 있으면 같은 곳으로 가는 탭 스톱이 둘이 되므로 건너뛰고,
+             버튼이 없는 슬라이드에서만 이 레이어가 키보드 진입점이 된다. */
+          tabIndex={currentSlide.buttonText ? -1 : 0}
         />
       )}
 
@@ -170,23 +174,29 @@ export const MainHero = ({ slidesData }: MainHeroProps) => {
               </div>
             )}
 
-            {/* 윗줄 문구 — WP에서 평문으로 입력 */}
+            {/* 윗줄 문구 — WP에서 평문으로 입력.
+                자간이 넓은 Outfit + 대문자가 영문 eyebrow 의 톤을 잡는다. */}
             {currentSlide.eyebrow?.trim() && (
-              <p className="text-[10px] md:text-sm font-bold text-white/70 uppercase tracking-[0.18em] md:tracking-[0.22em] mb-1.5 md:mb-3 drop-shadow">
+              <p className="font-display text-[10px] md:text-sm font-semibold text-white/75 uppercase tracking-[0.34em] md:tracking-[0.42em] mb-2.5 md:mb-5 drop-shadow">
                 {currentSlide.eyebrow}
               </p>
             )}
 
-            {/* 큰 제목 — 평문. 줄바꿈(\n)만 <br>로 바꿔 렌더 */}
+            {/* 큰 제목 — 평문. 줄바꿈(\n)은 whitespace-pre-line 이 처리.
+                크기는 clamp 로 뷰포트에 따라 연속 변화(md/lg 단차 없음).
+                히어로가 aspect-video 라 bold 브랜치(최대 5.6rem)보다 한 단계 낮췄다. */}
             {currentSlide.title?.trim() && (
-              <h1 className="text-[1.7rem] md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight break-keep leading-snug drop-shadow-lg whitespace-pre-line">
+              <h1
+                className="font-display font-black text-white tracking-[-0.03em] leading-[1.05] break-keep drop-shadow-lg whitespace-pre-line"
+                style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
+              >
                 {currentSlide.title}
               </h1>
             )}
 
             {/* 성경 구절 */}
             {currentSlide.scripture && (
-              <p className="mt-3 md:mt-4 text-[11px] md:text-sm text-white/60 leading-relaxed break-keep italic max-w-sm md:max-w-md">
+              <p className="mt-4 md:mt-6 text-[11px] md:text-base text-white/70 leading-relaxed break-keep max-w-sm md:max-w-xl">
                 {currentSlide.scripture}
               </p>
             )}
