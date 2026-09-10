@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import { createPortal } from "react-dom";
+import React, { useState, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
+import Modal from "@/components/Modal";
 
 // react-pageflip은 default export — SSR 비활성화
 const HTMLFlipBook = dynamic(
@@ -71,12 +71,7 @@ export default function BulletinFlipbook({ images }: Props) {
   const bookRef = useRef<FlipBookRef>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
-  const [mounted, setMounted] = useState(false);
   const totalPages = images.length;
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleFlip = useCallback((e: { data: number }) => {
     setCurrentPage(e.data);
@@ -165,19 +160,24 @@ export default function BulletinFlipbook({ images }: Props) {
         </button>
       </div>
 
-      {/* 라이트박스 — Portal로 body에 직접 렌더 */}
-      {lightboxIdx !== null &&
-        mounted &&
-        createPortal(
+      {/* 라이트박스 — <dialog> 는 top layer 라 Portal 이 필요 없다.
+          ESC 닫기·포커스 트랩도 Modal 이 처리한다. */}
+      <Modal
+        open={lightboxIdx !== null}
+        onClose={() => setLightboxIdx(null)}
+        aria-label="주보 크게 보기"
+        className="w-screen h-screen max-h-none"
+      >
+        {lightboxIdx !== null && (
           <div
-            className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
-            style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
+            className="relative w-full h-full bg-black/95 flex items-center justify-center"
             onClick={() => setLightboxIdx(null)}
           >
             {/* 닫기 */}
             <button
               className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors z-10"
               onClick={() => setLightboxIdx(null)}
+              aria-label="닫기"
             >
               <X size={32} />
             </button>
@@ -229,9 +229,9 @@ export default function BulletinFlipbook({ images }: Props) {
                 <ChevronRight size={40} />
               </button>
             )}
-          </div>,
-          document.body,
+          </div>
         )}
+      </Modal>
     </div>
   );
 }

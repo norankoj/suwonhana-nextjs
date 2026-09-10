@@ -7,8 +7,10 @@ import { ArrowRight, ChevronRight, Copy, X, ChevronDown, Tag } from "lucide-reac
 import { MainHero, MainHeroData } from "@/components/MainHero";
 import WelcomeSection from "@/components/WelcomeSection";
 import HomePhotoCarousel from "@/components/HomePhotoCarousel";
+import Modal from "@/components/Modal";
 import type { WPSlide } from "@/lib/types";
 import { DONATION_ACCOUNTS } from "@/lib/donation";
+import { RECEIPT_FORM_URL } from "@/lib/links";
 import { getBackgroundEmbedUrl } from "@/utils/youtube";
 
 interface WPPost {
@@ -29,8 +31,7 @@ interface WPPost {
 const WP_DOMAIN = wpBase();
 const SLIDE_POST_TYPE = "risen_slide";
 
-const RECEIPT_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfD5f0YpO6Y1b9Z6U6Yz4k3n8FQ1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1ZQ/viewform";
+
 
 export default function MainPage() {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
@@ -412,38 +413,13 @@ export default function MainPage() {
                 })}
               </div>
             ) : (
-              /* fallback */
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  { id: 1, title: "2026년 전반기 제자훈련 신청 안내", date: "2026-03-10", category: "공지사항" },
-                  { id: 2, title: "부활절 연합예배 안내", date: "2026-03-05", category: "예배" },
-                  { id: 3, title: "봄 수양회 신청 모집", date: "2026-02-28", category: "수양회" },
-                ].map((post) => {
-                  const d = new Date(post.date);
-                  const dateStr = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
-                  return (
-                    <Link
-                      key={post.id}
-                      href="/news"
-                      className="group overflow-hidden border border-slate-100 bg-white flex flex-col hover:border-slate-300 transition-colors"
-                    >
-                      <div className="aspect-[4/3] bg-slate-100 flex items-center justify-center">
-                        <Tag size={32} className="text-slate-200" />
-                      </div>
-                      <div className="p-4 md:p-5 flex flex-col flex-1">
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="text-[11px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 tracking-wider">
-                            {post.category}
-                          </span>
-                          <span className="text-xs text-slate-500">{dateStr}</span>
-                        </div>
-                        <h3 className="font-bold text-base text-slate-900 line-clamp-2 leading-snug">
-                          {post.title}
-                        </h3>
-                      </div>
-                    </Link>
-                  );
-                })}
+              /* 빈 상태 — 예전엔 가짜 공지 3건을 넣었는데, 있지도 않은
+                 교회 공지가 진짜처럼 보이므로 없앴다. */
+              <div className="border border-slate-200 rounded-lg py-16 flex flex-col items-center gap-3">
+                <Tag size={28} className="text-slate-300" />
+                <p className="text-sm text-slate-500">
+                  아직 등록된 소식이 없습니다.
+                </p>
               </div>
             )}
           </div>
@@ -470,14 +446,16 @@ export default function MainPage() {
 
                 {/* 버튼 영역 */}
                 <div className="flex flex-row gap-2.5 shrink-0">
-                  <a
-                    href={RECEIPT_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 bg-slate-900 text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors whitespace-nowrap"
-                  >
-                    영수증 신청 <ArrowRight size={14} />
-                  </a>
+                  {RECEIPT_FORM_URL && (
+                    <a
+                      href={RECEIPT_FORM_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 bg-slate-900 text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors whitespace-nowrap"
+                    >
+                      영수증 신청 <ArrowRight size={14} />
+                    </a>
+                  )}
 
                   {/* PC: 모달 */}
                   <button
@@ -503,15 +481,13 @@ export default function MainPage() {
       </div>
 
       {/* 헌금 계좌 모달 (PC 전용) */}
-      {showAccountInfo && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
-          onClick={() => setShowAccountInfo(false)}
-        >
-          <div
-            className="bg-white w-full max-w-lg rounded-lg shadow-lg overflow-hidden relative"
-            onClick={(e) => e.stopPropagation()}
-          >
+      <Modal
+        open={showAccountInfo}
+        onClose={() => setShowAccountInfo(false)}
+        aria-labelledby="donation-modal-title"
+        className="w-[calc(100%-2rem)] max-w-lg"
+      >
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="p-6 sm:p-8">
               {/* 모달 헤더 */}
               <div className="flex items-center justify-between mb-6">
@@ -519,12 +495,16 @@ export default function MainPage() {
                   <p className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">
                     Online Offering
                   </p>
-                  <h3 className="text-2xl font-bold text-slate-900">
+                  <h3
+                    id="donation-modal-title"
+                    className="text-2xl font-bold text-slate-900"
+                  >
                     헌금 계좌 안내
                   </h3>
                 </div>
                 <button
                   onClick={() => setShowAccountInfo(false)}
+                  aria-label="닫기"
                   className="p-2 hover:bg-slate-100 rounded-full transition-colors"
                 >
                   <X size={22} className="text-slate-500" />
@@ -574,9 +554,8 @@ export default function MainPage() {
                 계좌번호를 클릭하면 복사됩니다.
               </p>
             </div>
-          </div>
         </div>
-      )}
+      </Modal>
     </>
   );
 }

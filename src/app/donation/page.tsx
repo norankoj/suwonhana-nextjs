@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Copy, CheckCheck, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { DONATION_ACCOUNTS as ACCOUNTS } from "@/lib/donation";
+import { RECEIPT_FORM_URL } from "@/lib/links";
 
 
 export default function DonationPage() {
@@ -77,25 +78,28 @@ export default function DonationPage() {
         <div className="my-6 border-t border-slate-200" />
 
         {/* 기부금 영수증 */}
-        <div className="bg-white rounded-lg shadow-sm px-5 py-5">
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">
-            Tax Deduction
-          </p>
-          <h2 className="text-base font-bold text-slate-900 mb-1">
-            기부금 영수증 신청
-          </h2>
-          <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-            연말정산용 기부금 영수증을 온라인으로 신청하실 수 있습니다.
-          </p>
-          <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSfD5f0YpO6Y1b9Z6U6Yz4k3n8FQ1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1ZQ/viewform"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-3 bg-slate-900 text-white rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors w-full justify-center"
-          >
-            영수증 발급 신청하기
-          </a>
-        </div>
+        {/* 폼 주소가 없으면 섹션째로 감춘다 — 신청 못 하는 안내는 혼란만 준다 */}
+        {RECEIPT_FORM_URL && (
+          <div className="bg-white rounded-lg shadow-sm px-5 py-5">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">
+              Tax Deduction
+            </p>
+            <h2 className="text-base font-bold text-slate-900 mb-1">
+              기부금 영수증 신청
+            </h2>
+            <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+              연말정산용 기부금 영수증을 온라인으로 신청하실 수 있습니다.
+            </p>
+            <a
+              href={RECEIPT_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-3 bg-slate-900 text-white rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors w-full justify-center"
+            >
+              영수증 발급 신청하기
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );

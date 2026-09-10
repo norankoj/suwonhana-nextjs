@@ -2,9 +2,7 @@
 
 import React from "react";
 import { ArrowRight } from "lucide-react";
-
-const QUESTION_FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfD5f0YpO6Y1b9Z6U6Yz4k3n8FQ1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1Z1ZQ/viewform";
+import { QUESTION_FORM_URL } from "@/lib/links";
 
 const steps = [
   {
@@ -65,19 +63,21 @@ export default function WelcomeSection() {
               </p>
             </div>
 
-            {/* 질문하기 버튼 */}
-            <a
-              href={QUESTION_FORM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 md:px-7 md:py-3.5 bg-slate-900 text-white rounded-full font-bold text-xs md:text-sm hover:bg-slate-800 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg group w-fit"
-            >
-              궁금한 점 질문하기
-              <ArrowRight
-                size={15}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </a>
+            {/* 질문하기 버튼 — 폼 주소가 없으면 표시하지 않는다 */}
+            {QUESTION_FORM_URL && (
+              <a
+                href={QUESTION_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 md:px-7 md:py-3.5 bg-slate-900 text-white rounded-full font-bold text-xs md:text-sm hover:bg-slate-800 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg group w-fit"
+              >
+                궁금한 점 질문하기
+                <ArrowRight
+                  size={15}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </a>
+            )}
           </div>
 
           {/* 오른쪽: 4단계 등록 절차 */}

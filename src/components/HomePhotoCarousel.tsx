@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react";
+import Modal from "@/components/Modal";
 
 interface CarouselImage {
   src: string;
@@ -14,17 +14,19 @@ interface HomePhotoCarouselProps {
 }
 
 export default function HomePhotoCarousel({ images }: HomePhotoCarouselProps) {
-  if (!images.length) return null;
+  // 빈 배열 가드는 훅을 모두 호출한 뒤(=return 직전)에 둔다.
+  // 훅보다 앞에 두면 images 가 비었다 채워질 때 훅 호출 순서가 바뀌어 터진다.
 
   // ── 무한 루프: 맨 앞에 마지막 이미지, 맨 뒤에 첫 이미지 복제 ──
-  const padded = [images[images.length - 1], ...images, images[0]];
+  const padded = images.length
+    ? [images[images.length - 1], ...images, images[0]]
+    : [];
 
   // displayIndex 1 = 실제 첫 번째 사진 (왼쪽에 마지막 사진이 보임)
   const [displayIdx, setDisplayIdx] = useState(1);
   const [animated, setAnimated] = useState(true);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const [translateX, setTranslateX] = useState(0);
-  const [mounted, setMounted] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const dragStartX = useRef<number | null>(null);
@@ -33,8 +35,6 @@ export default function HomePhotoCarousel({ images }: HomePhotoCarouselProps) {
 
   // 실제 dot 인덱스 (0-based)
   const realIdx = ((displayIdx - 1) % images.length + images.length) % images.length;
-
-  useEffect(() => { setMounted(true); }, []);
 
   // ── translateX 계산 ──
   const calcTranslate = useCallback((idx: number) => {
@@ -128,8 +128,8 @@ export default function HomePhotoCarousel({ images }: HomePhotoCarouselProps) {
     const isLightbox = lightboxIdx !== null;
     const handleKey = (e: KeyboardEvent) => {
       if (isLightbox) {
-        if (e.key === "Escape") setLightboxIdx(null);
-        else if (e.key === "ArrowLeft")
+        // Escape 는 <dialog> 가 처리한다
+        if (e.key === "ArrowLeft")
           setLightboxIdx((i) => i === null ? null : (i - 1 + images.length) % images.length);
         else if (e.key === "ArrowRight")
           setLightboxIdx((i) => i === null ? null : (i + 1) % images.length);
@@ -142,19 +142,19 @@ export default function HomePhotoCarousel({ images }: HomePhotoCarouselProps) {
     return () => window.removeEventListener("keydown", handleKey);
   }, [lightboxIdx, prev, next, images.length]);
 
-  // ── 스크롤 잠금 ──
-  useEffect(() => {
-    document.body.style.overflow = lightboxIdx !== null ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [lightboxIdx]);
-
-  // ── 라이트박스 (Portal) ──
-  const lightbox =
-    lightboxIdx !== null && mounted
-      ? createPortal(
+  // ── 라이트박스 ──
+  // <dialog> 는 top layer 라 Portal 이 필요 없고, ESC·포커스 트랩·스크롤 잠금은
+  // Modal 이 처리한다. 좌우 이동만 위 keydown 에 남겨둔다.
+  const lightbox = (
+    <Modal
+      open={lightboxIdx !== null}
+      onClose={() => setLightboxIdx(null)}
+      aria-label="사진 크게 보기"
+      className="w-screen h-screen max-h-none"
+    >
+      {lightboxIdx !== null && (
           <div
-            className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
-            style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
+            className="relative w-full h-full bg-black/95 flex items-center justify-center"
             onClick={() => setLightboxIdx(null)}
           >
             {/* 닫기 */}
@@ -211,10 +211,12 @@ export default function HomePhotoCarousel({ images }: HomePhotoCarouselProps) {
                 <ChevronRight size={40} />
               </button>
             )}
-          </div>,
-          document.body
-        )
-      : null;
+          </div>
+      )}
+    </Modal>
+  );
+
+  if (!images.length) return null;
 
   return (
     <>
